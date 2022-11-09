@@ -1,0 +1,47 @@
+.form__group {
+    position: relative;
+}
+
+.form__group:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
+.form__group-inline {
+    position: relative;
+    display: inline-block;
+    width: 45%;
+    margin:.4rem .5rem;
+}
+
+input {
+    display: block;
+    padding: 0.8rem 0.8rem;
+    width: 100%;
+    border: 1px solid #bababa;
+    border-radius: 1.3rem;
+    margin-bottom: 0.2rem;
+}
+
+input:focus {
+    outline: 1px solid #1c925d;
+}
+
+input:focus:invalid {
+    outline: 1px solid red;
+}
+
+label {
+    margin-left: 0.5rem;
+    transition: all 0.3s;
+    color: #fcfcfc
+}
+
+label span {
+    color: red;
+}
+
+input:placeholder-shown+label {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4rem);
+}

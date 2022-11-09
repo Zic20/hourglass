@@ -1,0 +1,58 @@
+.btn {
+    display: inline-block;
+    border: none;
+    background-color: transparent;
+    padding: 0.7rem 0.8rem;
+    border-radius: 1.3rem;
+    transition: all 0.3s;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+}
+
+.btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.8rem 1rem rgba(0, 0, 0, 0.18);
+    outline: none;
+}
+
+.btn:disabled {
+    cursor: not-allowed;
+}
+
+.btn:active {
+    transform: translateY(-3px);
+    box-shadow: 0 0.8rem 1rem rgba(0, 0, 0, 0.15);
+    outline: none;
+}
+
+.btn__primary {
+    background-color: rgb(19, 82, 209);
+    color: #fcfcfc;
+    width: 10rem;
+}
+
+.btn__primary:disabled{
+    background-color: rgb(79, 102, 146);
+}
+
+.btn__secondary {
+    border: 1.2px solid #fcfcfc;
+    color: #fcfcfc;
+    box-shadow: 0 0.8rem 1rem rgba(0, 0, 0, 0.18);
+    background-color: transparent;
+    padding: 0.8rem 2rem;
+}
+
+.form__link {
+    color: #fcfcfc;
+    cursor: pointer;
+    display: inline-block;
+    transition: all .3s;
+}
+
+.form__link:hover {
+    transform: rotate(2deg) scale(1.13);
+    background-color: rgba(19, 82, 209, 0.642);
+    backface-visibility: hidden;
+}
