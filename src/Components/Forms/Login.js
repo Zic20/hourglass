@@ -1,7 +1,7 @@
 import React, { useState, useReducer, useEffect } from "react";
 import Button from "../Utilities/Button";
 import styles from "./Login.module.css";
-import "./Form.module.css"
+import "./Form.module.css";
 
 // this reducer is used to validate user email input and manage the email state
 const emailReducer = (state, action) => {
@@ -58,7 +58,6 @@ const Login = () => {
     };
   }, [emailState.isValid, passwordState.isValid]);
 
-
   const emailOnChangeHandler = (event) => {
     dispatchEmail({ type: "USER_INPUT", val: event.target.value });
   };
@@ -83,7 +82,6 @@ const Login = () => {
         </div>
         <div className={styles["form__login"]}>
           <h2>Login</h2>
-
           <div className={styles["form__group"]}>
             <input
               type="email"

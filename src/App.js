@@ -1,12 +1,16 @@
-import React from 'react'
-import './App.css';
-import Login from './Components/Forms/Login';
-import Signup from './Components/Forms/Signup';
+import React from "react";
+import "./App.css";
+import StudentProfile from "./Components/Forms/StudentProfile";
+import Activities from "./Components/Pages/Activities";
+
+
+
 
 function App() {
   return (
     <div className="App">
-      <Signup/>
+      <StudentProfile/>
+     {/* <Activities/> */}
     </div>
   );
 }

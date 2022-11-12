@@ -1,0 +1,12 @@
+.input {
+    border-radius: 5px;
+    border-color: #ccc;
+    margin-top: .5rem;
+    padding: .6rem 1rem;
+}
+
+label {
+    color: #656b7b;
+    margin-left:0;
+    margin-bottom: 1rem;
+}

@@ -2,12 +2,17 @@
     display: inline-block;
     border: none;
     background-color: transparent;
+    border-radius: 4px;
     padding: 0.7rem 0.8rem;
-    border-radius: 1.3rem;
     transition: all 0.3s;
     font-weight: 700;
     cursor: pointer;
     outline: none;
+    margin-left:.5rem;
+}
+
+.btn__rounded {
+    border-radius: 1.3rem;
 }
 
 .btn:hover {
@@ -32,7 +37,7 @@
     width: 10rem;
 }
 
-.btn__primary:disabled{
+.btn__primary:disabled {
     background-color: rgb(79, 102, 146);
 }
 
@@ -42,6 +47,27 @@
     box-shadow: 0 0.8rem 1rem rgba(0, 0, 0, 0.18);
     background-color: transparent;
     padding: 0.8rem 2rem;
+}
+
+.btn__cancel {
+    background-color: rgb(222, 36, 19);
+    color: #fcfcfc;
+}
+
+.btn__action {
+    width: auto;
+    border-radius: 4px;
+    background: rgba(28, 146, 93, 0.936);
+    color: #fcfcfc;
+    margin: .5rem .5rem;
+}
+
+.btn__delete {
+    width: auto;
+    border-radius: 4px;
+    background: rgba(180, 34, 56, 0.936);
+    color: #fcfcfc;
+    margin: .5rem .5rem;
 }
 
 .form__link {

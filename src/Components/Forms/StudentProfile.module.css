@@ -1,0 +1,29 @@
+.studentForm {
+    display:flex;
+    flex-direction: row;
+    background: #fcfcfc;
+    width: 100%; 
+    height: auto;
+    margin:auto;
+    position: relative;
+}
+
+.avatar {
+    flex: 1;
+    border-right: 1px solid #656b7b52;
+    align-items: center;
+    justify-content: center;
+}
+
+.form {
+    flex: 2;
+    padding-left: 1rem;
+    align-items: center;
+    background: white;
+}
+
+.footer {
+    text-align: right;
+    margin-top: 1.4rem;
+    padding-right: 2.2rem;
+}

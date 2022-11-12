@@ -9,7 +9,7 @@ const Button = (props) => {
       className={`${styles.btn} ${styles[props.className]}`}
       disabled={props.disabled}
     >
-      {props.text}
+      {props.children}
     </button>
   );
 };
