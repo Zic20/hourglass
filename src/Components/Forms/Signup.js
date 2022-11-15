@@ -69,10 +69,10 @@ const Signup = () => {
     isValid: null,
   });
 
-  const [confirmPasswordState, dispatchConfirmPassword] = useReducer(
-    confirmPasswordReducer,
-    { value: "", isValid: null }
-  );
+  const [
+    confirmPasswordState,
+    dispatchConfirmPassword,
+  ] = useReducer(confirmPasswordReducer, { value: "", isValid: null });
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
@@ -216,13 +216,16 @@ const Signup = () => {
             </label>
           </div>
           <div className={styles["form__group"]}>
-            <Button type="button" className="btn__secondary" text="Login" />
+            <Button type="button" className="btn__secondary">
+              Sign In
+            </Button>
             <Button
               type="submit"
               className="btn__primary"
               disabled={!formIsValid ? true : false}
-              text="Sign Up"
-            />
+            >
+              Sign Up
+            </Button>
           </div>
         </div>
       </form>

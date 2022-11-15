@@ -1,0 +1,50 @@
+.modal {
+    position: absolute;
+    left:0;
+    top:0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
+}
+
+.modal-dialog {
+    background: white;
+    position: absolute;
+    width: 50%;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    border-radius: .5rem;
+    overflow: hidden;
+}
+
+.modal-backdrop {
+    width: 100%;
+    height: 100%;
+    background-color: hsla(0, 0%, 0%, 0.548);
+}
+
+.modal-dialog .modal-header {
+    width: 100%;
+    padding: 1.5rem 1rem;
+    background-color: blueviolet;
+    color: white;
+    text-align: left;
+}
+
+.modal-dialog .modal-header h3 {
+    margin: 0;
+}
+
+.modal-dialog .modal-body {
+    padding: 1rem 2rem;
+    text-align: left;
+}
+
+.modal-dialog .modal-body .modal-content {
+    margin-bottom: 1.5rem;
+}
+
+.modal-dialog .modal-body .modal-footer{
+    text-align: right;
+}

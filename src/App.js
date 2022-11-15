@@ -1,7 +1,8 @@
 import React from "react";
 import "./App.css";
-import StudentProfile from "./Components/Forms/StudentProfile";
-import Activities from "./Components/Pages/Activities";
+import ActivitiesForm from "./Components/Forms/ActivitiesForm";
+// import StudentProfile from "./Components/Forms/StudentProfile";
+// import Activities from "./Components/Pages/Activities";
 
 
 
@@ -9,8 +10,7 @@ import Activities from "./Components/Pages/Activities";
 function App() {
   return (
     <div className="App">
-      <StudentProfile/>
-     {/* <Activities/> */}
+      <ActivitiesForm/>
     </div>
   );
 }
