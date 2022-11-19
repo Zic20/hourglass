@@ -78,7 +78,7 @@ const Login = () => {
         <div className={styles["form__signup"]}>
           <h1 className={styles["heading__primary"]}>Welcome!</h1>
           <p>Create your account For Free!</p>
-          <Button type="button" className="btn__secondary" text="Sign Up" />
+          <Button type="button" className="btn__secondary-rounded">Sign Up</Button>
         </div>
         <div className={styles["form__login"]}>
           <h2>Login</h2>
@@ -113,23 +113,16 @@ const Login = () => {
             </label>
           </div>
           <div className={styles["form__group"]}>
-            <Button
-              type="button"
-              className="btn__secondary"
-              disabled={false}
-              text="Sign Up"
-            />
+            <Button type="button" className="btn__secondary-rounded" disabled={false}>
+              Sign Up
+            </Button>
             <Button
               type="submit"
-              className="btn__primary"
-              disabled={!formIsValid ? true : false}
-              text="Login"
-            />
+              className="btn__primary-rounded"
+              disabled={!formIsValid ? true : false}>Sign In</Button>
             <Button
               type="button"
-              className="form__link"
-              text="Forgot password?"
-            />
+              className="form__link-rounded">Forgot password?</Button>
           </div>
         </div>
       </form>

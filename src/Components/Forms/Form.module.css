@@ -10,7 +10,27 @@
     position: relative;
     display: inline-block;
     width: 45%;
-    margin: .4rem .5rem;
+    margin: .4rem .5rem .8rem;
+}
+
+.form__textarea {
+    margin-left: .5rem;
+    width: 93%;
+    height: 10rem;
+}
+
+
+
+@media screen and (max-width:768px) {
+    .form__group-inline {
+        width: 90%;
+        margin: .4rem .5rem .8rem 1.5rem;
+    }
+    .form__textarea {
+        width: 90%;
+        margin-left: 1.5rem;
+    }
+    
 }
 
 input {
@@ -33,7 +53,7 @@ input:focus:invalid {
 label {
     margin-left: 0.5rem;
     transition: all 0.3s;
-    color: #fcfcfc
+    color: #fcfcfc;
 }
 
 label span {

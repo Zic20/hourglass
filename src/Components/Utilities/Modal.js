@@ -8,9 +8,9 @@ const Modal = (props) => {
   return (
     <React.Fragment>
       {ReactDOM.createPortal(
-        <div className={styles.modal}>
+        <div className={`${styles.modal}`}>
           <div onClick={props.onClose} className={styles["modal-backdrop"]}></div>
-          <div className={styles["modal-dialog"]}>
+          <div className={`${styles["modal-dialog"]} ${styles[props.className]} `}>
             <div className={styles["modal-header"]}>
               <h3>{props.headerText}</h3>
             </div>

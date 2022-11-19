@@ -22,11 +22,28 @@ const getTimeSpent = (firstTime, secondTime) => {
       }
       return "";
     } else {
-      if (hoursDifference > 0) {
-        return `${hoursDifference}  ${hoursDifference > 1 ? "hrs" : "hr"}`;
+
+      if (minutesDifference < 0) {
+        if (hoursDifference > 0) {
+          hoursDifference -= 1;
+          minutesDifference += 60;
+        }
       }
-      return "";
+
+      let hourString = `${
+        hoursDifference > 0
+          ? hoursDifference + `${hoursDifference > 1 ? "hrs" : "hr"}`
+          : ""
+      }`;
+      
+      let minutesString = `${
+        minutesDifference > 0
+          ? minutesDifference + `${minutesDifference > 1 ? "mins" : "min"}`
+          : ""
+      }`;
+      return `${hourString} ${minutesString}`;
     }
+    return "";
   }
 };
 

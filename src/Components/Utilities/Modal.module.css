@@ -1,7 +1,7 @@
 .modal {
     position: absolute;
-    left:0;
-    top:0;
+    left: 0;
+    top: 0;
     width: 100vw;
     height: 100vh;
     z-index: 100;
@@ -11,25 +11,51 @@
     background: white;
     position: absolute;
     width: 50%;
-    top:50%;
-    left:50%;
-    transform: translate(-50%,-50%);
+    height: 85%;
+    /* height: 80%; */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     border-radius: .5rem;
-    overflow: hidden;
 }
+
+.modal-dialog.modal-dialog-scrollable {
+    background: white;
+    position: absolute;
+    width: 50%;
+    height: 85%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: .5rem;
+    overflow-y: scroll;
+}
+
+@media screen and (max-width: 768px) {
+    .modal-dialog,
+    .modal-dialog.modal-dialog-scrollable {
+        width: 95%;
+    }
+}
+
 
 .modal-backdrop {
     width: 100%;
     height: 100%;
-    background-color: hsla(0, 0%, 0%, 0.548);
+    background-color: hsla(0, 0%, 0%, 0.42);
 }
 
 .modal-dialog .modal-header {
     width: 100%;
     padding: 1.5rem 1rem;
-    background-color: blueviolet;
-    color: white;
-    text-align: left;
+    background-color: rgb(251, 252, 255);
+    color: rgb(5, 5, 11);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: .23rem;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .modal-dialog .modal-header h3 {
@@ -42,9 +68,9 @@
 }
 
 .modal-dialog .modal-body .modal-content {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
 }
 
-.modal-dialog .modal-body .modal-footer{
+.modal-dialog .modal-body .modal-footer {
     text-align: right;
 }

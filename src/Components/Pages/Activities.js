@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
+import ActivitiesForm from "../Forms/ActivitiesForm";
+import Button from "../Utilities/Button";
 import Card from "../Utilities/Card";
 import MyDatatable from "../Utilities/DataTableBase";
-import Input from "../Utilities/Inputs/Input";
+import Modal from "../Utilities/Modal";
+// import Input from "../Utilities/Inputs/Input";
 
 const columns = [
   // {
@@ -277,6 +280,7 @@ const data = [
 ];
 const Activities = () => {
   const [dataset, setDataset] = useState();
+  const [showForm, setShowForm] = useState(false);
   const options = { month: "long", day: "numeric", year: "numeric" };
   const option = { hour: "numeric", minute: "numeric" };
 
@@ -297,10 +301,33 @@ const Activities = () => {
     setDataset(data);
   }, []);
 
+  const weekChangeHandler = (event) => {};
+
+  const weekBlurHandler = (event) => {};
+
+  const openActivityForm = () => {
+    setShowForm(true);
+  };
+
+  const closeForm = () => {
+    setShowForm(false);
+  };
+
   return (
     <div>
+      {showForm && (
+        <Modal headerText="Add Activity" onClose={closeForm}>
+          <ActivitiesForm />
+        </Modal>
+      )}
       <Card className="card__mid">
         <h2 style={{ textAlign: "left", marginBottom: "1rem" }}>Activities</h2>
+        <div>
+          <Button className="btn__primary">Load List</Button>
+          <Button className="btn__action" onClick={openActivityForm}>
+            New Activity
+          </Button>
+        </div>
         <MyDatatable columns={columns} data={dataset} />
       </Card>
     </div>

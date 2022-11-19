@@ -216,12 +216,12 @@ const Signup = () => {
             </label>
           </div>
           <div className={styles["form__group"]}>
-            <Button type="button" className="btn__secondary">
+            <Button type="button" className="btn__secondary-rounded">
               Sign In
             </Button>
             <Button
               type="submit"
-              className="btn__primary"
+              className="btn__primary-rounded"
               disabled={!formIsValid ? true : false}
             >
               Sign Up

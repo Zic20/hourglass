@@ -11,7 +11,6 @@
     margin-left:.5rem;
     font-family: 'Open Sans', sans-serif;
     font-weight: 400;
-    /* text-transform: uppercase; */
 }
 
 .btn__rounded {
@@ -34,17 +33,20 @@
     outline: none;
 }
 
-.btn__primary {
+.btn__primary,
+.btn__primary-rounded {
     background-color: rgb(19, 82, 209);
     color: #fcfcfc;
     width: 10rem;
 }
 
-.btn__primary:disabled {
+.btn__primary:disabled,
+.btn__primary-rounded:disabled {
     background-color: rgb(79, 102, 146);
 }
 
-.btn__secondary {
+.btn__secondary,
+.btn__secondary-rounded {
     border: 1.2px solid #fcfcfc;
     color: #fcfcfc;
     box-shadow: 0 0.8rem 1rem rgba(0, 0, 0, 0.18);
@@ -57,12 +59,20 @@
     color: #fcfcfc;
 }
 
-.btn__action {
+.btn__action,
+.btn__action-rounded {
     width: auto;
     border-radius: 4px;
     background: rgba(28, 146, 93, 0.936);
     color: #fcfcfc;
     margin: .5rem .5rem;
+}
+
+.btn__primary-rounded,
+.btn__secondary-rounded,
+.btn__action-rounded,
+.form__link-rounded {
+    border-radius: 1.3rem;
 }
 
 .btn__delete {
@@ -73,14 +83,16 @@
     margin: .5rem .5rem;
 }
 
-.form__link {
+.form__link,
+.form__link-rounded {
     color: #fcfcfc;
     cursor: pointer;
     display: inline-block;
     transition: all .3s;
 }
 
-.form__link:hover {
+.form__link:hover,
+.form__link-rounded:hover {
     transform: rotate(2deg) scale(1.13);
     background-color: rgba(19, 82, 209, 0.642);
     backface-visibility: hidden;

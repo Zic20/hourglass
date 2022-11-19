@@ -9,6 +9,10 @@
     background-image: linear-gradient(136deg, rgba(19, 82, 209, 0.642) 0 38%, rgba(28, 146, 93, 0.936) 79%), url(./assets/images/photo-1541480601022-2308c0f02487.avif);
     background-size: cover;
     background-position: center;
+    /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif; */
+      font-family: 'Open Sans', sans-serif;
 }
 
 .form {
@@ -47,6 +51,7 @@
 .form__login h2 {
     color: #ffffff;
     margin-left: .5rem;
+    letter-spacing: .12rem;
 }
 
 .form__login input:nth-child(1) {
