@@ -43,7 +43,6 @@ const getTimeSpent = (firstTime, secondTime) => {
       }`;
       return `${hourString} ${minutesString}`;
     }
-    return "";
   }
 };
 

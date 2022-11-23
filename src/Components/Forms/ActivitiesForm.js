@@ -7,7 +7,7 @@ import {
   getTimeSpent,
 } from "../../modules/timecalculation";
 
-const ActivitiesForm = () => {
+const ActivitiesForm = (props) => {
   const [week, setWeek] = useState("");
   const [date, setDate] = useState("");
   const [activity, setActivity] = useState("");
@@ -16,6 +16,8 @@ const ActivitiesForm = () => {
   const [endTime, setEndTime] = useState("");
   const [timeSpent, setTimeSpent] = useState("");
   const [formIsValid, setFormIsValid] = useState(false);
+  const options = { month: "long", day: "numeric", year: "numeric" };
+  const option = { hour: "numeric", minute: "numeric" };
 
   const weekRef = useRef();
   const dateRef = useRef();
@@ -26,14 +28,20 @@ const ActivitiesForm = () => {
   const timeSpentRef = useRef();
 
   useEffect(() => {
-    setFormIsValid(
-      week !== "" &&
-        date !== "" &&
-        activity !== "" &&
-        activityType !== "" &&
-        startTime !== "" &&
-        endTime !== ""
-    );
+    const identifier = setTimeout(() => {
+      setFormIsValid(
+        week !== "" &&
+          date !== "" &&
+          activity !== "" &&
+          activityType !== "" &&
+          startTime !== "" &&
+          endTime !== ""
+      );
+    }, 500);
+
+    return () => {
+      clearTimeout(identifier);
+    };
   }, [week, date, activity, activityType, startTime, endTime]);
 
   const startTimeBlurHandler = (event) => {
@@ -91,15 +99,24 @@ const ActivitiesForm = () => {
     ) {
       return;
     }
-    const data = {
-      Week: week,
-      Date: date,
-      Activity: activity,
-      ActivityType: activityType,
-      StartTime: startTime,
-      EndTime: endTime,
-    };
-    console.log(data);
+
+    props.onAddActivity({
+      StudentID: "09190",
+      id: null,
+      week: week,
+      date: new Date(date).toLocaleDateString("en-Monrovia", options),
+      activity: activity,
+      activityType: activityType,
+      startTime: new Date(`${date} ${startTime}`).toLocaleTimeString(
+        "en-US",
+        option
+      ),
+      endTime: new Date(`${date} ${endTime}`).toLocaleTimeString(
+        "en-US",
+        option
+      ),
+      timeInput: timeSpent.trim(),
+    });
   };
 
   const onCancelHandler = () => {
@@ -147,11 +164,13 @@ const ActivitiesForm = () => {
         />
       </div>
       <div className={formStyles["form__group-inline"]}>
-        <label>Activity Type</label>
-        <select onChange={activityTypeChangeHandler} ref={activityTypeRef}>
-          <option></option>
-          <option>Client Contact</option>
-        </select>
+        <Input
+          inputtype="select"
+          options={[{ value: 1, text: "Client Contact" }]}
+          onChange={activityTypeChangeHandler}
+          ref={activityTypeRef}
+          label="Activity Type"
+        />
       </div>
       <div className={formStyles["form__group-inline"]}>
         <Input
@@ -178,6 +197,7 @@ const ActivitiesForm = () => {
           id="timeSpent"
           label="Time Spent"
           type="text"
+          ref={timeSpentRef}
           readOnly={true}
           value={timeSpent}
         />
@@ -192,7 +212,7 @@ const ActivitiesForm = () => {
         >
           Save
         </Button>
-        <Button className="btn__cancel" onClick={onCancelHandler}>
+        <Button type="button" className="btn__cancel" onClick={onCancelHandler}>
           Cancel
         </Button>
       </div>

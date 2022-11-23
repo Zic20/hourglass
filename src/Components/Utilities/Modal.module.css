@@ -11,7 +11,7 @@
     background: white;
     position: absolute;
     width: 50%;
-    height: 85%;
+    /* height: 85%; */
     /* height: 80%; */
     top: 50%;
     left: 50%;
@@ -46,6 +46,8 @@
 }
 
 .modal-dialog .modal-header {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
     width: 100%;
     padding: 1.5rem 1rem;
     background-color: rgb(251, 252, 255);
