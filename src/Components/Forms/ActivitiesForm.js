@@ -171,6 +171,10 @@ const ActivitiesForm = (props) => {
           ref={activityTypeRef}
           label="Activity Type"
         />
+        {/* <select className={styles.select} onChange={activityTypeChangeHandler} ref={activityTypeRef}>
+          <option></option>
+          <option>Client Contact</option>
+        </select> */}
       </div>
       <div className={formStyles["form__group-inline"]}>
         <Input

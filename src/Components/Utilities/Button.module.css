@@ -59,6 +59,11 @@
     color: #fcfcfc;
 }
 
+.btn__dark {
+    color: white;
+    background-color: rgba(0, 0, 0, 0.913);
+}
+
 .btn__action,
 .btn__action-rounded {
     width: auto;

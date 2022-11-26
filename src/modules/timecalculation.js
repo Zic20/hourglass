@@ -22,7 +22,6 @@ const getTimeSpent = (firstTime, secondTime) => {
       }
       return "";
     } else {
-
       if (minutesDifference < 0) {
         if (hoursDifference > 0) {
           hoursDifference -= 1;
@@ -35,7 +34,7 @@ const getTimeSpent = (firstTime, secondTime) => {
           ? hoursDifference + `${hoursDifference > 1 ? "hrs" : "hr"}`
           : ""
       }`;
-      
+
       let minutesString = `${
         minutesDifference > 0
           ? minutesDifference + `${minutesDifference > 1 ? "mins" : "min"}`
@@ -57,5 +56,10 @@ const validateTimeInputs = (startTime, endTime) => {
   return true;
 };
 
-export { getTimeSpent };
-export { validateTimeInputs };
+const validateDateInputs = (startDate, endDate) => {
+  let firstDate = new Date(startDate);
+  let secondDate = new Date(endDate);
+
+  return !firstDate.getMilliseconds() > secondDate.getMilliseconds();
+};
+export { validateTimeInputs, validateDateInputs, getTimeSpent };

@@ -27,3 +27,14 @@
     margin-top: 1.4rem;
     padding-right: 2.2rem;
 }
+
+
+@media screen and (max-width:768px) {
+    .studentForm {
+        flex-direction: column;
+    }
+
+    .avatar {
+        border-right: none;
+    }
+}

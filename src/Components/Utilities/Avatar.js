@@ -46,7 +46,7 @@ const Avatar = React.forwardRef((props, ref) => {
     <div className={styles.avatarContainer}>
       <div className={styles.imageContainer}>
         {imageState.hasImage && (
-          <img alt="image" ref={imgRef} src={imageState.src} />
+          <img alt="Insert here" ref={imgRef} src={imageState.src} />
         )}
         {!imageState.hasImage && (
           <div className={styles.placeholder}>

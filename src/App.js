@@ -1,12 +1,11 @@
 import React from "react";
 import "./App.css";
-import Activities from "./Components/Pages/Activities";
+import PracticumInstructorForm from "./Components/Forms/PracticumInstructorForm";
 
 function App() {
   return (
     <div className="App">
-      
-      <Activities/>
+      <PracticumInstructorForm/>
     </div>
   );
 }

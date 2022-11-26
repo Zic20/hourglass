@@ -1,21 +1,27 @@
-import React from "react";
+import React, { Fragment } from "react";
 import styles from "./Input.module.css";
 const Input = React.forwardRef((props, ref) => {
   return (
-    <div>
+    <Fragment>
       <label className={styles.label} htmlFor={props.id}>
         {props.label}
       </label>
       {props.inputtype === "select" && (
-        <select className={styles.select} ref={ref}>
+        <select className={styles.select} ref={ref} onChange={props.onChange}>
           <option value="">--Select Option--</option>
           {props.options.map((option) => {
-            return <option key={option.value} value={option.value}>{option.text}</option>;
+            return (
+              <option key={option.value} value={option.value}>
+                {option.text}
+              </option>
+            );
           })}
         </select>
       )}
       {props.inputtype === "textarea" && (
-        <textarea className={styles.textarea} {...props}>{props.children}</textarea>
+        <textarea className={styles.textarea} {...props}>
+          {props.children}
+        </textarea>
       )}
 
       {props.inputtype !== "textarea" && props.inputtype !== "select" && (
@@ -24,16 +30,16 @@ const Input = React.forwardRef((props, ref) => {
           className={styles.input}
           onChange={props.onChange}
           onBlur={props.onBlur}
+          required={props.isrequired === "true"?true:false}
           {...props}
-          required={props.isRequired}
           readOnly={props.readOnly}
         />
       )}
 
-      {props.isRequired && (
-        <p className={styles.isInvalid}>{`${props.label} is required`}</p>
+      {props.isrequired === "true" && (
+        <p className={styles.isInvalid}>* {`${props.label} is required`}</p>
       )}
-    </div>
+    </Fragment>
   );
 });
 

@@ -4,10 +4,9 @@ import Card from "../Utilities/Card";
 import styles from "./StudentProfile.module.css";
 import formStyles from "./Form.module.css";
 import Input from "../Utilities/Inputs/Input";
-import Avatar from "../Utilities/Avatar";
 
-const StudentProfile = () => {
-  const [studentID, setStudentID] = useState("");
+const PracticumInstructorForm = () => {
+  const [agency, setAgency] = useState("");
   const [firstName, setfirstName] = useState("");
   const [middleName, setmiddleName] = useState("");
   const [lastName, setlastName] = useState("");
@@ -15,7 +14,7 @@ const StudentProfile = () => {
   const [phoneNo, setPhoneNo] = useState("");
   const [formIsValid, setFormIsValid] = useState(false);
 
-  const studentIDRef = useRef();
+  const agencyRef = useRef();
   const firstNameRef = useRef();
   const middleNameRef = useRef();
   const lastNameRef = useRef();
@@ -25,17 +24,14 @@ const StudentProfile = () => {
   useEffect(() => {
     const identifier = setTimeout(() => {
       setFormIsValid(
-        studentID !== "" &&
-          firstName !== "" &&
-          lastName !== "" &&
-          phoneNo !== ""
+        agency !== "" && firstName !== "" && lastName !== "" && phoneNo !== ""
       );
     }, 500);
 
     return () => {
       clearTimeout(identifier);
     };
-  }, [studentID, firstName, lastName, phoneNo]);
+  }, [agency, firstName, lastName, phoneNo]);
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
@@ -43,7 +39,7 @@ const StudentProfile = () => {
       return;
     }
     console.log({
-      StudentID: studentID,
+      Agency: agency,
       FirstName: firstName,
       MiddleName: middleName,
       LastName: lastName,
@@ -52,8 +48,8 @@ const StudentProfile = () => {
     });
   };
 
-  const studentIDChangeHandler = (event) => {
-    setStudentID(event.target.value.trim());
+  const agencyChangeHandler = (event) => {
+    setAgency(event.target.value.trim());
   };
 
   const firstNameChangeHandler = (event) => {
@@ -77,29 +73,24 @@ const StudentProfile = () => {
   };
 
   const formCancelHandler = () => {
-    studentIDRef.current.clear();
-    firstNameRef.current.clear();
-    middleNameRef.current.clear();
-    lastNameRef.current.clear();
-    emailRef.current.clear();
-    phoneRef.current.clear();
+    agencyRef.current.value = "";
+    firstNameRef.current.value = "";
+    middleNameRef.current.value = "";
+    lastNameRef.current.value = "";
+    emailRef.current.value = "";
+    phoneRef.current.value = "";
   };
 
   return (
     <Card>
       <form onSubmit={onSubmitHandler} className={styles.studentForm}>
-        <div className={styles.avatar}>
-          <Avatar/>
-        </div>
         <div className={styles.form}>
           <div className={formStyles["form__group-inline"]}>
             <Input
-              id="studentID"
-              label="Student ID"
+              id="agency"
+              label="Agency"
               type="text"
-              placeholder="Student ID"
-              onChange={studentIDChangeHandler}
-              ref={studentIDRef}
+              placeholder="Agency"
             />
           </div>
           <div className={formStyles["form__group-inline"]}>
@@ -158,7 +149,7 @@ const StudentProfile = () => {
               Save
             </Button>
             <Button onClick={formCancelHandler} className="btn__cancel">
-               Cancel
+              Cancel
             </Button>
           </div>
         </div>
@@ -167,4 +158,4 @@ const StudentProfile = () => {
   );
 };
 
-export default StudentProfile;
+export default PracticumInstructorForm;
