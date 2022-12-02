@@ -169,9 +169,10 @@
 }
 
 .sidebar .nav-list li {
-    padding: 1rem 1rem;
+    padding: 1rem .5rem;
     transition: all .5s ease;
     cursor: pointer;
+    text-align: left;
 }
 
 .sidebar .nav-list li:hover {

@@ -1,4 +1,5 @@
-import React, { useState, useReducer, useEffect } from "react";
+import React, { useState, useReducer, useEffect, useContext } from "react";
+import authContext from "../../store/auth-context";
 import Button from "../Utilities/Button";
 import styles from "./Login.module.css";
 import "./Form.module.css";
@@ -6,10 +7,10 @@ import "./Form.module.css";
 // this reducer is used to validate user email input and manage the email state
 const emailReducer = (state, action) => {
   if (action.type === "USER_INPUT") {
-    return { value: action.val, isValid: action.val.trim().includes("@") };
+    return { value: action.val, isValid: action.val.trim().length > 0};
   }
   if (action.type === "BLUR") {
-    return { value: state.value, isValid: state.value.trim().includes("@") };
+    return { value: state.value, isValid: state.value.trim().length > 0 };
   }
 
   return { value: "", isValid: false };
@@ -18,10 +19,10 @@ const emailReducer = (state, action) => {
 // this reducer is used to validate user password input and manage the password state
 const passwordReducer = (state, action) => {
   if (action.type === "USER_INPUT") {
-    return { value: action.val, isValid: action.val.trim().length > 7 };
+    return { value: action.val, isValid: action.val.trim().length > 0 };
   }
   if (action.type === "BLUR") {
-    return { value: state.value, isValid: state.value.trim().length > 7 };
+    return { value: state.value, isValid: state.value.trim().length > 0 };
   }
   return { value: "", isValid: false };
 };
@@ -39,12 +40,11 @@ const Login = () => {
     isValid: null,
   });
 
+  const authCtx = useContext(authContext);
+
   const onSubmitHandler = (event) => {
     event.preventDefault();
-    console.log({
-      username: emailState.value,
-      password: passwordState.value,
-    });
+    authCtx.login(emailState.value, passwordState.value);
   };
 
   // This effect hook is used to change the formIsValid state whenever emailState.isValid or passwordState.isValid changes
@@ -78,19 +78,21 @@ const Login = () => {
         <div className={styles["form__signup"]}>
           <h1 className={styles["heading__primary"]}>Welcome!</h1>
           <p>Create your account For Free!</p>
-          <Button type="button" className="btn__secondary-rounded">Sign Up</Button>
+          <Button type="button" className="btn__secondary-rounded">
+            Sign Up
+          </Button>
         </div>
         <div className={styles["form__login"]}>
           <h2>Login</h2>
           <div className={styles["form__group"]}>
             <input
-              type="email"
-              name="email"
-              id="email"
+              type="text"
+              name="username"
+              id="username"
               onChange={emailOnChangeHandler}
               onBlur={emailOnBlurHandler}
               className={styles["form__input"]}
-              placeholder="Enter username or email"
+              placeholder="Enter username"
               required
             />
             <label htmlFor="email" className={styles["form__label"]}>
@@ -113,16 +115,23 @@ const Login = () => {
             </label>
           </div>
           <div className={styles["form__group"]}>
-            <Button type="button" className="btn__secondary-rounded" disabled={false}>
+            <Button
+              type="button"
+              className="btn__secondary-rounded"
+              disabled={false}
+            >
               Sign Up
             </Button>
             <Button
               type="submit"
               className="btn__primary-rounded"
-              disabled={!formIsValid ? true : false}>Sign In</Button>
-            <Button
-              type="button"
-              className="form__link-rounded">Forgot password?</Button>
+              disabled={!formIsValid ? true : false}
+            >
+              Sign In
+            </Button>
+            <Button type="button" className="form__link-rounded">
+              Forgot password?
+            </Button>
           </div>
         </div>
       </form>

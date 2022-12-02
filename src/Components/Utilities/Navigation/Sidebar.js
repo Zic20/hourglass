@@ -1,16 +1,24 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import styles from "./Sidebar.module.css";
 import Button from "../Button";
+import authContext from "../../../store/auth-context";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChartLine,faBookOpen,faListCheck, faSquarePollVertical } from "@fortawesome/free-solid-svg-icons";
+import { faHandPointLeft, faUser } from "@fortawesome/free-regular-svg-icons";
 
 const Sidebar = () => {
   const [isClosed, setIsClosed] = useState(false);
-
+  const authCtx = useContext(authContext);
   const onCloseHandler = (event) => {
     if (event.target.checked) {
       setIsClosed(true);
     } else {
       setIsClosed(false);
     }
+  };
+
+  const onLogoutHandler = () => {
+    authCtx.logout();
   };
 
   return (
@@ -44,11 +52,13 @@ const Sidebar = () => {
         </div>
 
         <ul className={styles["nav-list"]}>
-          <li>Dashboard</li>
-          <li>Learning Contracts</li>
-          <li>Activities</li>
-          <li>Summary Timesheet</li>
-          <li>Profile</li>
+          <li>
+            <FontAwesomeIcon icon={faChartLine} /> &nbsp; Dashboard
+          </li>
+          <li><FontAwesomeIcon icon={faBookOpen} /> &nbsp;Learning Contracts</li>
+          <li><FontAwesomeIcon icon={faListCheck} /> &nbsp;Activities</li>
+          <li><FontAwesomeIcon icon={faSquarePollVertical} /> &nbsp;Summary Timesheet</li>
+          <li><FontAwesomeIcon icon={faUser} /> &nbsp;Profile</li>
         </ul>
         <input
           type="checkbox"
@@ -68,7 +78,9 @@ const Sidebar = () => {
           </label>
         )}
 
-        <Button className="btn__dark">Exit</Button>
+        <Button onClick={onLogoutHandler} className="btn__dark">
+        <FontAwesomeIcon icon={faHandPointLeft} /> &nbsp;Exit
+        </Button>
       </div>
     </Fragment>
   );

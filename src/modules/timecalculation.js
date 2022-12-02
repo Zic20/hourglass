@@ -62,4 +62,15 @@ const validateDateInputs = (startDate, endDate) => {
 
   return !firstDate.getMilliseconds() > secondDate.getMilliseconds();
 };
-export { validateTimeInputs, validateDateInputs, getTimeSpent };
+
+const convertTime = (time) => {
+  let convertedTime = time.split(":");
+  if (convertedTime[0] > 12) {
+    return `${convertedTime[0] - 12}:${convertedTime[1]} PM`;
+  } else if (convertedTime[0] === "00") {
+    return `12:${convertedTime[1]} AM`;
+  } else {
+    return `${time} AM`;
+  }
+};
+export { validateTimeInputs, validateDateInputs, getTimeSpent,convertTime };

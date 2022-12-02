@@ -1,39 +1,14 @@
-import React, { useReducer, useState, Fragment } from "react";
+import React, { useReducer, useState, Fragment, useEffect } from "react";
 import ActivitiesForm from "../Forms/ActivitiesForm";
 import Button from "../Utilities/Button";
 import Card from "../Utilities/Card";
 import MyDatatable from "../Utilities/DataTableBase";
 import Modal from "../Utilities/Modal";
-
-const columns = [
-  {
-    name: "Activity",
-    selector: (row) => row.activity,
-    wrap:true
-  },
-  {
-    name: "Date",
-    sortable: true,
-    selector: (row) => row.date,
-  },
-  {
-    name: "Start Time",
-    sortable: true,
-    selector: (row) => row.startTime,
-  },
-  {
-    name: "End Time",
-    selector: (row) => row.endTime,
-  },
-  {
-    name: "Time Input",
-    selector: (row) => row.timeInput,
-  },
-  {
-    name: "Activity Type",
-    selector: (row) => row.activityType,
-  },
-];
+import { RequestHelper } from "../../modules/Requester";
+import { getTimeSpent, convertTime } from "../../modules/timecalculation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit } from "@fortawesome/free-regular-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const activitiesReducer = (state, action) => {
   if (action.type === "ADD") {
@@ -41,33 +16,170 @@ const activitiesReducer = (state, action) => {
     const updatedState = state.activities.concat(action.activity);
     return { activities: updatedState };
   }
+
+  if (action.type === "UPDATE") {
+    const result = state.activities.filter(
+      (activity) => activity.id !== action.id
+    );
+    result.push({ id: action.id, ...action.activity });
+    return { activities: result };
+  }
+
+  if (action.type === "REMOVE") {
+    const result = state.activities.filter(
+      (activity) => activity.id !== action.id
+    );
+    return { activities: result };
+  }
   return { activities: [] };
 };
+
 const Activities = () => {
   const [showForm, setShowForm] = useState(false);
+  const [update, setUpdate] = useState(false);
+  const [activityID, setActivityID] = useState("");
+
   const [activitiesState, dispatchActivities] = useReducer(activitiesReducer, {
     activities: [],
   });
 
+  useEffect(() => {
+    getActivities();
+  }, []);
+
+  const columns = [
+    {
+      name: "Activity",
+      width: "200px",
+      selector: (row) => row.Activity,
+      wrap: true,
+    },
+    {
+      name: "Date",
+      sortable: true,
+      selector: (row) => row.Date,
+    },
+    {
+      name: "Start Time",
+      sortable: true,
+      selector: (row) => row.StartTime,
+    },
+    {
+      name: "End Time",
+      selector: (row) => row.EndTime,
+    },
+    {
+      name: "Time Input",
+      selector: (row) => row.TimeInput,
+    },
+    {
+      name: "Activity Type",
+      wrap: true,
+      selector: (row) => row.ActivityType,
+    },
+    {
+      name: "Action",
+      selector: (row) => row.id,
+      cell: (row) => (
+        <>
+          <Button onClick={onUpdateHandler} value={row.id}>
+            <FontAwesomeIcon value={row.id} icon={faEdit}></FontAwesomeIcon>
+          </Button>
+          <Button onClick={onDeleteHandler} value={row.id}>
+            <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+          </Button>
+        </>
+      ),
+      style: {
+        textAlign: "left",
+        fontSize: "1rem",
+      },
+    },
+  ];
+
+  const getActivities = async (week = 1) => {
+    const option = { year: "numeric", month: "long", day: "numeric" };
+    const result = await RequestHelper.get(`activities?week=${week}`);
+    if (result) {
+      if (typeof result === "object") {
+        result.forEach((activity) => {
+          let date = new Date(activity.Date);
+          date = date.toLocaleDateString("en-Monrovia", option);
+          let startTime = convertTime(activity.StartTime);
+          let endTime = convertTime(activity.EndTime);
+          const modifiedActivity = {
+            ...activity,
+            TimeInput: getTimeSpent(activity.StartTime, activity.EndTime),
+            Date: date,
+            StartTime: startTime,
+            EndTime: endTime,
+          };
+          dispatchActivities({ type: "ADD", activity: modifiedActivity });
+        });
+      }
+    }
+  };
+
+  const onAddActivityHandler = (data, id = null) => {
+    const activityID = id;
+    if (activityID !== null) {
+      dispatchActivities({ type: "UPDATE", activity: data, id: activityID });
+    } else {
+      dispatchActivities({ type: "ADD", activity: data });
+    }
+  };
+  const onDeleteHandler = async (event) => {
+    let id = !event.target.value
+      ? parseInt(event.target.parentElement.value)
+      : parseInt(event.target.value);
+
+    if (
+      window.confirm(
+        "Do you want to delete this activity? Deleted activities cannot be retrieved!"
+      )
+    ) {
+      const result = await RequestHelper.delete(`activities/${id}`);
+      if (result && typeof result === "object") {
+        dispatchActivities({ type: "REMOVE", id: id });
+        console.log(result.message);
+      }
+    }
+  };
+
+  const onUpdateHandler = (event) => {
+    if (!event.target.value) {
+      setActivityID(event.target.parentElement.value);
+    } else {
+      setActivityID(event.target.value);
+    }
+    setUpdate(true);
+    setShowForm(true);
+  };
   const openActivityForm = () => {
     setShowForm(true);
   };
 
   const closeForm = () => {
     setShowForm(false);
-  };
-
-  const onAddActivity = (activity) => {
-    dispatchActivities({ type: "ADD", activity: activity });
+    setUpdate(false);
+    setActivityID("");
   };
 
   return (
     <Fragment>
-      {showForm && (
+      {/* Opens form for saving new activity */}
+      {showForm && !update && (
         <Modal headerText="Add Activity" onClose={closeForm}>
-          <ActivitiesForm onAddActivity={onAddActivity} />
+          <ActivitiesForm />
         </Modal>
       )}
+      {/* Opens form for updating existing activity */}
+      {showForm && activityID.length > 0 && update && (
+        <Modal headerText="Add Activity" onClose={closeForm}>
+          <ActivitiesForm id={activityID} onSave={onAddActivityHandler}/>
+        </Modal>
+      )}
+
       <Card className="card__mid">
         <h2 style={{ textAlign: "left", marginBottom: "1rem" }}>Activities</h2>
         <div>

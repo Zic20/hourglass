@@ -6,18 +6,6 @@ const Input = React.forwardRef((props, ref) => {
       <label className={styles.label} htmlFor={props.id}>
         {props.label}
       </label>
-      {props.inputtype === "select" && (
-        <select className={styles.select} ref={ref} onChange={props.onChange}>
-          <option value="">--Select Option--</option>
-          {props.options.map((option) => {
-            return (
-              <option key={option.value} value={option.value}>
-                {option.text}
-              </option>
-            );
-          })}
-        </select>
-      )}
       {props.inputtype === "textarea" && (
         <textarea className={styles.textarea} {...props}>
           {props.children}

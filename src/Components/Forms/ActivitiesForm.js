@@ -5,19 +5,32 @@ import Input from "../Utilities/Inputs/Input";
 import {
   validateTimeInputs,
   getTimeSpent,
+  convertTime,
 } from "../../modules/timecalculation";
+import { RequestHelper } from "../../modules/Requester";
+import SelectInput from "../Utilities/Inputs/Select";
+
+const activityTypes = [
+  { value: 1, text: "Client Contact" },
+  { value: 2, text: "Instructor Conferences" },
+  { value: 3, text: "Meetings/Conferences Outside Agency" },
+  { value: 4, text: "Orientation Training" },
+  { value: 5, text: "Observation" },
+  { value: 6, text: "Paperwork" },
+  { value: 7, text: "Other" },
+];
 
 const ActivitiesForm = (props) => {
   const [week, setWeek] = useState("");
   const [date, setDate] = useState("");
   const [activity, setActivity] = useState("");
-  const [activityType, setActivityType] = useState("");
+  const [activityType, setActivityType] = useState(0);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [timeSpent, setTimeSpent] = useState("");
   const [formIsValid, setFormIsValid] = useState(false);
-  const options = { month: "long", day: "numeric", year: "numeric" };
-  const option = { hour: "numeric", minute: "numeric" };
+  const [saveMessage, setSaveMessage] = useState("");
+  const [id, setID] = useState();
 
   const weekRef = useRef();
   const dateRef = useRef();
@@ -53,6 +66,26 @@ const ActivitiesForm = (props) => {
     }
   };
 
+  useEffect(() => {
+    const getActivity = async (id) => {
+      const result = await RequestHelper.get(`activities/${id}`);
+      return result;
+    };
+    if (props.id) {
+      getActivity(props.id).then((response) => {
+        setActivity(response.Activity);
+        setDate(response.Date);
+        setStartTime(response.StartTime);
+        setEndTime(response.EndTime);
+        setActivityType(response.ActivityType);
+        setWeek(response.week);
+        const timeInput = getTimeSpent(response.StartTime, response.EndTime);
+        setTimeSpent(timeInput);
+      });
+      setID(props.id);
+    }
+  }, []);
+
   const endTimeBlurHandler = (event) => {
     if (validateTimeInputs(startTime, event.target.value)) {
       setEndTime(event.target.value);
@@ -87,36 +120,42 @@ const ActivitiesForm = (props) => {
     setActivityType(event.target.value);
   };
 
-  const onSubmitHandler = (event) => {
+  const onSubmitHandler = async (event) => {
     event.preventDefault();
-    if (
-      week === "" ||
-      date === "" ||
-      activity === "" ||
-      activityType === "" ||
-      startTime === "" ||
-      endTime === ""
-    ) {
-      return;
+
+    let data = {
+      Week: week,
+      Date: date,
+      Activity: activity,
+      ActivityType: activityType,
+      StartTime: startTime,
+      EndTime: endTime,
+    };
+
+    let result;
+
+    if (id.length > 0) {
+      result = await RequestHelper.update(`activities/${id}`, data);
+    } else {
+      result = await RequestHelper.post("activities", data);
     }
 
-    props.onAddActivity({
-      StudentID: "09190",
-      id: null,
-      week: week,
-      date: new Date(date).toLocaleDateString("en-Monrovia", options),
-      activity: activity,
-      activityType: activityType,
-      startTime: new Date(`${date} ${startTime}`).toLocaleTimeString(
-        "en-US",
-        option
-      ),
-      endTime: new Date(`${date} ${endTime}`).toLocaleTimeString(
-        "en-US",
-        option
-      ),
-      timeInput: timeSpent.trim(),
-    });
+    if (typeof result === "object") {
+      setSaveMessage(result.message);
+      if (result.id > 0) {
+        data = {
+          ...data,
+          ActivityType: activityTypes[result.id - 1].text,
+          StartTime: convertTime(startTime),
+          EndTime: convertTime(endTime),
+          TimeInput: getTimeSpent(startTime,endTime),
+          Date: new Date(date).toLocaleDateString("en-Monrovia",{ year: "numeric", month: "long", day: "numeric" })
+        };
+      }
+      props.onSave(data, result.id);
+    } else {
+      setSaveMessage("Something went wrong please try again");
+    }
   };
 
   const onCancelHandler = () => {
@@ -128,7 +167,15 @@ const ActivitiesForm = (props) => {
     activityTypeRef.current.selectedIndex = 0;
     setTimeSpent("");
     setFormIsValid(false);
+    setActivity("");
+    setDate("");
+    setStartTime("");
+    setEndTime("");
+    setActivityType("");
+    setWeek("");
+    setID("");
   };
+
   return (
     <form onSubmit={onSubmitHandler}>
       <div className={formStyles["form__group-inline"]}>
@@ -140,6 +187,7 @@ const ActivitiesForm = (props) => {
           onChange={weekChangeHandler}
           onBlur={weekBlurHandler}
           ref={weekRef}
+          defaultValue={week}
         />
       </div>
       <div className={formStyles["form__group-inline"]}>
@@ -150,6 +198,7 @@ const ActivitiesForm = (props) => {
           onChange={dateChangeHandler}
           onBlur={dateBlurHandler}
           ref={dateRef}
+          defaultValue={date}
         />
       </div>
       <div className={formStyles["form__group-inline"]}>
@@ -161,20 +210,18 @@ const ActivitiesForm = (props) => {
           onChange={activityChangeHandler}
           onBlur={activityBlurHandler}
           ref={activityRef}
+          defaultValue={activity}
         />
       </div>
       <div className={formStyles["form__group-inline"]}>
-        <Input
+        <SelectInput
           inputtype="select"
-          options={[{ value: 1, text: "Client Contact" }]}
+          selectedIndex={activityType}
+          options={activityTypes}
           onChange={activityTypeChangeHandler}
           ref={activityTypeRef}
           label="Activity Type"
         />
-        {/* <select className={styles.select} onChange={activityTypeChangeHandler} ref={activityTypeRef}>
-          <option></option>
-          <option>Client Contact</option>
-        </select> */}
       </div>
       <div className={formStyles["form__group-inline"]}>
         <Input
@@ -183,6 +230,7 @@ const ActivitiesForm = (props) => {
           type="time"
           onBlur={startTimeBlurHandler}
           ref={startTimeRef}
+          defaultValue={startTime}
         />
       </div>
       <div className={formStyles["form__group-inline"]}>
@@ -190,9 +238,10 @@ const ActivitiesForm = (props) => {
           id="endTime"
           label="End Time"
           type="time"
-          readOnly={startTime.trim() !== "" ? false : true}
+          readOnly={startTime !== "" ? false : true}
           onBlur={endTimeBlurHandler}
           ref={endTimeRef}
+          defaultValue={endTime}
         />
       </div>
 
@@ -203,11 +252,12 @@ const ActivitiesForm = (props) => {
           type="text"
           ref={timeSpentRef}
           readOnly={true}
-          value={timeSpent}
+          defaultValue={timeSpent}
         />
       </div>
+      <div className={formStyles["form__message"]}>{saveMessage}</div>
 
-      <div style={{ textAlign: "center" }}>
+      <div className={formStyles["form__message"]}>
         <Button
           type="submit"
           className="btn__primary"
@@ -224,4 +274,4 @@ const ActivitiesForm = (props) => {
   );
 };
 
-export default ActivitiesForm;
+export default React.memo(ActivitiesForm);
