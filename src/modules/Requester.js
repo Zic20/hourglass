@@ -7,6 +7,7 @@ class Requester {
   }
 
   get = async (url) => {
+    this.error = false;
     try {
       const response = await fetch(this.baseUrl + url, {
         headers: {
@@ -30,6 +31,7 @@ class Requester {
 
   post = async (url, data) => {
     const userdata = data;
+    this.error = false;
     try {
       const response = await fetch(this.baseUrl + url, {
         method: "POST",

@@ -23,6 +23,8 @@ const activityTypes = [
 const ActivitiesForm = (props) => {
   const [week, setWeek] = useState("");
   const [date, setDate] = useState("");
+  const [startDate,setStartDate] = useState("");
+  const [endDate,setEndDate] = useState("");
   const [activity, setActivity] = useState("");
   const [activityType, setActivityType] = useState(0);
   const [startTime, setStartTime] = useState("");
@@ -44,11 +46,8 @@ const ActivitiesForm = (props) => {
 
     const fetchData = async () => {
       if (props.id) {
-        const result = RequestHelper.get(
-          `activities/${props.id}`
-        );
-  
-        const {data, error} = await result;
+        const result = RequestHelper.get(`activities/${props.id}`);
+        const { data, error } = await result;
         if (data && !error) {
           setActivity(data.Activity);
           setDate(data.Date);
@@ -58,13 +57,20 @@ const ActivitiesForm = (props) => {
           setWeek(data.Week);
           const timeInput = getTimeSpent(data.StartTime, data.EndTime);
           setTimeSpent(timeInput);
+          getWeekDetail(data.Week);
         }
         setID(props.id);
       }
+    };
+    fetchData();
+    if (props.week) {
+      setWeek(props.week);
     }
 
-    fetchData();
-    
+    if(props.maxDate && props.minDate){
+      setStartDate(props.minDate);
+      setEndDate(props.maxDate);
+    }
   }, []);
 
   useEffect(() => {
@@ -84,6 +90,13 @@ const ActivitiesForm = (props) => {
     };
   }, [week, date, activity, activityType, startTime, endTime]);
 
+  const getWeekDetail = async (week) => {
+      const {data, error} =await RequestHelper.get(`learningcontracts?week=${week}`);
+      if(!error){
+        setStartDate(data.StartDate);
+        setEndDate(data.EndDate);
+      }
+  }
   const startTimeBlurHandler = (event) => {
     setStartTime(event.target.value);
 
@@ -147,7 +160,6 @@ const ActivitiesForm = (props) => {
 
     const { data, error } = await result;
 
-
     if (!error) {
       setMessage(data.message);
       if (data.id > 0) {
@@ -174,7 +186,6 @@ const ActivitiesForm = (props) => {
   };
 
   const onCancelHandler = () => {
-    weekRef.current.value = "";
     dateRef.current.value = "";
     activityRef.current.value = "";
     startTimeRef.current.value = "";
@@ -187,7 +198,6 @@ const ActivitiesForm = (props) => {
     setStartTime("");
     setEndTime("");
     setActivityType("");
-    setWeek("");
     setID("");
   };
 
@@ -203,7 +213,7 @@ const ActivitiesForm = (props) => {
           onBlur={weekBlurHandler}
           ref={weekRef}
           defaultValue={week}
-          readOnly={props.id}
+          readOnly={true}
         />
       </div>
       <div className={formStyles["form__group-inline"]}>
@@ -215,6 +225,8 @@ const ActivitiesForm = (props) => {
           onBlur={dateBlurHandler}
           ref={dateRef}
           defaultValue={date}
+          min={startDate}
+          max={endDate}
         />
       </div>
       <div className={formStyles["form__group-inline"]}>

@@ -32,6 +32,7 @@ const activitiesReducer = (state, action) => {
     console.log(result);
     return { activities: result };
   }
+
   return { activities: [] };
 };
 
@@ -39,13 +40,18 @@ const Activities = () => {
   const [showForm, setShowForm] = useState(false);
   const [update, setUpdate] = useState(false);
   const [activityID, setActivityID] = useState("");
+  const [currentWeek, setCurrentWeek] = useState(Number);
+  const [weeks, setWeeks] = useState([]);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
   const [activitiesState, dispatchActivities] = useReducer(activitiesReducer, {
     activities: [],
   });
 
   useEffect(() => {
-    
-    getActivities();
+    getWeeks();
+    getCurrentWeek();
   }, []);
 
   const columns = [
@@ -59,7 +65,7 @@ const Activities = () => {
       name: "Date",
       sortable: true,
       selector: (row) => row.Date,
-      wrap:true
+      wrap: true,
     },
     {
       name: "Start Time",
@@ -99,27 +105,51 @@ const Activities = () => {
     },
   ];
 
-  const getActivities = async (week = 1) => {
+  const getActivities = async (week) => {
     const option = { year: "numeric", month: "long", day: "numeric" };
     const { data, error } = await RequestHelper.get(`activities?week=${week}`);
+    if (!error) {
+      data.forEach((activity) => {
+        let date = new Date(activity.Date);
+        date = date.toLocaleDateString("en-Monrovia", option);
+        let startTime = convertTime(activity.StartTime);
+        let endTime = convertTime(activity.EndTime);
+        const modifiedActivity = {
+          ...activity,
+          TimeInput: getTimeSpent(activity.StartTime, activity.EndTime),
+          Date: date,
+          StartTime: startTime,
+          EndTime: endTime,
+        };
+        dispatchActivities({ type: "ADD", activity: modifiedActivity });
+      });
+    }else{
+        dispatchActivities({type:"REMOVE_ALL"});
+    }
+  };
 
-    if (data && !error) {
-      if (typeof data === "object") {
-        data.forEach((activity) => {
-          let date = new Date(activity.Date);
-          date = date.toLocaleDateString("en-Monrovia", option);
-          let startTime = convertTime(activity.StartTime);
-          let endTime = convertTime(activity.EndTime);
-          const modifiedActivity = {
-            ...activity,
-            TimeInput: getTimeSpent(activity.StartTime, activity.EndTime),
-            Date: date,
-            StartTime: startTime,
-            EndTime: endTime,
-          };
-          dispatchActivities({ type: "ADD", activity: modifiedActivity });
-        });
-      }
+  const getWeeks = async () => {
+    const { data, error } = await RequestHelper.get(`learningcontracts?weeks`);
+    if (!error) {
+      let result = data.map((week) => {
+        return { value: week.Week, text: week.Week };
+      });
+      setWeeks(result);
+    }
+  };
+
+  const getCurrentWeek = async () => {
+    const { data, error } = await RequestHelper.get(
+      `learningcontracts?current`
+    );
+    if (!error) {
+      setCurrentWeek(data.Week);
+      let startDate = data.StartDate;
+      let endDate = data.EndDate;
+      setStartDate(startDate);
+      setEndDate(endDate);
+
+      getActivities(data.Week);
     }
   };
 
@@ -165,16 +195,21 @@ const Activities = () => {
     setActivityID("");
   };
 
+  const onWeekChangeHandler = (event) => {
+    let week = +event.target.value;
+    getActivities(week);
+  };
+
   return (
     <Fragment>
       {/* Opens form for saving new activity */}
       {showForm && !update && (
         <Modal headerText="Add Activity" onClose={closeForm}>
-          <ActivitiesForm onSave={onAddActivityHandler} />
+          <ActivitiesForm week={currentWeek} maxDate={endDate} minDate={startDate} onSave={onAddActivityHandler} />
         </Modal>
       )}
       {/* Opens form for updating existing activity */}
-      {showForm && activityID.length > 0 && update && (
+      {showForm && update && (
         <Modal headerText="Add Activity" onClose={closeForm}>
           <ActivitiesForm id={activityID} onSave={onAddActivityHandler} />
         </Modal>
@@ -184,10 +219,10 @@ const Activities = () => {
         <h2 style={{ textAlign: "left", marginBottom: "1rem" }}>Activities</h2>
         <div>
           <SelectInput
-            options={[{ value: 1, text: "Week One" }]}
+            options={weeks}
             label="Week"
+            onChange={onWeekChangeHandler}
           />
-          <Button className="btn__primary">Load List</Button>
           <Button className="btn__action" onClick={openActivityForm}>
             New Activity
           </Button>
