@@ -70,3 +70,7 @@ input:placeholder-shown+label {
     visibility: hidden;
     transform: translateY(-4rem);
 }
+
+.editor {
+    height: 5rem;
+}

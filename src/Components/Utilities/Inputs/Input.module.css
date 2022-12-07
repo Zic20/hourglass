@@ -21,6 +21,12 @@
     width: 100%;
 }
 
+textarea {
+    resize:none;
+    padding: 1rem;
+    font-family: 'Roboto Slab', serif;
+}
+
 .label {
     color: #656b7b;
     margin-left: 0;

@@ -36,7 +36,7 @@ class Requester {
       const response = await fetch(this.baseUrl + url, {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${localStorage.getItem("tracksToken")}`,
+          Authorization: `Bearer ${localStorage.getItem("tracksToken")}`,
           "Content-Type": "application/json",
         },
 
@@ -108,30 +108,16 @@ class Requester {
   };
 
   getToken = async () => {
-    try {
-      const refreshToken = localStorage.getItem("tracksRefresh")
-        ? localStorage.getItem("tracksRefresh")
-        : "";
+    const refreshToken = localStorage.getItem("tracksRefresh")
+    ? localStorage.getItem("tracksRefresh")
+    : "";
+    const {data,error} = await this.post(this.baseUrl +"refresh.php",{token:refreshToken});
 
-      const response = await fetch(this.baseUrl + "refresh.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token: refreshToken }),
-      });
-
-      if (!response.ok) {
-        if (response.status === 400 || response.status === 401) {
-          localStorage.removeItem("isLoggedIn");
-        }
-      }
-
-      const data = await response.json();
+    if(!error){
       localStorage.setItem("tracksToken", data["access_token"]);
       localStorage.setItem("tracksRefresh", data["refresh_token"]);
-    } catch (error) {
-      return error.message;
+    }else{
+      localStorage.removeItem("isLoggedIn");
     }
   };
 }

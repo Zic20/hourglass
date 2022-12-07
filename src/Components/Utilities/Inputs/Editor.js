@@ -1,20 +1,26 @@
-import React, { useState } from "react";
+import React from "react";
 import ReactQuill from "react-quill";
+import formStyles from "../../Forms/Form.module.css";
 import "react-quill/dist/quill.snow.css";
 
-const Editor = (props) => {
-  const [value, setValue] = useState("");
-  const toolbarOptions = ['bold', 'italic', 'underline'];
+const Editor = React.forwardRef((props, ref) => {
+  const toolbarOptions = ["bold", "italic", "underline"];
+
+  const onChangeHandler = (value) => {
+    props.onChange(value);
+  };
+
   return (
     <ReactQuill
+      ref={ref}
+      className={formStyles.editor}
       modules={{
         toolbar: toolbarOptions,
       }}
       theme="snow"
-      value={value}
-      onChange={setValue}
+      onChange={onChangeHandler}
     />
   );
-};
+});
 
 export default Editor;

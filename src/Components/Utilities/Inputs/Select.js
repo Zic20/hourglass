@@ -15,7 +15,8 @@ const SelectInput = React.forwardRef((props, ref) => {
         onChange={props.onChange}
       >
         <option value="">--Select Option--</option>
-        {props.options.map((option) => {
+
+        {props.options && props.options.map((option) => {
           return (
             <option value={option.value} key={option.value}>
               {option.text}
