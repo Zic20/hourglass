@@ -29,8 +29,8 @@ const ActivitiesForm = (props) => {
   const [endTime, setEndTime] = useState("");
   const [timeSpent, setTimeSpent] = useState("");
   const [formIsValid, setFormIsValid] = useState(false);
-  const [saveMessage, setSaveMessage] = useState("");
-  const [id, setID] = useState();
+  const [message, setMessage] = useState("");
+  const [id, setID] = useState("");
 
   const weekRef = useRef();
   const dateRef = useRef();
@@ -39,6 +39,33 @@ const ActivitiesForm = (props) => {
   const startTimeRef = useRef();
   const endTimeRef = useRef();
   const timeSpentRef = useRef();
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+      if (props.id) {
+        const result = RequestHelper.get(
+          `activities/${props.id}`
+        );
+  
+        const {data, error} = await result;
+        if (data && !error) {
+          setActivity(data.Activity);
+          setDate(data.Date);
+          setStartTime(data.StartTime);
+          setEndTime(data.EndTime);
+          setActivityType(data.ActivityType);
+          setWeek(data.Week);
+          const timeInput = getTimeSpent(data.StartTime, data.EndTime);
+          setTimeSpent(timeInput);
+        }
+        setID(props.id);
+      }
+    }
+
+    fetchData();
+    
+  }, []);
 
   useEffect(() => {
     const identifier = setTimeout(() => {
@@ -65,26 +92,6 @@ const ActivitiesForm = (props) => {
       setTimeSpent(timeInput);
     }
   };
-
-  useEffect(() => {
-    const getActivity = async (id) => {
-      const result = await RequestHelper.get(`activities/${id}`);
-      return result;
-    };
-    if (props.id) {
-      getActivity(props.id).then((response) => {
-        setActivity(response.Activity);
-        setDate(response.Date);
-        setStartTime(response.StartTime);
-        setEndTime(response.EndTime);
-        setActivityType(response.ActivityType);
-        setWeek(response.week);
-        const timeInput = getTimeSpent(response.StartTime, response.EndTime);
-        setTimeSpent(timeInput);
-      });
-      setID(props.id);
-    }
-  }, []);
 
   const endTimeBlurHandler = (event) => {
     if (validateTimeInputs(startTime, event.target.value)) {
@@ -123,7 +130,7 @@ const ActivitiesForm = (props) => {
   const onSubmitHandler = async (event) => {
     event.preventDefault();
 
-    let data = {
+    let userData = {
       Week: week,
       Date: date,
       Activity: activity,
@@ -131,31 +138,39 @@ const ActivitiesForm = (props) => {
       StartTime: startTime,
       EndTime: endTime,
     };
-
     let result;
-
     if (id.length > 0) {
-      result = await RequestHelper.update(`activities/${id}`, data);
+      result = RequestHelper.update(`activities/${id}`, userData);
     } else {
-      result = await RequestHelper.post("activities", data);
+      result = RequestHelper.post(`activities`, userData);
     }
 
-    if (typeof result === "object") {
-      setSaveMessage(result.message);
-      if (result.id > 0) {
-        data = {
-          ...data,
-          ActivityType: activityTypes[result.id - 1].text,
+    const { data, error } = await result;
+
+
+    if (!error) {
+      setMessage(data.message);
+      if (data.id > 0) {
+        userData = {
+          ...userData,
+          ActivityType: activityTypes[userData.ActivityType - 1].text,
           StartTime: convertTime(startTime),
           EndTime: convertTime(endTime),
-          TimeInput: getTimeSpent(startTime,endTime),
-          Date: new Date(date).toLocaleDateString("en-Monrovia",{ year: "numeric", month: "long", day: "numeric" })
+          TimeInput: getTimeSpent(startTime, endTime),
+          Date: new Date(date).toLocaleDateString("en-Monrovia", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }),
+          id: data.id,
         };
       }
-      props.onSave(data, result.id);
+      props.onSave(userData, data.id);
     } else {
-      setSaveMessage("Something went wrong please try again");
+      setMessage(data.message);
     }
+
+    onCancelHandler();
   };
 
   const onCancelHandler = () => {
@@ -188,6 +203,7 @@ const ActivitiesForm = (props) => {
           onBlur={weekBlurHandler}
           ref={weekRef}
           defaultValue={week}
+          readOnly={props.id}
         />
       </div>
       <div className={formStyles["form__group-inline"]}>
@@ -255,7 +271,7 @@ const ActivitiesForm = (props) => {
           defaultValue={timeSpent}
         />
       </div>
-      <div className={formStyles["form__message"]}>{saveMessage}</div>
+      <div className={formStyles["form__message"]}>{message}</div>
 
       <div className={formStyles["form__message"]}>
         <Button

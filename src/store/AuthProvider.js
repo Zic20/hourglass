@@ -18,19 +18,19 @@ const AuthProvider = (props) => {
 
   const loginHandler = async (username, password) => {
     if (!isLoggedIn) {
-      let data = {
+      let userData = {
         username: username,
         password: password,
       };
 
-      const response = await RequestHelper.post("login.php", data);
-      if (response) {
+      const {data} = await RequestHelper.post("login.php", userData);
+      if (data) {
         setisLoggedIn(true);
-        setUsername(response.username);
-        setUserType(response.usertype);
-        setUserUniqueID(response.uniqueid);
-        localStorage.setItem("tracksToken", response["access_token"]);
-        localStorage.setItem("tracksRefresh", response["refresh_token"]);
+        setUsername(data.username);
+        setUserType(data.usertype);
+        setUserUniqueID(data.uniqueid);
+        localStorage.setItem("tracksToken", data["access_token"]);
+        localStorage.setItem("tracksRefresh", data["refresh_token"]);
         localStorage.setItem("isLoggedIn", true);
       }
     }

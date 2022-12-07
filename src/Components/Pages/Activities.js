@@ -4,6 +4,7 @@ import Button from "../Utilities/Button";
 import Card from "../Utilities/Card";
 import MyDatatable from "../Utilities/DataTableBase";
 import Modal from "../Utilities/Modal";
+import SelectInput from "../Utilities/Inputs/Select";
 import { RequestHelper } from "../../modules/Requester";
 import { getTimeSpent, convertTime } from "../../modules/timecalculation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,7 +13,6 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const activitiesReducer = (state, action) => {
   if (action.type === "ADD") {
-    action.activity.id = state.activities.length + 1;
     const updatedState = state.activities.concat(action.activity);
     return { activities: updatedState };
   }
@@ -27,8 +27,9 @@ const activitiesReducer = (state, action) => {
 
   if (action.type === "REMOVE") {
     const result = state.activities.filter(
-      (activity) => activity.id !== action.id
+      (activity) => parseInt(activity.id) !== parseInt(action.id)
     );
+    console.log(result);
     return { activities: result };
   }
   return { activities: [] };
@@ -38,12 +39,12 @@ const Activities = () => {
   const [showForm, setShowForm] = useState(false);
   const [update, setUpdate] = useState(false);
   const [activityID, setActivityID] = useState("");
-
   const [activitiesState, dispatchActivities] = useReducer(activitiesReducer, {
     activities: [],
   });
 
   useEffect(() => {
+    
     getActivities();
   }, []);
 
@@ -58,6 +59,7 @@ const Activities = () => {
       name: "Date",
       sortable: true,
       selector: (row) => row.Date,
+      wrap:true
     },
     {
       name: "Start Time",
@@ -83,7 +85,7 @@ const Activities = () => {
       cell: (row) => (
         <>
           <Button onClick={onUpdateHandler} value={row.id}>
-            <FontAwesomeIcon value={row.id} icon={faEdit}></FontAwesomeIcon>
+            <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
           </Button>
           <Button onClick={onDeleteHandler} value={row.id}>
             <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
@@ -99,10 +101,11 @@ const Activities = () => {
 
   const getActivities = async (week = 1) => {
     const option = { year: "numeric", month: "long", day: "numeric" };
-    const result = await RequestHelper.get(`activities?week=${week}`);
-    if (result) {
-      if (typeof result === "object") {
-        result.forEach((activity) => {
+    const { data, error } = await RequestHelper.get(`activities?week=${week}`);
+
+    if (data && !error) {
+      if (typeof data === "object") {
+        data.forEach((activity) => {
           let date = new Date(activity.Date);
           date = date.toLocaleDateString("en-Monrovia", option);
           let startTime = convertTime(activity.StartTime);
@@ -128,33 +131,30 @@ const Activities = () => {
       dispatchActivities({ type: "ADD", activity: data });
     }
   };
+
   const onDeleteHandler = async (event) => {
-    let id = !event.target.value
-      ? parseInt(event.target.parentElement.value)
-      : parseInt(event.target.value);
+    const id = event.target.closest("button").value;
 
     if (
       window.confirm(
-        "Do you want to delete this activity? Deleted activities cannot be retrieved!"
+        `Do you want to delete activity ${id}? Deleted activities cannot be retrieved!`
       )
     ) {
-      const result = await RequestHelper.delete(`activities/${id}`);
-      if (result && typeof result === "object") {
+      const { data, error } = await RequestHelper.delete(`activities/${id}`);
+
+      if (data && !error) {
         dispatchActivities({ type: "REMOVE", id: id });
-        console.log(result.message);
       }
     }
   };
 
   const onUpdateHandler = (event) => {
-    if (!event.target.value) {
-      setActivityID(event.target.parentElement.value);
-    } else {
-      setActivityID(event.target.value);
-    }
+    const id = event.target.closest("button").value;
+    setActivityID(id);
     setUpdate(true);
     setShowForm(true);
   };
+
   const openActivityForm = () => {
     setShowForm(true);
   };
@@ -170,19 +170,23 @@ const Activities = () => {
       {/* Opens form for saving new activity */}
       {showForm && !update && (
         <Modal headerText="Add Activity" onClose={closeForm}>
-          <ActivitiesForm />
+          <ActivitiesForm onSave={onAddActivityHandler} />
         </Modal>
       )}
       {/* Opens form for updating existing activity */}
       {showForm && activityID.length > 0 && update && (
         <Modal headerText="Add Activity" onClose={closeForm}>
-          <ActivitiesForm id={activityID} onSave={onAddActivityHandler}/>
+          <ActivitiesForm id={activityID} onSave={onAddActivityHandler} />
         </Modal>
       )}
 
       <Card className="card__mid">
         <h2 style={{ textAlign: "left", marginBottom: "1rem" }}>Activities</h2>
         <div>
+          <SelectInput
+            options={[{ value: 1, text: "Week One" }]}
+            label="Week"
+          />
           <Button className="btn__primary">Load List</Button>
           <Button className="btn__action" onClick={openActivityForm}>
             New Activity

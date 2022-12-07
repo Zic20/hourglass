@@ -1,10 +1,12 @@
 class Requester {
   constructor() {
     this.baseUrl = "http://127.0.0.1/practicumapi/";
+    this.loading = false;
+    this.error = false;
+    this.result = null;
   }
 
   get = async (url) => {
-    this.validateToken();
     try {
       const response = await fetch(this.baseUrl + url, {
         headers: {
@@ -13,24 +15,26 @@ class Requester {
         },
       });
       if (!response.ok) {
-        const errorMessage = await response.json();
-        throw new Error(errorMessage.message);
+        if(response.status === 401){
+          this.getToken();
+        }
+        throw new Error();
       }
-      const data = await response.json();
-      return data;
+      this.result = await response.json();
     } catch (error) {
-      return error.message;
+      this.error = true;
     }
+
+    return { data: this.result, loading: this.loading, error: this.error };
   };
 
   post = async (url, data) => {
     const userdata = data;
-
     try {
       const response = await fetch(this.baseUrl + url, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("tracksToken")}`,
+          "Authorization": `Bearer ${localStorage.getItem("tracksToken")}`,
           "Content-Type": "application/json",
         },
 
@@ -38,17 +42,17 @@ class Requester {
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
+        if(response.status === 401){
           this.getToken();
         }
-        const errorMessage = await response.json();
-        throw new Error(errorMessage.message);
+        throw new Error();
       }
-      const data = await response.json();
-      return data;
+      this.result = await response.json();
     } catch (error) {
-      return error.message;
+      this.error = true;
     }
+
+    return { data: this.result, loading: this.loading, error: this.error };
   };
 
   update = async (url, data) => {
@@ -64,17 +68,17 @@ class Requester {
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
+        if(response.status === 401){
           this.getToken();
         }
-        const errorMessage = await response.json();
-        throw new Error(errorMessage.message);
+        throw new Error();
       }
-      const data = await response.json();
-      return data;
+      this.result = await response.json();
     } catch (error) {
-      return error.message;
+      this.error = true;
     }
+
+    return { data: this.result, loading: this.loading, error: this.error };
   };
 
   delete = async (url) => {
@@ -88,31 +92,17 @@ class Requester {
       });
 
       if (!response.ok) {
-        if (response.status === 400) {
-          localStorage.removeItem("isLoggedIn");
+        if(response.status === 401){
+          this.getToken();
         }
-        const errorMessage = await response.json();
-        throw new Error(errorMessage.message);
+        throw new Error();
       }
-      const data = await response.json();
-      return data;
+      this.result = await response.json();
     } catch (error) {
-      return error.message;
+      this.error = true;
     }
-  };
 
-  validateToken = async () => {
-    const response = await fetch(this.baseUrl + "activities?week=1", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("tracksToken")}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.status === 401) {
-      this.getToken();
-    }
+    return { data: this.result, loading: this.loading, error: this.error };
   };
 
   getToken = async () => {
