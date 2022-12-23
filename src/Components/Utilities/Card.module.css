@@ -1,10 +1,24 @@
 .card {
-    background-color: #fcfcfc;
+    background: #fffefe;
     border-radius: .2rem;
     padding: 1.5rem;
-    box-shadow: .3rem .1rem 50rem rgba(0, 0, 0, 0.429);
-    margin:auto;
-    margin-top: 1rem;
+    box-shadow: .3rem .1rem 1rem .1rem rgba(0, 0, 0, 0.078);
+    margin-top: 4rem;
     margin-bottom: 1rem;
-    max-width: 80%;
+    margin-left: 18rem;
+    width: 75%;
+}
+
+.card_large {
+    width: 95%;
+    margin: auto;
+    margin-top: 4rem;
+    margin-bottom: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+    .card {
+        margin-left: 1rem;
+        width: 90%;
+    }
 }

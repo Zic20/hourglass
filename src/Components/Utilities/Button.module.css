@@ -13,13 +13,9 @@
     font-weight: 400;
 }
 
-.btn__rounded {
-    border-radius: 1.3rem;
-}
-
 .btn:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0.8rem 1rem rgba(0, 0, 0, 0.18);
+    transform: translateY(-2px);
+    box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.078);
     outline: none;
 }
 
@@ -28,9 +24,13 @@
 }
 
 .btn:active {
-    transform: translateY(-3px);
+    transform: translateY(0);
     box-shadow: 0 0.8rem 1rem rgba(0, 0, 0, 0.15);
     outline: none;
+}
+
+.btn__rounded {
+    border-radius: 1.3rem;
 }
 
 .btn__primary,
@@ -62,6 +62,7 @@
 .btn__dark {
     color: white;
     background-color: rgba(0, 0, 0, 0.913);
+    width: auto;
 }
 
 .btn__action,
@@ -69,6 +70,14 @@
     width: auto;
     border-radius: 4px;
     background: rgba(28, 146, 93, 0.936);
+    color: #fcfcfc;
+    margin: .5rem .5rem;
+}
+
+.btn__new {
+    width: auto;
+    border-radius: 4px;
+    background: #4a7dff;
     color: #fcfcfc;
     margin: .5rem .5rem;
 }

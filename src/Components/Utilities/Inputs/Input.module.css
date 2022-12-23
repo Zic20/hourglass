@@ -21,6 +21,11 @@
     width: 100%;
 }
 
+.select-sm {
+    width: 20%;
+    margin-left: 1rem;
+}
+
 textarea {
     resize:none;
     padding: 1rem;

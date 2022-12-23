@@ -1,0 +1,14 @@
+.alert {
+    width: 50%;
+    margin: auto;
+    margin-top: 1rem;
+    border-radius: 4px;
+    text-align: center;
+    font-size: .9rem;
+    padding: 1rem 1rem;
+}
+
+.alert__success {
+    background: #1c925d9c;
+    color: white;
+}

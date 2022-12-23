@@ -73,4 +73,26 @@ const convertTime = (time) => {
     return `${time} AM`;
   }
 };
-export { validateTimeInputs, validateDateInputs, getTimeSpent,convertTime };
+
+const convertTimeToString = (time) => {
+  let convertedTime = time.split(":");
+  const hourModifier = `${convertedTime[0] > 1 ? "hrs" : "hr"}`;
+  const minModifier = `${convertedTime[1] > 1 ? "mins" : "min"}`;
+  if (convertedTime[0] > 0) {
+    if (convertedTime[1] > 0) {
+      return `${convertedTime[0]}  ${hourModifier} ${convertedTime[1]} ${minModifier}`;
+    }
+    return `${convertedTime[0]} ${hourModifier}`;
+  }
+
+  if (convertedTime[1] > 0) {
+    return `${convertedTime[1]} ${minModifier}`;
+  }
+};
+export {
+  validateTimeInputs,
+  validateDateInputs,
+  getTimeSpent,
+  convertTime,
+  convertTimeToString,
+};

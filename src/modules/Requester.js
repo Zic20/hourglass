@@ -117,7 +117,7 @@ class Requester {
       localStorage.setItem("tracksToken", data["access_token"]);
       localStorage.setItem("tracksRefresh", data["refresh_token"]);
     }else{
-      localStorage.removeItem("isLoggedIn");
+      localStorage.clear();
     }
   };
 }

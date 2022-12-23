@@ -1,0 +1,26 @@
+.expandedDetails {
+    display:flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 2rem;
+    column-gap: .7rem;
+}
+
+.expandedDetails div {
+    margin-top:.7rem;
+}
+
+.expandedDetails h3 {
+    margin-bottom: .4rem;
+    margin-top: .4rem;
+    text-align: left;
+}
+
+.expandedDetailsItem {
+    margin-left: 1rem;
+    margin-right: 2rem;
+}
+
+.expandedDetailsItem ul li {
+    margin-top: .5rem;
+}

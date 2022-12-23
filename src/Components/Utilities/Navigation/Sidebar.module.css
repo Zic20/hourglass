@@ -7,7 +7,10 @@
     justify-content: space-between;
     align-items: center;
     padding: 0 1.3rem;
-    display: none;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 99;
 }
 
 .logo-box {
@@ -96,24 +99,16 @@
     font-family: 'Roboto Slab', serif;
     font-family: 'Poppins', sans-serif;
     box-shadow: 1rem 0 1rem rgba(0, 0, 0, 0.027);
-    transition: all .3s ease-in-out;
+    transition: all .4s ease;
+    z-index: 100;
 }
 
-.sidebar.closed {
+/* .sidebar.closed {
     width: 9rem;
     padding: .5rem;
-}
-
-@media screen and (max-width:500px){
-    .top-nav {
-        display: flex;
-    }
-    .sidebar {
-        transition: all .8s ease;
-    }
-    .sidebar.closed {
-        transform: translateX(-40rem);
-    }
+} */
+.sidebar.closed {
+    transform: translateX(-40rem);
 }
 
 

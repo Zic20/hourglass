@@ -1,0 +1,30 @@
+.datatable {
+    width: 95%;
+    margin-left: .5rem;
+    border-collapse: collapse;
+    overflow: auto;
+}
+
+.datatable tr {
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+
+.datatable th {
+    font-weight: 550;
+}
+
+.datatable td,
+.datatable th {
+    padding: .5rem 1rem;
+    font-size: .8rem;
+}
+
+.datatable tr th:first-child {
+    text-align: left;
+}
+
+.datatable tr td:first-child {
+    text-align: left;
+}
+

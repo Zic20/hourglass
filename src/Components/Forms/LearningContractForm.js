@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
+import Alert from "../Utilities/Alert";
 import Button from "../Utilities/Button";
 import Editor from "../Utilities/Inputs/Editor";
 import formStyles from "./Form.module.css";
 import SelectInput from "../Utilities/Inputs/Select";
 import Input from "../Utilities/Inputs/Input";
-import { RequestHelper } from "../../modules/Requester";
+import useFetch from "../../hooks/useFetch";
 
 const goals = [
   {
@@ -92,7 +93,7 @@ const goals = [
   },
 ];
 
-const LearningContractForm = () => {
+const LearningContractForm = (props) => {
   const [week, setWeek] = useState(Number);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -103,7 +104,16 @@ const LearningContractForm = () => {
   const [expectedOutcome, setExpectedOutcome] = useState("");
   const [indicators, setIndicators] = useState("");
   const [meansOfVerification, setMeansOfVerification] = useState("");
+  const [saveMessage, setSaveMessage] = useState("");
   const [formIsValid, setFormIsValid] = useState(false);
+
+  const { error, sendRequest } = useFetch();
+
+  useEffect(() => {
+    if (props.id) {
+      getLearningContractDetails(props.id);
+    }
+  }, []);
 
   useEffect(() => {
     const identifier = setTimeout(() => {
@@ -134,6 +144,29 @@ const LearningContractForm = () => {
     indicators,
     meansOfVerification,
   ]);
+
+  const getLearningContractDetails = (id) => {
+    const useData = (data) => {
+      if (!error) {
+        setWeek(data.Week);
+        setStartDate(data.StartDate);
+        setEndDate(data.EndDate);
+        setGoal(data.Goal);
+        setObjective(data.Objectives ? data.Objectives : "");
+        setActivities(data.Activities ? data.Activities : "");
+        setIndicators(
+          data.IndicatorsOfPerformance ? data.IndicatorsOfPerformance : ""
+        );
+        setExpectedOutcome(data.ExpectedOutcome ? data.ExpectedOutcome : "");
+        setMeansOfVerification(
+          data.MeansOfVerification ? data.MeansOfVerification : ""
+        );
+        setGoalText(data.GoalText);
+        setFormIsValid(false);
+      }
+    };
+    sendRequest({ url: `learningcontracts/${id}` }, useData);
+  };
 
   const onObjectiveChangeHandler = (value) => {
     setObjective(value);
@@ -182,26 +215,57 @@ const LearningContractForm = () => {
         Week: week,
         StartDate: startDate,
         EndDate: endDate,
-        Goal: goal,
+        Goals: goal,
         Objectives: objective,
         Activities: activities,
-        ExpectedOutcomes: expectedOutcome,
+        ExpectedOutcome: expectedOutcome,
         IndicatorsOfPerformance: indicators,
         MeansOfVerification: meansOfVerification,
+        GoalText: goalText,
       };
 
-      const postData = async (userData) => {
-        const { data, error } = await RequestHelper.post(
-          `learningcontracts`,
-          userData
+      if (props.id) {
+        sendRequest(
+          {
+            url: `learningcontracts/${+props.id}`,
+            method: "PATCH",
+            body: userData,
+          },
+          () => {
+            if (!error) {
+              setSaveMessage("Learning Contract updated");
+            }
+          }
         );
-        if (!error) {
-          console.log(data);
-        }
-      };
 
-      postData(userData);
+        props.onSave(userData, props.id);
+      } else {
+        sendRequest(
+          { url: "learningcontracts", method: "POST", body: userData },
+          (data) => {
+            userData.id = data.id;
+            if (!error) {
+              setSaveMessage(data.message);
+            }
+          }
+        );
+        props.onSave(userData);
+      }
     }
+  };
+
+  const clearState = () => {
+    setWeek("");
+    setStartDate("");
+    setEndDate("");
+    setGoal("");
+    setObjective("");
+    setActivities("");
+    setIndicators("");
+    setExpectedOutcome("");
+    setMeansOfVerification("");
+    setGoalText("");
+    setFormIsValid(false);
   };
 
   return (
@@ -213,6 +277,7 @@ const LearningContractForm = () => {
           type="number"
           placeholder="Week"
           onChange={onWeekChangeHandler}
+          value={week ? week : ""}
         />
       </div>
       <div className={formStyles["form__group-inline"]}>
@@ -221,6 +286,7 @@ const LearningContractForm = () => {
           label="Start Date"
           type="date"
           onChange={onStartDateChangeHandler}
+          value={startDate}
         />
       </div>
       <div className={formStyles["form__group-inline"]}>
@@ -231,6 +297,7 @@ const LearningContractForm = () => {
           readOnly={!startDate.length > 0}
           min={startDate}
           onChange={onEndDateChangeHandler}
+          value={endDate}
         />
       </div>
       <div className={formStyles["form__group-inline"]}>
@@ -239,6 +306,8 @@ const LearningContractForm = () => {
           label="Goal"
           onChange={onGoalChangeHandler}
           options={goals}
+          selectedIndex={goal}
+          value={goal}
         />
       </div>
       <div className={formStyles["form__group"]}>
@@ -252,29 +321,34 @@ const LearningContractForm = () => {
       </div>
       <div className={formStyles["form__group-inline"]}>
         <p>Objective</p>
-        <Editor onChange={onObjectiveChangeHandler} />
+        <Editor onChange={onObjectiveChangeHandler} value={objective} />
       </div>
       <div className={formStyles["form__group-inline"]}>
         <p>Activities</p>
-        <Editor onChange={onActivitiesChangeHandler} />
+        <Editor onChange={onActivitiesChangeHandler} value={activities} />
       </div>
       <div className={formStyles["form__group-inline"]}>
         <p>Expected Outcome</p>
-        <Editor onChange={onOutcomeChangeHandler} />
+        <Editor onChange={onOutcomeChangeHandler} value={expectedOutcome} />
       </div>
       <div className={formStyles["form__group-inline"]}>
         <p>Indicators of Performance</p>
-        <Editor onChange={onIndicatorsChangeHandler} />
+        <Editor onChange={onIndicatorsChangeHandler} value={indicators} />
       </div>
       <div className={formStyles["form__group-inline"]}>
         <p>Means of Verification</p>
-        <Editor onChange={onMeansChangeHandler} />
+        <Editor onChange={onMeansChangeHandler} value={meansOfVerification} />
       </div>
+      {saveMessage.length > 0 && (
+        <Alert className="alert__success">{saveMessage}</Alert>
+      )}
       <div style={{ textAlign: "center", marginTop: "1rem" }}>
         <Button disabled={!formIsValid} type="submit" className="btn__primary">
           Save
         </Button>
-        <Button className="btn__cancel">Cancel</Button>
+        <Button onClick={clearState} className="btn__cancel">
+          Cancel
+        </Button>
       </div>
     </form>
   );

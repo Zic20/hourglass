@@ -8,8 +8,7 @@ import SelectInput from "../Utilities/Inputs/Select";
 import { RequestHelper } from "../../modules/Requester";
 import { getTimeSpent, convertTime } from "../../modules/timecalculation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit } from "@fortawesome/free-regular-svg-icons";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faKeyboard, faTrash, faFile } from "@fortawesome/free-solid-svg-icons";
 
 const activitiesReducer = (state, action) => {
   if (action.type === "ADD") {
@@ -36,7 +35,7 @@ const activitiesReducer = (state, action) => {
   return { activities: [] };
 };
 
-const Activities = () => {
+const Activities = (props) => {
   const [showForm, setShowForm] = useState(false);
   const [update, setUpdate] = useState(false);
   const [activityID, setActivityID] = useState("");
@@ -91,7 +90,7 @@ const Activities = () => {
       cell: (row) => (
         <>
           <Button onClick={onUpdateHandler} value={row.id}>
-            <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
+            <FontAwesomeIcon icon={faKeyboard}></FontAwesomeIcon>
           </Button>
           <Button onClick={onDeleteHandler} value={row.id}>
             <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
@@ -105,6 +104,12 @@ const Activities = () => {
     },
   ];
 
+  let className = "";
+  if (props.fullWidth) {
+    className = "card_large";
+  } else {
+    className = "card_mid";
+  }
   const getActivities = async (week) => {
     const option = { year: "numeric", month: "long", day: "numeric" };
     const { data, error } = await RequestHelper.get(`activities?week=${week}`);
@@ -123,8 +128,8 @@ const Activities = () => {
         };
         dispatchActivities({ type: "ADD", activity: modifiedActivity });
       });
-    }else{
-        dispatchActivities({type:"REMOVE_ALL"});
+    } else {
+      dispatchActivities({ type: "REMOVE_ALL" });
     }
   };
 
@@ -205,26 +210,33 @@ const Activities = () => {
       {/* Opens form for saving new activity */}
       {showForm && !update && (
         <Modal headerText="Add Activity" onClose={closeForm}>
-          <ActivitiesForm week={currentWeek} maxDate={endDate} minDate={startDate} onSave={onAddActivityHandler} />
+          <ActivitiesForm
+            week={currentWeek}
+            maxDate={endDate}
+            minDate={startDate}
+            onSave={onAddActivityHandler}
+          />
         </Modal>
       )}
       {/* Opens form for updating existing activity */}
       {showForm && update && (
-        <Modal headerText="Add Activity" onClose={closeForm}>
+        <Modal headerText="Edit Activity" onClose={closeForm}>
           <ActivitiesForm id={activityID} onSave={onAddActivityHandler} />
         </Modal>
       )}
 
-      <Card className="card__mid">
+      <Card className={className}>
         <h2 style={{ textAlign: "left", marginBottom: "1rem" }}>Activities</h2>
         <div>
           <SelectInput
             options={weeks}
             label="Week"
             onChange={onWeekChangeHandler}
+            className="select-sm"
           />
-          <Button className="btn__action" onClick={openActivityForm}>
-            New Activity
+          <Button className="btn__new" onClick={openActivityForm}>
+            <FontAwesomeIcon icon={faFile}></FontAwesomeIcon> &nbsp; New
+            Activity
           </Button>
         </div>
         <MyDatatable columns={columns} data={activitiesState.activities} />

@@ -1,36 +1,69 @@
-import { useState, useEffect } from "react";
+import { useCallback, useState } from "react";
 
-const useFetch = (url, method = "GET", userData = null) => {
-  const [data, setData] = useState(null);
+const useFetch = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const baseUrl = `http://127.0.0.1/practicumapi/`;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`http://127.0.0.1/practicumapi/${url}`, {
-          method: method,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("tracksToken")}`,
-            "Content-Type": "application/json",
-          },
-          body: userData && JSON.stringify(userData),
-        });
+  const getRefreshToken = async () => {
+    const refreshToken = localStorage.getItem("tracksRefresh")
+    ? localStorage.getItem("tracksRefresh")
+    : "";
 
-        const data = await response.json();
-        setData(data);
-        setLoading(false);
-      } catch (error) {
-        setError(false);
-        setLoading(false);
+    const response = await fetch(baseUrl +"refresh.php", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("tracksToken")}`,
+        "Content-Type": "application/json",
+      },
+
+      body: {token:refreshToken},
+    });
+
+    if(!response.ok){
+      if(response.status === 401 || response.status === 400){
+        localStorage.clear();
       }
-    };
+    }
 
-    fetchData();
+    const data = await response.json();
+
+
+    if(!error){
+      localStorage.setItem("tracksToken", data["access_token"]);
+      localStorage.setItem("tracksRefresh", data["refresh_token"]);
+    }else{
+      localStorage.clear();
+    }
+  };
+
+  const sendRequest = useCallback(async (requestConfig, useData) => {
+    try {
+      setLoading(true);
+      const response = await fetch(baseUrl + requestConfig.url, {
+        method: requestConfig.method ? requestConfig.method : "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("tracksToken")}`,
+          "Content-Type": "application/json",
+        },
+        body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
+      });
+
+      if (!response.ok) {
+        if(response.status === 401){
+          getRefreshToken();
+        }
+        throw new Error("Something went wrong");
+      }
+      const data = await response.json();
+      useData(data);
+    } catch (error) {
+      setError(error.message || "Something went wrong");
+    }
+    setLoading(false);
   }, []);
 
-  return { data, loading, error };
+  return { loading, error, sendRequest };
 };
 
 export default useFetch;

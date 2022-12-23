@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "../Utilities/Button";
 import formStyles from "./Form.module.css";
 import Input from "../Utilities/Inputs/Input";
@@ -33,14 +33,6 @@ const ActivitiesForm = (props) => {
   const [formIsValid, setFormIsValid] = useState(false);
   const [message, setMessage] = useState("");
   const [id, setID] = useState("");
-
-  const weekRef = useRef();
-  const dateRef = useRef();
-  const activityRef = useRef();
-  const activityTypeRef = useRef();
-  const startTimeRef = useRef();
-  const endTimeRef = useRef();
-  const timeSpentRef = useRef();
 
   useEffect(() => {
 
@@ -186,11 +178,6 @@ const ActivitiesForm = (props) => {
   };
 
   const onCancelHandler = () => {
-    dateRef.current.value = "";
-    activityRef.current.value = "";
-    startTimeRef.current.value = "";
-    endTimeRef.current.value = "";
-    activityTypeRef.current.selectedIndex = 0;
     setTimeSpent("");
     setFormIsValid(false);
     setActivity("");
@@ -211,7 +198,6 @@ const ActivitiesForm = (props) => {
           placeholder="Week"
           onChange={weekChangeHandler}
           onBlur={weekBlurHandler}
-          ref={weekRef}
           defaultValue={week}
           readOnly={true}
         />
@@ -223,7 +209,6 @@ const ActivitiesForm = (props) => {
           type="date"
           onChange={dateChangeHandler}
           onBlur={dateBlurHandler}
-          ref={dateRef}
           defaultValue={date}
           min={startDate}
           max={endDate}
@@ -237,7 +222,6 @@ const ActivitiesForm = (props) => {
           placeholder="Enter Activity"
           onChange={activityChangeHandler}
           onBlur={activityBlurHandler}
-          ref={activityRef}
           defaultValue={activity}
         />
       </div>
@@ -247,7 +231,6 @@ const ActivitiesForm = (props) => {
           selectedIndex={activityType}
           options={activityTypes}
           onChange={activityTypeChangeHandler}
-          ref={activityTypeRef}
           label="Activity Type"
         />
       </div>
@@ -257,7 +240,6 @@ const ActivitiesForm = (props) => {
           label="Start Time"
           type="time"
           onBlur={startTimeBlurHandler}
-          ref={startTimeRef}
           defaultValue={startTime}
         />
       </div>
@@ -268,7 +250,6 @@ const ActivitiesForm = (props) => {
           type="time"
           readOnly={startTime !== "" ? false : true}
           onBlur={endTimeBlurHandler}
-          ref={endTimeRef}
           defaultValue={endTime}
         />
       </div>
@@ -278,7 +259,6 @@ const ActivitiesForm = (props) => {
           id="timeSpent"
           label="Time Spent"
           type="text"
-          ref={timeSpentRef}
           readOnly={true}
           defaultValue={timeSpent}
         />
