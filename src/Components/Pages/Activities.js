@@ -21,14 +21,14 @@ const activitiesReducer = (state, action) => {
       (activity) => activity.id !== action.id
     );
     result.push({ id: action.id, ...action.activity });
-    return { activities: result };
+    const sortedList = result.sort((a, b) => a.id - b.id);
+    return { activities: sortedList };
   }
 
   if (action.type === "REMOVE") {
     const result = state.activities.filter(
       (activity) => parseInt(activity.id) !== parseInt(action.id)
     );
-    console.log(result);
     return { activities: result };
   }
 

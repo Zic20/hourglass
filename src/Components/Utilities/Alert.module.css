@@ -12,3 +12,8 @@
     background: #1c925d9c;
     color: white;
 }
+
+.alert__error {
+    background: rgb(222, 36, 19);
+    color: white;
+}

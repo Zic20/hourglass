@@ -2,8 +2,9 @@ import React, { useContext, useState } from "react";
 import "./App.css";
 import Login from "./Components/Forms/Login";
 import authContext from "./store/auth-context";
-import Activities from "./Components/Pages/Activities";
 import Sidebar from "./Components/Utilities/Navigation/Sidebar";
+import Agencies from "./Components/Pages/Agencies";
+import Staff from "./Components/Pages/Staff";
 function App() {
   const authCtx = useContext(authContext);
   const [sideBarClosed, setSidebarClosed] = useState(true);
@@ -15,7 +16,7 @@ function App() {
       {authCtx.isLoggedIn && (
         <>
           <Sidebar onClose={onSidebarCloseHandler} />
-          <Activities fullWidth={!sideBarClosed} />
+          <Staff fullWidth={!sideBarClosed} />
         </>
       )}
       {!authCtx.isLoggedIn && <Login />}

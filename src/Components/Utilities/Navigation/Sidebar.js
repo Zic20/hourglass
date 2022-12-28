@@ -44,7 +44,7 @@ const Sidebar = (props) => {
               className={styles["nav-check-mobile-icon"]}
               htmlFor="nav-check-mobile"
             >
-              &nbsp;
+              {/* &nbsp; */}
             </label>
           </div>
           <div className={styles.logo}>

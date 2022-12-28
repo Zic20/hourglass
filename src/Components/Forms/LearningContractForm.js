@@ -243,8 +243,8 @@ const LearningContractForm = (props) => {
         sendRequest(
           { url: "learningcontracts", method: "POST", body: userData },
           (data) => {
-            userData.id = data.id;
             if (!error) {
+              userData.id = data.id;
               setSaveMessage(data.message);
             }
           }

@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPrint } from "@fortawesome/free-solid-svg-icons";
+import Button from "../Utilities/Button";
 import SelectInput from "../Utilities/Inputs/Select";
 import Card from "../Utilities/Card";
 import formStyles from "../Forms/Form.module.css";
@@ -27,7 +30,6 @@ const TableBody = (props) => {
         return (
           <tr>
             {row.map((column, index) => {
-              console.log(index);
               if (index > 0) {
                 column = convertTimeToString(column);
               }
@@ -40,7 +42,7 @@ const TableBody = (props) => {
   );
 };
 
-const SummaryTimeSheet = () => {
+const SummaryTimeSheet = (props) => {
   const [firstWeek, setFirstWeek] = useState(Number);
   const [secondWeek, setSecondWeek] = useState(Number);
   const [weeks, setWeeks] = useState(null);
@@ -92,27 +94,36 @@ const SummaryTimeSheet = () => {
     }
   };
 
-  const { sendRequest } = useFetch();
+  let className = "";
+  if (props.fullWidth) {
+    className = "card_large";
+  } else {
+    className = "card_mid";
+  }
+
+  const { error, loading, sendRequest } = useFetch();
   return (
-    <Card>
+    <Card className={className}>
       <h3>Summary Timesheet</h3>
-      <div className={formStyles["form__group-inline"]}>
         <SelectInput
           id="firstWeek"
           label="First Week"
           options={weeks}
           onChange={onFirstWeekChangeHandler}
+          className="select-sm"
         />
-      </div>
-      <div className={formStyles["form__group-inline"]}>
         <SelectInput
           id="secondWeek"
           label="Second Week"
           options={weeks}
           onChange={onSecondChangeHandler}
           disabled={firstWeek < 1}
+          className="select-sm"
+          
         />
-      </div>
+      <Button className="btn__action">
+        <FontAwesomeIcon icon={faPrint}></FontAwesomeIcon> &nbsp; Print
+      </Button>
 
       <table className={classes.datatable}>
         {tableHeader !== null && <TableHead data={tableHeader} />}

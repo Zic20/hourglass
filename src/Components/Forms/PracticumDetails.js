@@ -77,7 +77,6 @@ const PracticumDetails = () => {
           endDate: endDate,
           hours: hours,
         };
-        console.log(data);
         setTimeout(onCancelHandler, 1000);
       }
     } else {
