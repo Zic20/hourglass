@@ -4,6 +4,8 @@ import Card from "../Utilities/Card";
 import styles from "./StudentProfile.module.css";
 import formStyles from "./Form.module.css";
 import Input from "../Utilities/Inputs/Input";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 const PracticumInstructorForm = () => {
   const [agency, setAgency] = useState("");
@@ -146,6 +148,7 @@ const PracticumInstructorForm = () => {
 
           <div className={styles["footer"]}>
             <Button type="submit" className="btn__primary">
+              <FontAwesomeIcon icon={faPaperPlane}></FontAwesomeIcon> &nbsp;
               Save
             </Button>
             <Button onClick={formCancelHandler} className="btn__cancel">

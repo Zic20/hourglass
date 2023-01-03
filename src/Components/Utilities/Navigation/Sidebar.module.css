@@ -17,8 +17,9 @@
     display: flex;
     align-items: center;
 }
+
 .logo-box .logo {
-    font-size:.8rem;
+    font-size: .8rem;
     font-family: 'Poppins', sans-serif;
 }
 
@@ -31,6 +32,7 @@
     text-align: center;
     margin-right: 1rem;
 }
+
 .nav-check-mobile-icon {
     position: relative;
     display: block;
@@ -57,6 +59,7 @@
     bottom: -.4rem;
     transition: all .3s ease;
 }
+
 .nav-check-mobile-icon::before {
     left: 0;
     top: -.4rem;
@@ -64,13 +67,15 @@
 }
 
 .nav-check-mobile-icon:hover {
-   background-color: transparent;
+    background-color: transparent;
 }
+
 .nav-check-mobile-icon:hover::after {
     /* top: 0; */
     background: #656b7b;
     transform: rotate(135deg);
 }
+
 .nav-check-mobile-icon:hover::before {
     /* top: 0; */
     background: #656b7b;
@@ -103,16 +108,12 @@
     z-index: 100;
 }
 
-/* .sidebar.closed {
-    width: 9rem;
-    padding: .5rem;
-} */
 .sidebar.closed {
     transform: translateX(-40rem);
 }
 
 
-.sidebar.closed .logo h1{
+.sidebar.closed .logo h1 {
     font-size: 1.5rem;
 }
 
@@ -126,7 +127,7 @@
     background: black;
     border-radius: 50%;
     font-size: 2rem;
-    margin:0 auto;
+    margin: 0 auto;
 }
 
 .sidebar .nav-check-icon:hover {
@@ -139,9 +140,11 @@
     text-transform: uppercase;
     color: #4a7dff;
 }
+
 .sidebar .user {
     height: 30%;
 }
+
 .sidebar .user-img {
     width: 80%;
     height: 80%;
@@ -150,11 +153,12 @@
     margin-bottom: 1rem;
     overflow: hidden;
 }
+
 .sidebar .user-img img {
     position: relative;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     width: 100%;
     height: 100%;
 }
@@ -163,17 +167,36 @@
     list-style-type: none;
 }
 
+
+
 .sidebar .nav-list li {
     padding: 1rem .5rem;
     transition: all .5s ease;
     cursor: pointer;
     text-align: left;
+    color: #fcfcfc;
 }
 
-.sidebar .nav-list li:hover {
-    background-color: #000000;
+.sidebar .nav-list li a,
+.sidebar .nav-list li a:active,
+.sidebar .nav-list li a:hover {
+    text-decoration: none;
+    color: #000000;
+    height: 100%;
+    width: 100%;
+}
+
+.sidebar .nav-list li:hover
+/* .sidebar .nav-list li a.active  */
+{
+    /* background-color: #000000; */
     background-color: #4a7dff;
-    color: #fcfcfc;
     border-radius: 5px;
     transform: scale(.9);
+}
+
+
+
+.sidebar .nav-list li:hover a {
+    color: #fcfcfc;
 }

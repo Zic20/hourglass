@@ -1,4 +1,5 @@
 import React, { Fragment, useContext, useState } from "react";
+import { NavLink } from "react-router-dom";
 import styles from "./Sidebar.module.css";
 import Button from "../Button";
 import authContext from "../../../store/auth-context";
@@ -8,6 +9,7 @@ import {
   faBookOpen,
   faListCheck,
   faSquarePollVertical,
+  faTools,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHandPointLeft, faUser } from "@fortawesome/free-regular-svg-icons";
 
@@ -70,20 +72,30 @@ const Sidebar = (props) => {
 
         <ul className={styles["nav-list"]}>
           <li>
-            <FontAwesomeIcon icon={faChartLine} /> &nbsp; Dashboard
+            <NavLink activeClassName={styles.active} to="/dashboard">
+              <FontAwesomeIcon icon={faChartLine} /> &nbsp; Dashboard
+            </NavLink>
           </li>
           <li>
-            <FontAwesomeIcon icon={faBookOpen} /> &nbsp;Learning Contracts
+            <NavLink activeClassName={styles.active} to="/learningcontracts">
+              <FontAwesomeIcon icon={faBookOpen} /> &nbsp;Learning Contracts
+            </NavLink>
           </li>
           <li>
-            <FontAwesomeIcon icon={faListCheck} /> &nbsp;Activities
+            <NavLink activeClassName={styles.active} to="/timesheet">
+              <FontAwesomeIcon icon={faListCheck} /> &nbsp;Activities
+            </NavLink>
           </li>
           <li>
-            <FontAwesomeIcon icon={faSquarePollVertical} /> &nbsp;Summary
-            Timesheet
+            <NavLink activeClassName={styles.active} to="/summarytimesheet">
+              <FontAwesomeIcon icon={faSquarePollVertical} /> &nbsp;Summary
+              Timesheet
+            </NavLink>
           </li>
           <li>
-            <FontAwesomeIcon icon={faUser} /> &nbsp;Profile
+            <NavLink activeClassName={styles.active} to="/profile">
+              <FontAwesomeIcon icon={faTools} /> &nbsp;Change Password
+            </NavLink>
           </li>
         </ul>
         <Button onClick={onLogoutHandler} className="btn__dark">

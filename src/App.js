@@ -1,10 +1,12 @@
 import React, { useContext, useState } from "react";
+import { Redirect, Route, Switch } from "react-router-dom";
 import "./App.css";
 import Login from "./Components/Forms/Login";
 import authContext from "./store/auth-context";
 import Sidebar from "./Components/Utilities/Navigation/Sidebar";
-import Agencies from "./Components/Pages/Agencies";
-import Staff from "./Components/Pages/Staff";
+import Activities from "./Components/Pages/Activities";
+import LearningContracts from "./Components/Pages/LearningContracts";
+import SummaryTimeSheet from "./Components/Pages/SummaryTimeSheet";
 function App() {
   const authCtx = useContext(authContext);
   const [sideBarClosed, setSidebarClosed] = useState(true);
@@ -16,7 +18,22 @@ function App() {
       {authCtx.isLoggedIn && (
         <>
           <Sidebar onClose={onSidebarCloseHandler} />
-          <Staff fullWidth={!sideBarClosed} />
+
+          {/* Routes */}
+          <Switch>
+            <Route path="/" exact>
+              <Redirect to="/dashboard" />
+            </Route>
+            <Route path="/timesheet">
+              <Activities fullWidth={!sideBarClosed} />
+            </Route>
+            <Route path="/learningcontracts">
+              <LearningContracts fullWidth={!sideBarClosed} />
+            </Route>
+            <Route path="/summarytimesheet">
+              <SummaryTimeSheet fullWidth={!sideBarClosed} />
+            </Route>
+          </Switch>
         </>
       )}
       {!authCtx.isLoggedIn && <Login />}
