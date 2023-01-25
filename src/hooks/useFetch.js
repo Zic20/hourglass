@@ -1,8 +1,11 @@
 import { useCallback, useState } from "react";
+// import { useNavigate } from "react-router-dom";
 
 const useFetch = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  // const navigate = useNavigate();
+  // const baseUrl = `http://192.168.1.154:80/practicumapi/`;
   const baseUrl = `http://127.0.0.1/practicumapi/`;
 
   const getRefreshToken = async () => {
@@ -23,6 +26,7 @@ const useFetch = () => {
     if(!response.ok){
       if(response.status === 401 || response.status === 400){
         localStorage.clear();
+        // navigate('/dashboard');
       }
     }
 

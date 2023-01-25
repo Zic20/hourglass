@@ -4,7 +4,6 @@ import { faPrint } from "@fortawesome/free-solid-svg-icons";
 import Button from "../Utilities/Button";
 import SelectInput from "../Utilities/Inputs/Select";
 import Card from "../Utilities/Card";
-import formStyles from "../Forms/Form.module.css";
 import classes from "./SummaryTimesheet.module.css";
 import useFetch from "../../hooks/useFetch";
 import { convertTimeToString } from "../../modules/timecalculation";
@@ -105,30 +104,31 @@ const SummaryTimeSheet = (props) => {
   return (
     <Card className={className}>
       <h3>Summary Timesheet</h3>
-        <SelectInput
-          id="firstWeek"
-          label="First Week"
-          options={weeks}
-          onChange={onFirstWeekChangeHandler}
-          className="select-sm"
-        />
-        <SelectInput
-          id="secondWeek"
-          label="Second Week"
-          options={weeks}
-          onChange={onSecondChangeHandler}
-          disabled={firstWeek < 1}
-          className="select-sm"
-          
-        />
+      <SelectInput
+        id="firstWeek"
+        label="First Week"
+        options={weeks}
+        onChange={onFirstWeekChangeHandler}
+        className="select-sm"
+      />
+      <SelectInput
+        id="secondWeek"
+        label="Second Week"
+        options={weeks}
+        onChange={onSecondChangeHandler}
+        disabled={firstWeek < 1}
+        className="select-sm"
+      />
       <Button className="btn__action">
         <FontAwesomeIcon icon={faPrint}></FontAwesomeIcon> &nbsp; Print
       </Button>
 
-      <table className={classes.datatable}>
-        {tableHeader !== null && <TableHead data={tableHeader} />}
-        {detail !== null && <TableBody data={detail} />}
-      </table>
+      {!error && !loading && (
+        <table className={classes.datatable}>
+          {tableHeader !== null && <TableHead data={tableHeader} />}
+          {detail !== null && <TableBody data={detail} />}
+        </table>
+      )}
     </Card>
   );
 };

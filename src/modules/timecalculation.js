@@ -89,10 +89,20 @@ const convertTimeToString = (time) => {
     return `${convertedTime[1]} ${minModifier}`;
   }
 };
+
+function convertDate(date) {
+  // converts date to conform to format of date input field
+  date = new Date(date);
+  let month =
+    date.getMonth() > 9 ? date.getMonth() + 1 : `0${date.getMonth() + 1}`;
+  date = `${date.getFullYear()}-${month}-${date.getDate()}`;
+  return date;
+}
 export {
   validateTimeInputs,
   validateDateInputs,
   getTimeSpent,
   convertTime,
   convertTimeToString,
+  convertDate,
 };

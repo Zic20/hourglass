@@ -11,7 +11,7 @@ import {
   faSquarePollVertical,
   faTools,
 } from "@fortawesome/free-solid-svg-icons";
-import { faHandPointLeft, faUser } from "@fortawesome/free-regular-svg-icons";
+import { faHandPointLeft} from "@fortawesome/free-regular-svg-icons";
 
 const Sidebar = (props) => {
   const [isClosed, setIsClosed] = useState(false);
@@ -30,6 +30,10 @@ const Sidebar = (props) => {
   const onLogoutHandler = () => {
     authCtx.logout();
   };
+
+  function setActiveNavLink(navData) {
+    return navData.isActive ? styles.active : "";
+  }
 
   return (
     <Fragment>
@@ -72,29 +76,29 @@ const Sidebar = (props) => {
 
         <ul className={styles["nav-list"]}>
           <li>
-            <NavLink activeClassName={styles.active} to="/dashboard">
+            <NavLink className={setActiveNavLink}  to="/dashboard">
               <FontAwesomeIcon icon={faChartLine} /> &nbsp; Dashboard
             </NavLink>
           </li>
           <li>
-            <NavLink activeClassName={styles.active} to="/learningcontracts">
+            <NavLink className={setActiveNavLink} to="/learningcontracts">
               <FontAwesomeIcon icon={faBookOpen} /> &nbsp;Learning Contracts
             </NavLink>
           </li>
           <li>
-            <NavLink activeClassName={styles.active} to="/timesheet">
+            <NavLink className={setActiveNavLink} to="/timesheet">
               <FontAwesomeIcon icon={faListCheck} /> &nbsp;Activities
             </NavLink>
           </li>
           <li>
-            <NavLink activeClassName={styles.active} to="/summarytimesheet">
+            <NavLink className={setActiveNavLink} to="/summarytimesheet">
               <FontAwesomeIcon icon={faSquarePollVertical} /> &nbsp;Summary
               Timesheet
             </NavLink>
           </li>
           <li>
-            <NavLink activeClassName={styles.active} to="/profile">
-              <FontAwesomeIcon icon={faTools} /> &nbsp;Change Password
+            <NavLink className={setActiveNavLink} to="/profile">
+              <FontAwesomeIcon icon={faTools} /> &nbsp;Profile
             </NavLink>
           </li>
         </ul>

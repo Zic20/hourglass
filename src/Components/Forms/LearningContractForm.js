@@ -6,6 +6,7 @@ import formStyles from "./Form.module.css";
 import SelectInput from "../Utilities/Inputs/Select";
 import Input from "../Utilities/Inputs/Input";
 import useFetch from "../../hooks/useFetch";
+import { convertDate } from "../../modules/timecalculation";
 
 const goals = [
   {
@@ -110,8 +111,38 @@ const LearningContractForm = (props) => {
   const { error, sendRequest } = useFetch();
 
   useEffect(() => {
-    if (props.id) {
-      getLearningContractDetails(props.id);
+    if (props.data) {
+      const { data: learningContract } = props;
+      let selectedGoal = goals.filter(
+        (row) => row.Goal === learningContract.Goal
+      );
+      setGoal(selectedGoal[0].value);
+      setWeek(learningContract.Week);
+      let startDate = convertDate(learningContract.StartDate);
+      setStartDate(startDate);
+      let endDate = convertDate(learningContract.EndDate);
+      setEndDate(endDate);
+      setGoalText(learningContract.Goal);
+      setObjective(
+        learningContract.Objectives ? learningContract.Objectives : ""
+      );
+      setActivities(
+        learningContract.Activities ? learningContract.Activities : ""
+      );
+      setIndicators(
+        learningContract.IndicatorsOfPerformance
+          ? learningContract.IndicatorsOfPerformance
+          : ""
+      );
+      setExpectedOutcome(
+        learningContract.ExpectedOutcome ? learningContract.ExpectedOutcome : ""
+      );
+      setMeansOfVerification(
+        learningContract.MeansOfVerification
+          ? learningContract.MeansOfVerification
+          : ""
+      );
+      setFormIsValid(false);
     }
   }, []);
 
@@ -144,29 +175,6 @@ const LearningContractForm = (props) => {
     indicators,
     meansOfVerification,
   ]);
-
-  const getLearningContractDetails = (id) => {
-    const useData = (data) => {
-      if (!error) {
-        setWeek(data.Week);
-        setStartDate(data.StartDate);
-        setEndDate(data.EndDate);
-        setGoal(data.Goal);
-        setObjective(data.Objectives ? data.Objectives : "");
-        setActivities(data.Activities ? data.Activities : "");
-        setIndicators(
-          data.IndicatorsOfPerformance ? data.IndicatorsOfPerformance : ""
-        );
-        setExpectedOutcome(data.ExpectedOutcome ? data.ExpectedOutcome : "");
-        setMeansOfVerification(
-          data.MeansOfVerification ? data.MeansOfVerification : ""
-        );
-        setGoalText(data.GoalText);
-        setFormIsValid(false);
-      }
-    };
-    sendRequest({ url: `learningcontracts/${id}` }, useData);
-  };
 
   const onObjectiveChangeHandler = (value) => {
     setObjective(value);
@@ -224,21 +232,24 @@ const LearningContractForm = (props) => {
         GoalText: goalText,
       };
 
-      if (props.id) {
+      if (props.data) {
         sendRequest(
           {
-            url: `learningcontracts/${+props.id}`,
+            url: `learningcontracts/${+props.data.id}`,
             method: "PATCH",
             body: userData,
           },
           () => {
             if (!error) {
               setSaveMessage("Learning Contract updated");
+              setTimeout(() => {
+                setSaveMessage("");
+              }, 3000);
             }
           }
         );
 
-        props.onSave(userData, props.id);
+        props.onSave(userData, props.data.id);
       } else {
         sendRequest(
           { url: "learningcontracts", method: "POST", body: userData },
@@ -246,6 +257,9 @@ const LearningContractForm = (props) => {
             if (!error) {
               userData.id = data.id;
               setSaveMessage(data.message);
+              setTimeout(() => {
+                setSaveMessage("");
+              }, 3000);
             }
           }
         );
@@ -307,7 +321,7 @@ const LearningContractForm = (props) => {
           onChange={onGoalChangeHandler}
           options={goals}
           selectedIndex={goal}
-          value={goal}
+          defaultvalue={goal}
         />
       </div>
       <div className={formStyles["form__group"]}>

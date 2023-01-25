@@ -1,4 +1,11 @@
-import React, { useState, useReducer, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useReducer,
+  useEffect,
+  useRef
+} from "react";
+import { useNavigate } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
 import Button from "../Utilities/Button";
 import styles from "./Form.module.css";
 import formStyle from "./Signup.module.css";
@@ -74,13 +81,8 @@ const Signup = () => {
     dispatchConfirmPassword,
   ] = useReducer(confirmPasswordReducer, { value: "", isValid: null });
 
-  const onSubmitHandler = (event) => {
-    event.preventDefault();
-    console.log({
-      username: emailState.value,
-      password: passwordState.value,
-    });
-  };
+  const navigate = useNavigate();
+  const { sendRequest } = useFetch();
 
   useEffect(() => {
     if (!passwordValid) {
@@ -148,9 +150,38 @@ const Signup = () => {
   const confirmPasswordOnBlurHandler = () => {
     dispatchConfirmPassword({ type: "BLUR" });
   };
+
+  const onSignInClickHandler = () => {
+    navigate("/login");
+  };
+
+  const onSubmitHandler = (event) => {
+    event.preventDefault();
+    let userData = {
+      username: emailState.value,
+      password: passwordState.value,
+      confirm_password: confirmPasswordState.value,
+      uniqueID: studentIDState.value,
+      usertype: 'Student'
+    };
+
+    sendRequest(
+      { url: "register.php", method: "POST", body: userData },
+      (data) => {
+        if (data && data.id> 0) {
+          window.alert("User created");
+          navigate("/login");
+        }else{
+          console.log(data.message);
+          window.alert("Failed to create user. Try again later.");
+        }
+      }
+    );
+  };
+
   return (
     <div className={formStyle["form__container"]}>
-      <form action="#" onSubmit={onSubmitHandler} className={styles["form"]}>
+      <form onSubmit={onSubmitHandler} className={styles["form"]}>
         <div>
           <h2 className={formStyle["heading__primary"]}>Sign Up</h2>
           <div className={styles["form__group"]}>
@@ -216,15 +247,19 @@ const Signup = () => {
             </label>
           </div>
           <div className={styles["form__group"]}>
-            <Button type="button" className="btn__secondary-rounded">
-              Sign In
-            </Button>
             <Button
               type="submit"
               className="btn__primary-rounded"
               disabled={!formIsValid ? true : false}
             >
               Sign Up
+            </Button>
+            <Button
+              type="button"
+              className="btn__secondary-rounded"
+              onClick={onSignInClickHandler}
+            >
+              Sign In
             </Button>
           </div>
         </div>

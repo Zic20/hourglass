@@ -71,8 +71,19 @@
     z-index: 1;
 }
 
+.modal-dialog .modal-header button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgb(222, 36, 19);
+    color: white;
+    font-size: 1rem;
+    padding: .5rem .8rem;
+}
+
 .modal-dialog .modal-header h3 {
     margin: 0;
+    font-weight: 400;
 }
 
 .modal-dialog .modal-body {

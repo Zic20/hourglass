@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import useFetch from "../../hooks/useFetch";
+import Alert from "../Utilities/Alert";
 import Button from "../Utilities/Button";
 import formStyles from "./Form.module.css";
 import Input from "../Utilities/Inputs/Input";
@@ -6,8 +8,8 @@ import {
   validateTimeInputs,
   getTimeSpent,
   convertTime,
+  convertDate,
 } from "../../modules/timecalculation";
-import { RequestHelper } from "../../modules/Requester";
 import SelectInput from "../Utilities/Inputs/Select";
 
 const activityTypes = [
@@ -23,45 +25,53 @@ const activityTypes = [
 const ActivitiesForm = (props) => {
   const [week, setWeek] = useState("");
   const [date, setDate] = useState("");
-  const [startDate,setStartDate] = useState("");
-  const [endDate,setEndDate] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [activity, setActivity] = useState("");
-  const [activityType, setActivityType] = useState(0);
+  const [activityType, setActivityType] = useState(Number);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [timeSpent, setTimeSpent] = useState("");
   const [formIsValid, setFormIsValid] = useState(false);
   const [message, setMessage] = useState("");
-  const [id, setID] = useState("");
+  const [id, setID] = useState(Number);
 
   useEffect(() => {
+    const { data } = props;
 
-    const fetchData = async () => {
-      if (props.id) {
-        const result = RequestHelper.get(`activities/${props.id}`);
-        const { data, error } = await result;
-        if (data && !error) {
-          setActivity(data.Activity);
-          setDate(data.Date);
-          setStartTime(data.StartTime);
-          setEndTime(data.EndTime);
-          setActivityType(data.ActivityType);
-          setWeek(data.Week);
-          const timeInput = getTimeSpent(data.StartTime, data.EndTime);
-          setTimeSpent(timeInput);
-          getWeekDetail(data.Week);
-        }
-        setID(props.id);
-      }
-    };
-    fetchData();
-    if (props.week) {
-      setWeek(props.week);
+    if (data) {
+      let {
+        Activity,
+        Date: activityDate,
+        StartTime,
+        EndTime,
+        ActivityTypeID,
+        Week,
+        TimeInput,
+        id,
+        WeekStartDate,
+        WeekEndDate,
+      } = data;
+
+      let date = convertDate(activityDate);
+
+      StartTime = getTimeString(StartTime);
+      EndTime = getTimeString(EndTime);
+
+      setActivity(Activity);
+      setDate(date);
+      setStartTime(StartTime);
+      setEndTime(EndTime);
+      setActivityType(ActivityTypeID);
+      setWeek(Week);
+      setTimeSpent(TimeInput);
+      setID(id);
+      setStartDate(WeekStartDate);
+      setEndDate(WeekEndDate);
     }
 
-    if(props.maxDate && props.minDate){
-      setStartDate(props.minDate);
-      setEndDate(props.maxDate);
+    if (props.week) {
+      setWeek(props.week);
     }
   }, []);
 
@@ -82,13 +92,17 @@ const ActivitiesForm = (props) => {
     };
   }, [week, date, activity, activityType, startTime, endTime]);
 
-  const getWeekDetail = async (week) => {
-      const {data, error} =await RequestHelper.get(`learningcontracts?week=${week}`);
-      if(!error){
-        setStartDate(data.StartDate);
-        setEndDate(data.EndDate);
-      }
+  const { error, sendRequest } = useFetch();
+
+  function getTimeString(time) {
+    // converts time to conform to format of time input field
+    let date = new Date(`January 1, 1980 ${time}`);
+    let hour = date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`;
+    let minutes =
+      date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`;
+    return `${hour}:${minutes}`;
   }
+
   const startTimeBlurHandler = (event) => {
     setStartTime(event.target.value);
 
@@ -114,13 +128,6 @@ const ActivitiesForm = (props) => {
     setDate(event.target.value);
   };
 
-  const weekBlurHandler = (event) => {
-    setWeek(event.target.value);
-  };
-  const weekChangeHandler = (event) => {
-    setWeek(event.target.value);
-  };
-
   const activityChangeHandler = (event) => {
     setActivity(event.target.value);
   };
@@ -139,21 +146,23 @@ const ActivitiesForm = (props) => {
       Week: week,
       Date: date,
       Activity: activity,
-      ActivityType: activityType,
+      ActivityType: +activityType,
       StartTime: startTime,
       EndTime: endTime,
     };
-    let result;
-    if (id.length > 0) {
-      result = RequestHelper.update(`activities/${id}`, userData);
+    if (id > 0) {
+      sendRequest(
+        { url: `activities/${id}`, method: "PATCH", body: userData },
+        useData
+      );
     } else {
-      result = RequestHelper.post(`activities`, userData);
+      sendRequest(
+        { url: `activities`, method: "POST", body: userData },
+        useData
+      );
     }
 
-    const { data, error } = await result;
-
-    if (!error) {
-      setMessage(data.message);
+    function useData(data) {
       if (data.id > 0) {
         userData = {
           ...userData,
@@ -168,13 +177,14 @@ const ActivitiesForm = (props) => {
           }),
           id: data.id,
         };
+        props.onSave(userData, data.id);
       }
-      props.onSave(userData, data.id);
-    } else {
-      setMessage(data.message);
-    }
 
-    onCancelHandler();
+      setMessage(data.message);
+      setTimeout(() => {
+        setMessage("");
+      }, 5000);
+    }
   };
 
   const onCancelHandler = () => {
@@ -196,8 +206,6 @@ const ActivitiesForm = (props) => {
           label="Week"
           type="number"
           placeholder="Week"
-          onChange={weekChangeHandler}
-          onBlur={weekBlurHandler}
           defaultValue={week}
           readOnly={true}
         />
@@ -263,7 +271,12 @@ const ActivitiesForm = (props) => {
           defaultValue={timeSpent}
         />
       </div>
-      <div className={formStyles["form__message"]}>{message}</div>
+      {message.length > 0 && !error && (
+        <Alert className="alert__success">{message}</Alert>
+      )}
+      {message.length > 0 && error && (
+        <Alert className="alert__error">{message}</Alert>
+      )}
 
       <div className={formStyles["form__message"]}>
         <Button

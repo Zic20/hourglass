@@ -2,7 +2,7 @@ import React, { useState, useEffect, useReducer, Fragment } from "react";
 import Button from "../Utilities/Button";
 import Card from "../Utilities/Card";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPrint,faFile } from "@fortawesome/free-solid-svg-icons";
+import { faPrint, faFile } from "@fortawesome/free-solid-svg-icons";
 import useFetch from "../../hooks/useFetch";
 import LearningContractForm from "../Forms/LearningContractForm";
 import Modal from "../Utilities/Modal";
@@ -42,6 +42,7 @@ const LearningContracts = (props) => {
   const [update, setUpdate] = useState(false);
   const [weeks, setWeeks] = useState([]);
   const [id, setID] = useState("");
+  const [activeRow, setActiveRow] = useState({});
   const [contracts, dispatchContracts] = useReducer(contractsReducer, {
     learningContracts: [],
   });
@@ -81,13 +82,11 @@ const LearningContracts = (props) => {
   }, []);
 
   let className = "";
-  if(props.fullWidth){
+  if (props.fullWidth) {
     className = "card_large";
-  }else{
+  } else {
     className = "card_mid";
   }
-
-
 
   // responsible for updating the learning contracts state
   const onAddLearningContract = (data, id = null) => {
@@ -126,6 +125,10 @@ const LearningContracts = (props) => {
 
   // responsible for showing the form for updating a learning contract
   const showUpdateForm = (id) => {
+    const row = contracts.learningContracts.filter((learningcontract) => {
+      return parseInt(learningcontract.id) === parseInt(id);
+    });
+    setActiveRow(row[0]);
     setShowForm(true);
     setUpdate(true);
     setID(id);
@@ -164,7 +167,11 @@ const LearningContracts = (props) => {
           className="modal-dialog-scrollable"
           headerText="Update Learning Contract"
         >
-          <LearningContractForm id={id} onSave={onAddLearningContract} />
+          <LearningContractForm
+            id={id}
+            data={activeRow}
+            onSave={onAddLearningContract}
+          />
         </Modal>
       )}
       <Card className={className}>
@@ -186,7 +193,6 @@ const LearningContracts = (props) => {
           onShowForm={showUpdateForm}
           onDelete={onDeleteHandler}
         />
-        {contracts.learningContracts.Activities}
       </Card>
     </Fragment>
   );

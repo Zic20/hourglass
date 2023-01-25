@@ -43,6 +43,8 @@ const Activities = (props) => {
   const [weeks, setWeeks] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [selectedWeek, setSelectedWeek] = useState(Number);
+  const [selectedRow, setSelectedRow] = useState({});
 
   const [activitiesState, dispatchActivities] = useReducer(activitiesReducer, {
     activities: [],
@@ -52,6 +54,8 @@ const Activities = (props) => {
     getWeeks();
     getCurrentWeek();
   }, []);
+
+  const { activities } = activitiesState;
 
   const columns = [
     {
@@ -110,10 +114,12 @@ const Activities = (props) => {
   } else {
     className = "card_mid";
   }
+
   const getActivities = async (week) => {
     const option = { year: "numeric", month: "long", day: "numeric" };
     const { data, error } = await RequestHelper.get(`activities?week=${week}`);
     if (!error) {
+      dispatchActivities({ type: "REMOVE_ALL" });
       data.forEach((activity) => {
         let date = new Date(activity.Date);
         date = date.toLocaleDateString("en-Monrovia", option);
@@ -148,13 +154,13 @@ const Activities = (props) => {
       `learningcontracts?current`
     );
     if (!error) {
-      setCurrentWeek(data.Week);
-      let startDate = data.StartDate;
-      let endDate = data.EndDate;
+      let { StartDate: startDate, EndDate: endDate, Week } = data;
+      setCurrentWeek(Week);
+      setSelectedWeek(Week);
       setStartDate(startDate);
       setEndDate(endDate);
 
-      getActivities(data.Week);
+      getActivities(Week);
     }
   };
 
@@ -185,6 +191,16 @@ const Activities = (props) => {
 
   const onUpdateHandler = (event) => {
     const id = event.target.closest("button").value;
+    let row = activities.filter(
+      (activity) => parseInt(activity.id) === parseInt(id)
+    );
+    row = {
+      ...row[0],
+      Week: selectedWeek,
+      WeekStartDate: startDate,
+      WeekEndDate: endDate,
+    };
+    setSelectedRow(row);
     setActivityID(id);
     setUpdate(true);
     setShowForm(true);
@@ -202,6 +218,7 @@ const Activities = (props) => {
 
   const onWeekChangeHandler = (event) => {
     let week = +event.target.value;
+    setSelectedWeek(week);
     getActivities(week);
   };
 
@@ -221,7 +238,7 @@ const Activities = (props) => {
       {/* Opens form for updating existing activity */}
       {showForm && update && (
         <Modal headerText="Edit Activity" onClose={closeForm}>
-          <ActivitiesForm id={activityID} onSave={onAddActivityHandler} />
+          <ActivitiesForm id={activityID} onSave={onAddActivityHandler} data={selectedRow} />
         </Modal>
       )}
 

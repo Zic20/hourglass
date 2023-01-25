@@ -12,7 +12,7 @@
     /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif; */
-      font-family: 'Open Sans', sans-serif;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .form {
@@ -23,7 +23,7 @@
     column-gap: 2rem;
     width: 100%;
     height: 100%;
-    padding: 2rem;
+    padding: .5rem;
 }
 
 .form__signup {
@@ -48,6 +48,14 @@
     text-align: left;
 }
 
+@media screen and (min-width: 600px) {
+
+    .form__login {
+        padding-right: 2rem;
+    }
+}
+
+
 .form__login h2 {
     color: #ffffff;
     margin-left: .5rem;
@@ -58,13 +66,15 @@
     margin-top: 1rem;
 }
 
-.form__login Button:first-child {
+.form__login Button:nth-child(2) {
     display: none;
 }
 
 .form__login Button {
     margin: 8px;
 }
+
+
 
 @media (max-width:980px) {
     .form__container {
@@ -91,16 +101,35 @@
 
     .form__login Button {
         width: 45%;
-        padding: .8rem 0;
+        padding: .9rem 0;
         font-size: .99rem;
         margin: 8px;
     }
 
-    .form__login Button:first-child {
+    .form__login Button:nth-child(2) {
         display: inline-block;
     }
 
     .form__login:last-child {
         text-align: center;
     }
+}
+
+@media (max-width:500px) {
+    .form__login Button {
+        width: 100%;
+        padding: .8rem 0;
+        font-size: .99rem;
+        margin: 8px;
+    }
+
+    .form__container {
+        width: 95%;
+        height: auto;
+        background-size: cover;
+        background-position: center;
+        border-radius: 5px;
+    }
+
+
 }

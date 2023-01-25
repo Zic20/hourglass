@@ -1,16 +1,14 @@
-import React from "react";
+import React, { memo } from "react";
 import DataTable from "react-data-table-component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit,faKeyboard } from "@fortawesome/free-regular-svg-icons";
+import { faKeyboard } from "@fortawesome/free-regular-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import Button from "../Utilities/Button";
 import styles from "../Pages/LearningContracts.module.css";
 import useFetch from "../../hooks/useFetch";
 
 const ExpandedComponent = ({ data }) => {
-  const showResult = (data) => {
-    return <div>{data}</div>;
-  };
+
 
   return (
     <div className={styles.expandedDetails}>
@@ -59,7 +57,7 @@ const ExpandedComponent = ({ data }) => {
   );
 };
 
-const LearningContractTable = (props) => {
+const LearningContractTable = memo(({data:list,onDelete,onShowForm}) => {
   const { error, sendRequest } = useFetch();
 
   const columns = [
@@ -78,10 +76,12 @@ const LearningContractTable = (props) => {
       name: "Start Date",
       sortable: true,
       selector: (row) => row.StartDate,
+      wrap: true
     },
     {
       name: "End Date",
       selector: (row) => row.EndDate,
+      wrap: true
     },
     {
       name: "Action",
@@ -105,7 +105,8 @@ const LearningContractTable = (props) => {
 
   const onShowUpdateForm = (event) => {
     const id = event.target.closest("button").value;
-    props.onShowForm(id);
+    onShowForm(id);
+    // props.onShowForm(id);
   };
 
   const onDeleteHandler = (event) => {
@@ -123,18 +124,19 @@ const LearningContractTable = (props) => {
           }
         }
       );
-      props.onDelete(id);
+      // props.onDelete(id);
+      onDelete(id);
     }
   };
 
   return (
     <DataTable
       columns={columns}
-      data={props.data}
+      data={list}
       expandableRows
       expandableRowsComponent={ExpandedComponent}
     />
   );
-};
+});
 
 export default LearningContractTable;

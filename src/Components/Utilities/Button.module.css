@@ -37,7 +37,8 @@
 .btn__primary-rounded {
     background-color: rgb(19, 82, 209);
     color: #fcfcfc;
-    width: 10rem;
+    /* width: 10rem; */
+    padding: 0.8rem 2rem;
 }
 
 .btn__primary:disabled,
@@ -72,6 +73,7 @@
     background: rgba(28, 146, 93, 0.936);
     color: #fcfcfc;
     margin: .5rem .5rem;
+    padding: .5rem 1rem;
 }
 
 .btn__new {

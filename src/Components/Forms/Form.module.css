@@ -38,7 +38,7 @@
     
 }
 
-input {
+.form__input {
     display: block;
     padding: 0.8rem 0.8rem;
     width: 100%;
@@ -47,11 +47,11 @@ input {
     margin-bottom: 0.2rem;
 }
 
-input:focus {
+.form__input:focus {
     outline: 1px solid #1c925d;
 }
 
-input:focus:invalid {
+.form__input:focus:invalid {
     outline: 1px solid red;
 }
 
@@ -65,7 +65,7 @@ label span {
     color: red;
 }
 
-input:placeholder-shown+label {
+.form__input:placeholder-shown+label {
     opacity: 0;
     visibility: hidden;
     transform: translateY(-4rem);
