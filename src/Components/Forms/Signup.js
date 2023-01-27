@@ -82,7 +82,7 @@ const Signup = () => {
   ] = useReducer(confirmPasswordReducer, { value: "", isValid: null });
 
   const navigate = useNavigate();
-  const { sendRequest } = useFetch();
+  const { error,sendRequest } = useFetch();
 
   useEffect(() => {
     if (!passwordValid) {
@@ -171,10 +171,14 @@ const Signup = () => {
         if (data && data.id> 0) {
           window.alert("User created");
           navigate("/login");
-        }else{
-          console.log(data.message);
-          window.alert("Failed to create user. Try again later.");
         }
+
+        if(error){
+          console.log(data.message);
+          console.log("Failed to create user. Try again later.");
+        }
+          
+        
       }
     );
   };

@@ -16,6 +16,7 @@ function retrieveStoredToken() {
 
     if (remainingTime <= 3600) {
       return null;
+
     }
 
     return {
@@ -88,21 +89,10 @@ const NewAuthProvider = (props) => {
     refreshTimer = setTimeout(getNewToken, remainingTime);
   };
 
-  //   grants users access to app
-  const loginHandler = async (username, password) => {
-    let userData = {
-      username: username,
-      password: password,
-    };
-    sendRequest(
-      { url: "login.php", method: "POST", body: userData },
-      (data) => {
-        if (data) {
-          setTokens(data);
-          navigate("/dashboard");
-        }
-      }
-    );
+
+  const loginHandler = (data) => {
+    setTokens(data);
+    navigate("/dashboard");
   };
 
   const logoutHandler = useCallback(() => {

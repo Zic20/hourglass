@@ -1,5 +1,6 @@
 import React, { useState, useReducer, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
 import authContext from "../../store/auth-context";
 import Button from "../Utilities/Button";
 import styles from "./Login.module.css";
@@ -43,11 +44,7 @@ const Login = () => {
 
   const authCtx = useContext(authContext);
   const navigate = useNavigate();
-
-  const onSubmitHandler = (event) => {
-    event.preventDefault();
-    authCtx.login(emailState.value, passwordState.value);
-  };
+  const {error,sendRequest} = useFetch();
 
   // This effect hook is used to change the formIsValid state whenever emailState.isValid or passwordState.isValid changes
   useEffect(() => {
@@ -80,7 +77,26 @@ const Login = () => {
 
   const onForgotPasswordHandler = () => {
     navigate("/changepassword");
-  }
+  };
+
+  const onSubmitHandler = (event) => {
+    event.preventDefault();
+    let userData = {
+      username: emailState.value,
+      password: passwordState.value,
+    };
+    sendRequest(
+      { url: "login.php", method: "POST", body: userData },
+      (data) => {
+        if (data) {
+          authCtx.login(data);
+          navigate("/dashboard");
+        }else {
+          console.log(data);
+        }
+      }
+    );
+  };
 
   return (
     <div className={styles["form__container"]}>
@@ -145,7 +161,11 @@ const Login = () => {
               Sign Up
             </Button>
 
-            <Button type="button" className="form__link-rounded" onClick={onForgotPasswordHandler}>
+            <Button
+              type="button"
+              className="form__link-rounded"
+              onClick={onForgotPasswordHandler}
+            >
               Forgot password?
             </Button>
           </div>
