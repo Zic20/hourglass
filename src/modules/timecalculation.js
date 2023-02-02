@@ -98,6 +98,10 @@ function convertDate(date) {
   date = `${date.getFullYear()}-${month}-${date.getDate()}`;
   return date;
 }
+
+export function totalTime(dataset){
+  
+}
 export {
   validateTimeInputs,
   validateDateInputs,

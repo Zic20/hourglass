@@ -82,7 +82,7 @@ const Sidebar = (props) => {
           </li>
           <li>
             <NavLink className={setActiveNavLink} to="/learningcontracts">
-              <FontAwesomeIcon icon={faBookOpen} /> &nbsp;Learning Contracts
+              <FontAwesomeIcon icon={faBookOpen} /> &nbsp;Goals
             </NavLink>
           </li>
           <li>

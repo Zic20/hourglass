@@ -1,5 +1,6 @@
-import React, { memo } from "react";
+import React, { Fragment, memo, useState } from "react";
 import DataTable from "react-data-table-component";
+import AlertDialog from "../ImportedComponents/AlertDialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faKeyboard } from "@fortawesome/free-regular-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -8,8 +9,6 @@ import styles from "../Pages/LearningContracts.module.css";
 import useFetch from "../../hooks/useFetch";
 
 const ExpandedComponent = ({ data }) => {
-
-
   return (
     <div className={styles.expandedDetails}>
       <div>
@@ -57,7 +56,10 @@ const ExpandedComponent = ({ data }) => {
   );
 };
 
-const LearningContractTable = memo(({data:list,onDelete,onShowForm}) => {
+const LearningContractTable = memo(({ data: list, onDelete, onShowForm }) => {
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [selectedRowID, setSelectedRowID] = useState(Number);
+
   const { error, sendRequest } = useFetch();
 
   const columns = [
@@ -76,12 +78,12 @@ const LearningContractTable = memo(({data:list,onDelete,onShowForm}) => {
       name: "Start Date",
       sortable: true,
       selector: (row) => row.StartDate,
-      wrap: true
+      wrap: true,
     },
     {
       name: "End Date",
       selector: (row) => row.EndDate,
-      wrap: true
+      wrap: true,
     },
     {
       name: "Action",
@@ -111,31 +113,44 @@ const LearningContractTable = memo(({data:list,onDelete,onShowForm}) => {
 
   const onDeleteHandler = (event) => {
     const id = event.target.closest("button").value;
-    if (
-      window.confirm(
-        "Do you want to delete this learning contract? Deleted items cannot be retrieved!"
-      )
-    ) {
-      sendRequest(
-        { url: `learningcontracts/${id}`, method: "DELETE" },
-        (data) => {
-          if (!error) {
-            alert(data.message);
-          }
+    setSelectedRowID(+id);
+    setShowDeleteDialog(true);
+  };
+
+  const onDeleteDialogClose = () => {
+    setShowDeleteDialog(false);
+  };
+
+  const onAcceptDelete = async () => {
+    sendRequest(
+      { url: `learningcontracts/${selectedRowID}`, method: "DELETE" },
+      (data) => {
+        if (data.rows > 0) {
+          onDelete(selectedRowID);
         }
-      );
-      // props.onDelete(id);
-      onDelete(id);
-    }
+      }
+    );
   };
 
   return (
-    <DataTable
-      columns={columns}
-      data={list}
-      expandableRows
-      expandableRowsComponent={ExpandedComponent}
-    />
+    <Fragment>
+      <AlertDialog
+        open={showDeleteDialog}
+        Header="Delete Goal"
+        onClose={onDeleteDialogClose}
+        onAgree={onAcceptDelete}
+      >
+        Are you sure you want to delete this goal? Deleted goals
+        cannot be retrieved!
+      </AlertDialog>
+
+      <DataTable
+        columns={columns}
+        data={list}
+        expandableRows
+        expandableRowsComponent={ExpandedComponent}
+      />
+    </Fragment>
   );
 });
 

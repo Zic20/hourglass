@@ -16,7 +16,6 @@ function retrieveStoredToken() {
 
     if (remainingTime <= 3600) {
       return null;
-
     }
 
     return {
@@ -63,7 +62,7 @@ const NewAuthProvider = (props) => {
   if (!isLoggedIn) {
     let hasRefreshToken = !!refreshToken;
     if (hasRefreshToken) {
-      getNewToken();
+     // getNewToken();
     }
   }
 
@@ -72,7 +71,7 @@ const NewAuthProvider = (props) => {
   useEffect(() => {
     if (tokenData) {
       //sets a timer based on the token expiration time to get a new token
-      refreshTimer = setTimeout(getNewToken, tokenData.duration);
+     refreshTimer = setTimeout(getNewToken, tokenData.duration);
     }
   }, [tokenData]);
 
@@ -82,11 +81,10 @@ const NewAuthProvider = (props) => {
     setRefreshToken(data["refresh_token"]);
     const expiresIn = new Date(data.expiresIn * 1000).getTime();
     const remainingTime = getRemainingTime(expiresIn);
-
     localStorage.setItem("tokenExpiration", expiresIn);
     localStorage.setItem("tracksToken", data["access_token"]);
     localStorage.setItem("tracksRefresh", data["refresh_token"]);
-    refreshTimer = setTimeout(getNewToken, remainingTime);
+   // refreshTimer = setTimeout(getNewToken, remainingTime);
   };
 
 
@@ -121,7 +119,6 @@ const NewAuthProvider = (props) => {
         if (!error) {
           setTokens(data);
         }
-
         if (error) {
           logoutHandler();
         }

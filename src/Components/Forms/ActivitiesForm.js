@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import useFetch from "../../hooks/useFetch";
-import Alert from "../Utilities/Alert";
+import { Alert } from "@mui/material";
 import Button from "../Utilities/Button";
 import formStyles from "./Form.module.css";
 import Input from "../Utilities/Inputs/Input";
@@ -272,10 +272,10 @@ const ActivitiesForm = (props) => {
         />
       </div>
       {message.length > 0 && !error && (
-        <Alert className="alert__success">{message}</Alert>
+        <Alert severity="success" sx={{mb:2,textAlign:"center"}}>{message}</Alert>
       )}
       {message.length > 0 && error && (
-        <Alert className="alert__error">{message}</Alert>
+        <Alert severity="error" sx={{mb:2,textAlign:"center"}}>{message}</Alert>
       )}
 
       <div className={formStyles["form__message"]}>

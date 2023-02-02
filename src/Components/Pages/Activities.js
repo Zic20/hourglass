@@ -1,6 +1,7 @@
 import React, { useReducer, useState, Fragment, useEffect } from "react";
 import ActivitiesForm from "../Forms/ActivitiesForm";
 import Button from "../Utilities/Button";
+import AlertDialog from "../ImportedComponents/AlertDialog";
 import Card from "../Utilities/Card";
 import MyDatatable from "../Utilities/DataTableBase";
 import Modal from "../Utilities/Modal";
@@ -8,7 +9,8 @@ import SelectInput from "../Utilities/Inputs/Select";
 import { RequestHelper } from "../../modules/Requester";
 import { getTimeSpent, convertTime } from "../../modules/timecalculation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faKeyboard, faTrash, faFile } from "@fortawesome/free-solid-svg-icons";
+import { faKeyboard, faTrash,faPrint,faFile } from "@fortawesome/free-solid-svg-icons";
+import TimesheetPrint from "../Reports/TimesheetPrint";
 
 const activitiesReducer = (state, action) => {
   if (action.type === "ADD") {
@@ -45,6 +47,8 @@ const Activities = (props) => {
   const [endDate, setEndDate] = useState("");
   const [selectedWeek, setSelectedWeek] = useState(Number);
   const [selectedRow, setSelectedRow] = useState({});
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [selectedRowID, setSelectedRowID] = useState(Number);
 
   const [activitiesState, dispatchActivities] = useReducer(activitiesReducer, {
     activities: [],
@@ -175,19 +179,20 @@ const Activities = (props) => {
 
   const onDeleteHandler = async (event) => {
     const id = event.target.closest("button").value;
+    setSelectedRowID(+id);
+    setShowDeleteDialog(true);
+  };
 
-    if (
-      window.confirm(
-        `Do you want to delete activity ${id}? Deleted activities cannot be retrieved!`
-      )
-    ) {
-      const { data, error } = await RequestHelper.delete(`activities/${id}`);
-
-      if (data && !error) {
-        dispatchActivities({ type: "REMOVE", id: id });
-      }
+  const onAcceptDelete = async () => {
+    const { data, error } = await RequestHelper.delete(
+      `activities/${selectedRowID}`
+    );
+    if (data && !error) {
+      dispatchActivities({ type: "REMOVE", id: selectedRowID });
     }
   };
+
+  const onDeleteDialogClose = () => setShowDeleteDialog(false);
 
   const onUpdateHandler = (event) => {
     const id = event.target.closest("button").value;
@@ -222,6 +227,14 @@ const Activities = (props) => {
     getActivities(week);
   };
 
+  const onPrintHandler = () => {
+    TimesheetPrint({
+      columnHeaders: ["Week", "Date", "Activity", "Start Time", "End Time","Time Input"],
+      data: activitiesState.activities,
+      title: `Week ${currentWeek} Timesheet`
+    });
+  };
+
   return (
     <Fragment>
       {/* Opens form for saving new activity */}
@@ -238,12 +251,35 @@ const Activities = (props) => {
       {/* Opens form for updating existing activity */}
       {showForm && update && (
         <Modal headerText="Edit Activity" onClose={closeForm}>
-          <ActivitiesForm id={activityID} onSave={onAddActivityHandler} data={selectedRow} />
+          <ActivitiesForm
+            id={activityID}
+            onSave={onAddActivityHandler}
+            data={selectedRow}
+          />
         </Modal>
       )}
 
+      <AlertDialog
+        open={showDeleteDialog}
+        Header="Delete Activity"
+        onClose={onDeleteDialogClose}
+        onAgree={onAcceptDelete}
+      >
+        Are your sure you want to delete this activity? Deleted activities
+        cannot be retrieved!
+      </AlertDialog>
+
       <Card className={className}>
-        <h2 style={{ textAlign: "left", marginBottom: "1rem" }}>Activities</h2>
+        <h2
+          style={{
+            textAlign: "left",
+            marginBottom: "1rem",
+            fontWeight: 600,
+            fontSize: "18px",
+          }}
+        >
+          Activities
+        </h2>
         <div>
           <SelectInput
             options={weeks}
@@ -254,6 +290,10 @@ const Activities = (props) => {
           <Button className="btn__new" onClick={openActivityForm}>
             <FontAwesomeIcon icon={faFile}></FontAwesomeIcon> &nbsp; New
             Activity
+          </Button>
+
+          <Button className="btn__action" onClick={onPrintHandler}>
+            Print &nbsp;<FontAwesomeIcon icon={faPrint}></FontAwesomeIcon>
           </Button>
         </div>
         <MyDatatable columns={columns} data={activitiesState.activities} />

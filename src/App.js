@@ -1,6 +1,7 @@
 import React, { Fragment, Suspense, useContext, useState } from "react";
 import { Navigate, Route, Routes, useLocation, Outlet } from "react-router-dom";
 import "./App.css";
+import Dashboard from "./Components/Pages/Dashboard";
 import Sidebar from "./Components/Utilities/Navigation/Sidebar";
 import authContext from "./store/auth-context";
 
@@ -41,10 +42,8 @@ function App() {
           <Routes>
             {authCtx.isLoggedIn && (
               <>
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/" element={<Navigate to="/dashboard" />} />
-                <Route path="/dashboard" element={<Outlet />} />
+                <Route path="/*" element={<Navigate to="/dashboard" />} />
+                <Route path="/dashboard" element={<Dashboard fullWidth={!sideBarClosed} />} />
                 <Route
                   path="/timesheet"
                   element={<Activities fullWidth={!sideBarClosed} />}

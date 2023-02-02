@@ -2,11 +2,13 @@ import React, {
   useState,
   useReducer,
   useEffect,
-  useRef
+  useRef,
+  Fragment,
 } from "react";
 import { useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import Button from "../Utilities/Button";
+import ErrorModal from "../ImportedComponents/ErrorModal";
 import styles from "./Form.module.css";
 import formStyle from "./Signup.module.css";
 
@@ -58,6 +60,8 @@ const confirmPasswordReducer = (state, action) => {
 const Signup = () => {
   const [formIsValid, setFormIsValid] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showErrorModal, setShowErrorModal] = useState(false);
   const passwordRef = useRef();
   // the reducer below manages email state
   const [emailState, dispatchEmail] = useReducer(emailReducer, {
@@ -82,7 +86,7 @@ const Signup = () => {
   ] = useReducer(confirmPasswordReducer, { value: "", isValid: null });
 
   const navigate = useNavigate();
-  const { error,sendRequest } = useFetch();
+  const { sendRequest } = useFetch();
 
   useEffect(() => {
     if (!passwordValid) {
@@ -162,113 +166,127 @@ const Signup = () => {
       password: passwordState.value,
       confirm_password: confirmPasswordState.value,
       uniqueID: studentIDState.value,
-      usertype: 'Student'
+      usertype: "Student",
     };
 
     sendRequest(
       { url: "register.php", method: "POST", body: userData },
       (data) => {
-        if (data && data.id> 0) {
+        if (data && data.id > 0) {
           window.alert("User created");
           navigate("/login");
+        } else {
+          if (data.message) {
+            setShowErrorModal(true);
+            setErrorMessage(data.message);
+          }
         }
-
-        if(error){
-          console.log(data.message);
-          console.log("Failed to create user. Try again later.");
-        }
-          
-        
       }
     );
   };
 
+  const showModal = (option) => {
+    setShowErrorModal(option);
+  };
+
   return (
-    <div className={formStyle["form__container"]}>
-      <form onSubmit={onSubmitHandler} className={styles["form"]}>
-        <div>
-          <h2 className={formStyle["heading__primary"]}>Sign Up</h2>
-          <div className={styles["form__group"]}>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              onChange={emailOnChangeHandler}
-              onBlur={emailOnBlurHandler}
-              className={styles["form__input"]}
-              placeholder="Enter username or email"
-              required
-            />
-            <label htmlFor="email" className={styles["form__label"]}>
-              Enter username or email <span>*</span>
-            </label>
+    <Fragment>
+      <ErrorModal
+        message={errorMessage}
+        open={showErrorModal}
+        onClose={showModal}
+      />
+      <div className={formStyle["form__container"]}>
+        <form onSubmit={onSubmitHandler} className={styles["form"]}>
+          <div>
+            <h2 className={formStyle["heading__primary"]}>Sign Up</h2>
+            <div className={styles["form__group"]}>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                onChange={emailOnChangeHandler}
+                onBlur={emailOnBlurHandler}
+                className={styles["form__input"]}
+                placeholder="Enter username or email"
+                required
+              />
+              <label htmlFor="email" className={styles["form__label"]}>
+                Enter username or email <span>*</span>
+              </label>
+            </div>
+            <div className={styles["form__group"]}>
+              <input
+                type="text"
+                name="studentID"
+                id="studentID"
+                onChange={studentIdOnChangeHandler}
+                onBlur={studentIdOnBlurHandler}
+                className={styles["form__input"]}
+                placeholder="Enter Student ID"
+                required
+              />
+              <label htmlFor="email" className={styles["form__label"]}>
+                Enter Student ID <span>*</span>
+              </label>
+            </div>
+            <div className={styles["form__group"]}>
+              <input
+                type="password"
+                name="password"
+                onChange={passwordOnChangeHandler}
+                onBlur={passwordOnBlurHandler}
+                className={styles["form__input"]}
+                placeholder="Password"
+                required
+              />
+              <label htmlFor="email" className={styles["form__label"]}>
+                {passwordState.value.length > 7 && "Password"}
+                {passwordState.value.length < 8 && (
+                  <>
+                    Password must be at least 8 characters long <span>*</span>
+                  </>
+                )}
+              </label>
+            </div>
+            <div className={styles["form__group"]}>
+              <input
+                type="password"
+                name="password"
+                onChange={confirmPasswordOnChangeHandler}
+                onBlur={confirmPasswordOnBlurHandler}
+                className={styles["form__input"]}
+                placeholder="Confirm Password"
+                required
+              />
+              <label
+                ref={passwordRef}
+                htmlFor="email"
+                className={styles["form__label"]}
+              >
+                Confirm Password <span>*</span>
+              </label>
+            </div>
+            <div className={styles["form__group"]}>
+              <Button
+                type="submit"
+                className="btn__primary-rounded"
+                disabled={!formIsValid ? true : false}
+              >
+                Sign Up
+              </Button>
+              <Button
+                type="button"
+                className="btn__secondary-rounded"
+                onClick={onSignInClickHandler}
+              >
+                Sign In
+              </Button>
+            </div>
           </div>
-          <div className={styles["form__group"]}>
-            <input
-              type="text"
-              name="studentID"
-              id="studentID"
-              onChange={studentIdOnChangeHandler}
-              onBlur={studentIdOnBlurHandler}
-              className={styles["form__input"]}
-              placeholder="Enter Student ID"
-              required
-            />
-            <label htmlFor="email" className={styles["form__label"]}>
-              Enter Student ID <span>*</span>
-            </label>
-          </div>
-          <div className={styles["form__group"]}>
-            <input
-              type="password"
-              name="password"
-              onChange={passwordOnChangeHandler}
-              onBlur={passwordOnBlurHandler}
-              className={styles["form__input"]}
-              placeholder="Password"
-              required
-            />
-            <label htmlFor="email" className={styles["form__label"]}>
-              Password <span>*</span>
-            </label>
-          </div>
-          <div className={styles["form__group"]}>
-            <input
-              type="password"
-              name="password"
-              onChange={confirmPasswordOnChangeHandler}
-              onBlur={confirmPasswordOnBlurHandler}
-              className={styles["form__input"]}
-              placeholder="Confirm Password"
-              required
-            />
-            <label
-              ref={passwordRef}
-              htmlFor="email"
-              className={styles["form__label"]}
-            >
-              Confirm Password <span>*</span>
-            </label>
-          </div>
-          <div className={styles["form__group"]}>
-            <Button
-              type="submit"
-              className="btn__primary-rounded"
-              disabled={!formIsValid ? true : false}
-            >
-              Sign Up
-            </Button>
-            <Button
-              type="button"
-              className="btn__secondary-rounded"
-              onClick={onSignInClickHandler}
-            >
-              Sign In
-            </Button>
-          </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </Fragment>
   );
 };
 

@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useReducer, Fragment } from "react";
+import useFetch from "../../hooks/useFetch";
 import Button from "../Utilities/Button";
 import Card from "../Utilities/Card";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPrint, faFile } from "@fortawesome/free-solid-svg-icons";
-import useFetch from "../../hooks/useFetch";
+import { faPrint, faPlus } from "@fortawesome/free-solid-svg-icons";
 import LearningContractForm from "../Forms/LearningContractForm";
 import Modal from "../Utilities/Modal";
 import SelectInput from "../Utilities/Inputs/Select";
 import LearningContractTable from "../Tables/LearningContractTable";
+import TimesheetPrint from "../Reports/TimesheetPrint";
 
 const contractsReducer = (state, action) => {
   if (action.type === "ADD") {
@@ -43,6 +44,7 @@ const LearningContracts = (props) => {
   const [weeks, setWeeks] = useState([]);
   const [id, setID] = useState("");
   const [activeRow, setActiveRow] = useState({});
+
   const [contracts, dispatchContracts] = useReducer(contractsReducer, {
     learningContracts: [],
   });
@@ -148,6 +150,14 @@ const LearningContracts = (props) => {
     dispatchContracts({ type: "REMOVE", id: +id });
   };
 
+  const onPrintHandler = () => {
+    TimesheetPrint({
+      columnHeaders: ["Week","Goal","Objective","EndDate"],
+      data: contracts.learningContracts,
+      orientation: "potrait"
+    });
+  }
+
   return (
     <Fragment>
       {/* Opens form for saving new learning contract */}
@@ -155,7 +165,7 @@ const LearningContracts = (props) => {
         <Modal
           onClose={onFormCloseHandler}
           className="modal-dialog-scrollable"
-          headerText="Add Learning Contract"
+          headerText="New Goal"
         >
           <LearningContractForm onSave={onAddLearningContract} />
         </Modal>
@@ -165,7 +175,7 @@ const LearningContracts = (props) => {
         <Modal
           onClose={onFormCloseHandler}
           className="modal-dialog-scrollable"
-          headerText="Update Learning Contract"
+          headerText="Edit Goal"
         >
           <LearningContractForm
             id={id}
@@ -174,17 +184,19 @@ const LearningContracts = (props) => {
           />
         </Modal>
       )}
+
+      
       <Card className={className}>
         <h2 style={{ textAlign: "left", marginBottom: "1rem" }}>
-          Learning Contracts
+          Goals
         </h2>
         <div>
           <SelectInput options={weeks} className="select-sm" label="Weeks" />
           <Button className="btn__new" onClick={onShowFormHandler}>
-            <FontAwesomeIcon icon={faFile}></FontAwesomeIcon>
-            &nbsp;New
+            <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
+            &nbsp;New Goal
           </Button>
-          <Button className="btn__action">
+          <Button className="btn__action" onClick={onPrintHandler}>
             Print &nbsp;<FontAwesomeIcon icon={faPrint}></FontAwesomeIcon>
           </Button>
         </div>

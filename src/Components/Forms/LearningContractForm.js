@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Alert from "../Utilities/Alert";
+import { Alert } from "@mui/material";
 import Button from "../Utilities/Button";
 import Editor from "../Utilities/Inputs/Editor";
 import formStyles from "./Form.module.css";
@@ -241,7 +241,7 @@ const LearningContractForm = (props) => {
           },
           () => {
             if (!error) {
-              setSaveMessage("Learning Contract updated");
+              setSaveMessage("Goal updated");
               setTimeout(() => {
                 setSaveMessage("");
               }, 3000);
@@ -256,7 +256,7 @@ const LearningContractForm = (props) => {
           (data) => {
             if (!error) {
               userData.id = data.id;
-              setSaveMessage(data.message);
+              setSaveMessage("Goal created");
               setTimeout(() => {
                 setSaveMessage("");
               }, 3000);
@@ -354,7 +354,7 @@ const LearningContractForm = (props) => {
         <Editor onChange={onMeansChangeHandler} value={meansOfVerification} />
       </div>
       {saveMessage.length > 0 && (
-        <Alert className="alert__success">{saveMessage}</Alert>
+        <Alert severity="success" sx={{mx: "auto",mt:1,mb:1, width:"80%"}}>{saveMessage}</Alert>
       )}
       <div style={{ textAlign: "center", marginTop: "1rem" }}>
         <Button disabled={!formIsValid} type="submit" className="btn__primary">
