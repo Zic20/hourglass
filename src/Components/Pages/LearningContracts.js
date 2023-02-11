@@ -8,7 +8,7 @@ import LearningContractForm from "../Forms/LearningContractForm";
 import Modal from "../Utilities/Modal";
 import SelectInput from "../Utilities/Inputs/Select";
 import LearningContractTable from "../Tables/LearningContractTable";
-import TimesheetPrint from "../Reports/TimesheetPrint";
+import LearningContractPrint from "../Reports/LearningContractPrint";
 
 const contractsReducer = (state, action) => {
   if (action.type === "ADD") {
@@ -151,10 +151,9 @@ const LearningContracts = (props) => {
   };
 
   const onPrintHandler = () => {
-    TimesheetPrint({
-      columnHeaders: ["Week","Goal","Objective","EndDate"],
+    LearningContractPrint({
       data: contracts.learningContracts,
-      orientation: "potrait"
+      title: "Learning Contract"
     });
   }
 

@@ -69,7 +69,7 @@ const Dashboard = (props) => {
           <p className={styles.text}>79</p>
         </div>
       </div>
-      <div
+      {/* <div
         className={styles.basicCard}
         style={{
           backgroundImage:"linear-gradient(to right, #43e97b 0%, #38f9d7 100%)",
@@ -86,7 +86,7 @@ const Dashboard = (props) => {
           />
           <p className={styles.text}>3</p>
         </div>
-      </div>
+      </div> */}
       <div
         className={styles.basicCard}
         style={{

@@ -6,7 +6,7 @@ import formStyles from "./Form.module.css";
 import Input from "../Utilities/Inputs/Input";
 import {
   validateTimeInputs,
-  getTimeSpent,
+  getTimeDifference,
   convertTime,
   convertDate,
 } from "../../modules/timecalculation";
@@ -107,7 +107,7 @@ const ActivitiesForm = (props) => {
     setStartTime(event.target.value);
 
     if (endTime.length > 0) {
-      let timeInput = getTimeSpent(event.target.value, endTime);
+      let timeInput = getTimeDifference(event.target.value, endTime);
       setTimeSpent(timeInput);
     }
   };
@@ -115,7 +115,7 @@ const ActivitiesForm = (props) => {
   const endTimeBlurHandler = (event) => {
     if (validateTimeInputs(startTime, event.target.value)) {
       setEndTime(event.target.value);
-      let timeInput = getTimeSpent(startTime, event.target.value);
+      let timeInput = getTimeDifference(startTime, event.target.value);
       setTimeSpent(timeInput);
     }
   };
@@ -169,7 +169,7 @@ const ActivitiesForm = (props) => {
           ActivityType: activityTypes[userData.ActivityType - 1].text,
           StartTime: convertTime(startTime),
           EndTime: convertTime(endTime),
-          TimeInput: getTimeSpent(startTime, endTime),
+          TimeInput: getTimeDifference(startTime, endTime),
           Date: new Date(date).toLocaleDateString("en-Monrovia", {
             year: "numeric",
             month: "long",

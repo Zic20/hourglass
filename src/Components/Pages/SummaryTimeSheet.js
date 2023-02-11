@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPrint } from "@fortawesome/free-solid-svg-icons";
 import Button from "../Utilities/Button";
@@ -7,6 +7,8 @@ import Card from "../Utilities/Card";
 import classes from "./SummaryTimesheet.module.css";
 import useFetch from "../../hooks/useFetch";
 import { convertTimeToString } from "../../modules/timecalculation";
+import printSummaryTimesheet from "../Reports/PrintSummaryTimesheet";
+import ErrorModal from "../ImportedComponents/ErrorModal";
 
 const TableHead = (props) => {
   const headerData = props.data;
@@ -14,8 +16,8 @@ const TableHead = (props) => {
   return (
     <thead>
       <tr key={0}>
-        {headerData.map((column) => {
-          return <td>{column}</td>;
+        {headerData.map((column, index) => {
+          return <td key={index}>{column}</td>;
         })}
       </tr>
     </thead>
@@ -27,12 +29,12 @@ const TableBody = (props) => {
     <tbody>
       {props.data.map((row) => {
         return (
-          <tr>
+          <tr key={row[0]}>
             {row.map((column, index) => {
               if (index > 0) {
                 column = convertTimeToString(column);
               }
-              return <td>{column}</td>;
+              return <td key={index}>{column}</td>;
             })}
           </tr>
         );
@@ -47,10 +49,13 @@ const SummaryTimeSheet = (props) => {
   const [weeks, setWeeks] = useState(null);
   const [detail, setDetails] = useState(null);
   const [tableHeader, setTableHeader] = useState(null);
+  const [showMessageDialog, setshowMessageDialog] = useState(false);
+
+  const { error, loading, sendRequest } = useFetch();
 
   useEffect(() => {
     sendRequest({ url: `learningcontracts?weeks` }, listWeeks);
-  }, []);
+  }, [sendRequest]);
 
   useEffect(() => {
     if (firstWeek > 0 && secondWeek > 0) {
@@ -59,7 +64,7 @@ const SummaryTimeSheet = (props) => {
         tableDetails
       );
     }
-  }, [secondWeek]);
+  }, [firstWeek, secondWeek, sendRequest]);
 
   const tableDetails = (data) => {
     setTableHeader(data[0]);
@@ -86,11 +91,7 @@ const SummaryTimeSheet = (props) => {
 
   const onSecondChangeHandler = (event) => {
     const value = parseInt(event.target.value);
-    if (value > 0 && value > firstWeek) {
-      setSecondWeek(value);
-    } else {
-      event.preventDefault();
-    }
+    setSecondWeek(value);
   };
 
   let className = "";
@@ -100,36 +101,64 @@ const SummaryTimeSheet = (props) => {
     className = "card_mid";
   }
 
-  const { error, loading, sendRequest } = useFetch();
-  return (
-    <Card className={className}>
-      <h3>Summary Timesheet</h3>
-      <SelectInput
-        id="firstWeek"
-        label="First Week"
-        options={weeks}
-        onChange={onFirstWeekChangeHandler}
-        className="select-sm"
-      />
-      <SelectInput
-        id="secondWeek"
-        label="Second Week"
-        options={weeks}
-        onChange={onSecondChangeHandler}
-        disabled={firstWeek < 1}
-        className="select-sm"
-      />
-      <Button className="btn__action">
-        <FontAwesomeIcon icon={faPrint}></FontAwesomeIcon> &nbsp; Print
-      </Button>
+  const onPrintClickHandler = () => {
+    if (!firstWeek > 0 || !secondWeek > 0) {
+      setshowMessageDialog(true);
+      return;
+    }
+    printSummaryTimesheet({
+      columnHeaders: tableHeader,
+      data: detail,
+      title: `Week ${firstWeek} and ${secondWeek} Summary Timesheet`,
+      student: {
+        name: "Isaac Zally, Jr",
+        phone: "0777204203",
+        email: "izallyjr@gmail.com",
+        "Practicum Instructor": "Isaac Zally, Jr.",
+        "Instructor Phone": "0880339614",
+        agency: "Tracks",
+      },
+      totalHours: "200 hrs 25mins",
+    });
+  };
 
-      {!error && !loading && (
-        <table className={classes.datatable}>
-          {tableHeader !== null && <TableHead data={tableHeader} />}
-          {detail !== null && <TableBody data={detail} />}
-        </table>
-      )}
-    </Card>
+  const closeMessageDialog = () => setshowMessageDialog(false);
+  return (
+    <Fragment>
+      <ErrorModal
+        message="Please Select the two weeks you want to print a summary timesheet for!"
+        open={showMessageDialog}
+        onClose={closeMessageDialog}
+      />
+      <Card className={className}>
+        <h3>Summary Timesheet</h3>
+        <SelectInput
+          id="firstWeek"
+          label="First Week"
+          options={weeks}
+          onChange={onFirstWeekChangeHandler}
+          className="select-sm"
+        />
+        <SelectInput
+          id="secondWeek"
+          label="Second Week"
+          options={weeks}
+          onChange={onSecondChangeHandler}
+          disabled={firstWeek < 1}
+          className="select-sm"
+        />
+        <Button className="btn__action" onClick={onPrintClickHandler}>
+          <FontAwesomeIcon icon={faPrint}></FontAwesomeIcon> &nbsp; Print
+        </Button>
+
+        {!error && !loading && (
+          <table className={classes.datatable}>
+            {tableHeader !== null && <TableHead data={tableHeader} />}
+            {detail !== null && <TableBody data={detail} />}
+          </table>
+        )}
+      </Card>
+    </Fragment>
   );
 };
 

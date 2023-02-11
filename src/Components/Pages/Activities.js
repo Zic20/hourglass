@@ -7,7 +7,7 @@ import MyDatatable from "../Utilities/DataTableBase";
 import Modal from "../Utilities/Modal";
 import SelectInput from "../Utilities/Inputs/Select";
 import { RequestHelper } from "../../modules/Requester";
-import { getTimeSpent, convertTime } from "../../modules/timecalculation";
+import { getTimeDifference, convertTime } from "../../modules/timecalculation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faKeyboard, faTrash,faPrint,faFile } from "@fortawesome/free-solid-svg-icons";
 import TimesheetPrint from "../Reports/TimesheetPrint";
@@ -131,7 +131,7 @@ const Activities = (props) => {
         let endTime = convertTime(activity.EndTime);
         const modifiedActivity = {
           ...activity,
-          TimeInput: getTimeSpent(activity.StartTime, activity.EndTime),
+          TimeInput: getTimeDifference(activity.StartTime, activity.EndTime),
           Date: date,
           StartTime: startTime,
           EndTime: endTime,
@@ -231,7 +231,8 @@ const Activities = (props) => {
     TimesheetPrint({
       columnHeaders: ["Week", "Date", "Activity", "Start Time", "End Time","Time Input"],
       data: activitiesState.activities,
-      title: `Week ${currentWeek} Timesheet`
+      title: `Week ${currentWeek} Timesheet`,
+      week: currentWeek
     });
   };
 

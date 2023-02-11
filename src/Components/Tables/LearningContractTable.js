@@ -60,7 +60,7 @@ const LearningContractTable = memo(({ data: list, onDelete, onShowForm }) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedRowID, setSelectedRowID] = useState(Number);
 
-  const { error, sendRequest } = useFetch();
+  const { sendRequest } = useFetch();
 
   const columns = [
     {

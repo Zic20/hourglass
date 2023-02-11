@@ -1,4 +1,4 @@
-const getTimeSpent = (firstTime, secondTime) => {
+const getTimeDifference = (firstTime, secondTime) => {
   let startTime = new Date();
   let endTime = new Date();
 
@@ -76,22 +76,23 @@ const convertTime = (time) => {
 
 const convertTimeToString = (time) => {
   let convertedTime = time.split(":");
-  const hourModifier = `${convertedTime[0] > 1 ? "hrs" : "hr"}`;
-  const minModifier = `${convertedTime[1] > 1 ? "mins" : "min"}`;
+  const modifiedHour = `${convertedTime[0] > 1 ? "hrs" : "hr"}`;
+  const modifiedMinute = `${convertedTime[1] > 1 ? "mins" : "min"}`;
   if (convertedTime[0] > 0) {
     if (convertedTime[1] > 0) {
-      return `${convertedTime[0]}  ${hourModifier} ${convertedTime[1]} ${minModifier}`;
+      return `${convertedTime[0]}  ${modifiedHour} ${convertedTime[1]} ${modifiedMinute}`;
     }
-    return `${convertedTime[0]} ${hourModifier}`;
+    return `${convertedTime[0]} ${modifiedHour}`;
   }
 
   if (convertedTime[1] > 0) {
-    return `${convertedTime[1]} ${minModifier}`;
+    return `${convertedTime[1]} ${modifiedMinute}`;
   }
+
+  return " ";
 };
 
 function convertDate(date) {
-  // converts date to conform to format of date input field
   date = new Date(date);
   let month =
     date.getMonth() > 9 ? date.getMonth() + 1 : `0${date.getMonth() + 1}`;
@@ -99,13 +100,29 @@ function convertDate(date) {
   return date;
 }
 
-export function totalTime(dataset){
-  
+export function totalTime(dataset) {
+  // Todo: Complete function for calculating total time for a dataset that contains hours
+  let totalHours = 0;
+  let totalMinutes = 0;
+  dataset.forEach((data) => {
+    let time = data.split(":");
+    totalHours += +time[0];
+    totalMinutes += +time[1];
+  });
+
+  if (totalMinutes > 60) {
+    totalHours += Math.floor(totalMinutes / 60);
+    totalMinutes = Math.abs(totalMinutes / 60);
+  } 
+
+  return `${totalHours}:${totalMinutes}`;
 }
+
+ 
 export {
   validateTimeInputs,
   validateDateInputs,
-  getTimeSpent,
+  getTimeDifference,
   convertTime,
   convertTimeToString,
   convertDate,
