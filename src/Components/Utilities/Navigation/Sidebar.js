@@ -10,8 +10,8 @@ import {
   faListCheck,
   faSquarePollVertical,
   faTools,
+  faArrowAltCircleLeft,
 } from "@fortawesome/free-solid-svg-icons";
-import { faHandPointLeft} from "@fortawesome/free-regular-svg-icons";
 
 const Sidebar = (props) => {
   const [isClosed, setIsClosed] = useState(false);
@@ -50,7 +50,6 @@ const Sidebar = (props) => {
               className={styles["nav-check-mobile-icon"]}
               htmlFor="nav-check-mobile"
             >
-              {/* &nbsp; */}
             </label>
           </div>
           <div className={styles.logo}>
@@ -103,7 +102,7 @@ const Sidebar = (props) => {
           </li>
         </ul>
         <Button onClick={onLogoutHandler} className="btn__dark">
-          <FontAwesomeIcon icon={faHandPointLeft} /> &nbsp;Exit
+          <FontAwesomeIcon icon={faArrowAltCircleLeft} /> &nbsp;Logout
         </Button>
       </div>
     </Fragment>

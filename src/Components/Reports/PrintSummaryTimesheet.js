@@ -1,11 +1,17 @@
 import { jsPDF } from "jspdf";
 import { convertTimeToString } from "../../modules/timecalculation";
-const printSummaryTimesheet = ({ columnHeaders, data, title,student,totalHours }) => {
+const printSummaryTimesheet = ({
+  columnHeaders,
+  data,
+  title,
+  student,
+  totalHours,
+}) => {
   if (!data || data.length === 0) {
     return;
   }
 
-  let headers = createHeaders(columnHeaders);
+  const { headers, columnCount } = createHeaders(columnHeaders);
   let records = formatData(columnHeaders, data);
 
   const doc = new jsPDF();
@@ -20,7 +26,6 @@ const printSummaryTimesheet = ({ columnHeaders, data, title,student,totalHours }
 
   doc.text("Social Work Program", 105, 24, { align: "center" });
 
-  
   doc.text(`Name: ${student.name}`, 10, 33);
   doc.line(25, 34, 105, 34);
   doc.text(`Student Phone (Home) : ${student.phone}`, 110, 33);
@@ -31,55 +36,84 @@ const printSummaryTimesheet = ({ columnHeaders, data, title,student,totalHours }
   doc.line(27, 48, 195, 48);
   doc.text(`Practicum Instructor: ${student["Practicum Instructor"]}`, 10, 54);
   doc.line(53, 55, 110, 55);
-  doc.text(`Practicum Instructor Phone: ${student["Instructor Phone"]}`, 110, 54);
+  doc.text(
+    `Practicum Instructor Phone: ${student["Instructor Phone"]}`,
+    110,
+    54
+  );
   doc.line(167, 55, 195, 55);
-  
-  doc.setFontSize(11);
+
   doc.table(10, 61, records, headers, {
     autoSize: false,
     headerBackgroundColor: "white",
     printHeaders: true,
+    fontSize: 11,
+    padding: 2
   });
+  
+  doc.setFontSize(12);
+  doc.text(
+    `Total Hours of Practicum Experience to Date:   ${totalHours}`,
+    10,
+    185
+  );
+  doc.line(90, 186, 140, 186);
+  doc.text("SIGNATURES:", 10, 195);
+  doc.text("Student:", 10, 205);
+  doc.line(25, 205, 155, 205);
 
-  doc.text(`Total Hours of Practicum Experience to Date:   ${totalHours}`, 10, 225);
-  doc.line(90,226,140,226);
-  doc.text("SIGNATURES:", 10, 235);
-  doc.text("Student:",10,245);
-  doc.line(25,245,155,245);
-  doc.text("Date:",158,245);
-  doc.line(169,245,200,245);
-  doc.text("Practicum Instructor:",10,255);
-  doc.line(46,255,155,255);
-  doc.text("Date:",158,255);
-  doc.line(169,255,200,255);
-  doc.text("Practicum Director:",10,265);
-  doc.line(44,265,155,265);
-  doc.text("Date:",158,265);
-  doc.line(169,265,200,265);
+  doc.text("Date:", 158, 205);
+  doc.line(169, 205, 200, 205);
+  doc.text("Practicum Instructor:", 10, 215);
+  doc.line(46, 215, 155, 215);
+  doc.text("Date:", 158, 215);
+  doc.line(169, 215, 200, 215);
+  doc.text("Practicum Director:", 10, 225);
+  doc.line(44, 225, 155, 225);
+  doc.text("Date:", 158, 225);
+  doc.line(169, 225, 200, 225);
   doc.save(`${title}.pdf`);
 };
 
 function createHeaders(columnHeaders) {
   let result = [];
   columnHeaders.forEach((header, index) => {
-    let width = 22;
-    if (index === 0) {
-      width = 50;
+    let width = 0;
+    let align = "center";
+
+    if (columnHeaders.length === 10) {
+      width = 22;
+      if (index === 0) {
+        align = "left";
+        width = 45;
+      }
+
+      if (index === columnHeaders.length - 1) {
+        width = 25;
+      }
     }
 
-    if(index === columnHeaders.length -1){
-        width = 30;
+    if (columnHeaders.length > 10 && columnHeaders.length <= 12) {
+      width = 18.5;
+      if (index === 0) {
+        align = "left";
+        width = 40;
+      }
+
+      if (index === columnHeaders.length - 1) {
+        width = 25;
+      }
     }
+
     result.push({
       id: header,
       name: header,
       prompt: header,
       width,
-      align: "center",
-      padding: 0,
+      align,
     });
   });
-  return result;
+  return { headers: result, columnCount: columnHeaders.length };
 }
 
 function formatData(header, data) {
@@ -88,16 +122,14 @@ function formatData(header, data) {
     let line = {};
     row.forEach((cell, index) => {
       if (index > 0) {
-          line[`${header[index]}`] = convertTimeToString(cell);
-        } else {
-          line[`${header[index]}`] = cell;
+        line[`${header[index]}`] = convertTimeToString(cell);
+      } else {
+        line[`${header[index]}`] = cell;
       }
     });
-    console.log(line);
     result.push(line);
   });
 
-  console.log(result);
   return result;
 }
 

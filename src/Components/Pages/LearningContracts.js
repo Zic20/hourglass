@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useReducer, Fragment } from "react";
+import React, {
+  useState,
+  useEffect,
+  useReducer,
+  Fragment,
+  useCallback,
+} from "react";
 import useFetch from "../../hooks/useFetch";
 import Button from "../Utilities/Button";
 import Card from "../Utilities/Card";
@@ -6,9 +12,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPrint, faPlus } from "@fortawesome/free-solid-svg-icons";
 import LearningContractForm from "../Forms/LearningContractForm";
 import Modal from "../Utilities/Modal";
-import SelectInput from "../Utilities/Inputs/Select";
 import LearningContractTable from "../Tables/LearningContractTable";
 import LearningContractPrint from "../Reports/LearningContractPrint";
+import SelectVariants from "../ImportedComponents/SelectVariants";
 
 const contractsReducer = (state, action) => {
   if (action.type === "ADD") {
@@ -42,6 +48,7 @@ const LearningContracts = (props) => {
   const [showForm, setShowForm] = useState(false);
   const [update, setUpdate] = useState(false);
   const [weeks, setWeeks] = useState([]);
+  const [week, setWeek] = useState([]);
   const [id, setID] = useState("");
   const [activeRow, setActiveRow] = useState({});
 
@@ -49,9 +56,11 @@ const LearningContracts = (props) => {
     learningContracts: [],
   });
   const { sendRequest } = useFetch();
+
   const option = { year: "numeric", month: "long", day: "numeric" };
 
-  const listLearningContract = (data) => {
+  const listLearningContract = useCallback((data) => {
+    dispatchContracts({ type: "REMOVE_ALL" });
     const result = data.map((learningContract) => {
       let startDate = new Date(learningContract.StartDate).toLocaleDateString(
         "en-Monrovia",
@@ -68,11 +77,11 @@ const LearningContracts = (props) => {
       };
     });
     dispatchContracts({ type: "ADD", learningContracts: result });
-  };
+  }, []);
 
   const listWeeks = (data) => {
     const result = data.map((week) => {
-      return { value: week.Week, text: week.Week };
+      return { value: week.Week, text: `Week ${week.Week}` };
     });
 
     setWeeks(result);
@@ -90,7 +99,6 @@ const LearningContracts = (props) => {
     className = "card_mid";
   }
 
-  // responsible for updating the learning contracts state
   const onAddLearningContract = (data, id = null) => {
     let startDate = new Date(data.StartDate).toLocaleDateString(
       "en-Monrovia",
@@ -125,7 +133,6 @@ const LearningContracts = (props) => {
     }
   };
 
-  // responsible for showing the form for updating a learning contract
   const showUpdateForm = (id) => {
     const row = contracts.learningContracts.filter((learningcontract) => {
       return parseInt(learningcontract.id) === parseInt(id);
@@ -151,15 +158,21 @@ const LearningContracts = (props) => {
   };
 
   const onPrintHandler = () => {
+    let learningcontract = contracts.learningContracts.filter(
+      (row) => row.Week === +week
+    );
     LearningContractPrint({
-      data: contracts.learningContracts,
-      title: "Learning Contract"
+      data: learningcontract,
+      title: "Learning Contract",
     });
+  };
+
+  const onWeekChangeHandler = (week) => {
+    setWeek(week);
   }
 
   return (
     <Fragment>
-      {/* Opens form for saving new learning contract */}
       {showForm && !update && (
         <Modal
           onClose={onFormCloseHandler}
@@ -169,7 +182,7 @@ const LearningContracts = (props) => {
           <LearningContractForm onSave={onAddLearningContract} />
         </Modal>
       )}
-      {/* Opens form for updating existing learning contract */}
+
       {showForm && update && (
         <Modal
           onClose={onFormCloseHandler}
@@ -184,13 +197,11 @@ const LearningContracts = (props) => {
         </Modal>
       )}
 
-      
       <Card className={className}>
-        <h2 style={{ textAlign: "left", marginBottom: "1rem" }}>
-          Goals
-        </h2>
+        <h2 style={{ textAlign: "left", marginBottom: "1rem" }}>Goals</h2>
         <div>
-          <SelectInput options={weeks} className="select-sm" label="Weeks" />
+          <SelectVariants data={weeks} title="Weeks" onChange={onWeekChangeHandler} />
+
           <Button className="btn__new" onClick={onShowFormHandler}>
             <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
             &nbsp;New Goal

@@ -131,7 +131,7 @@ const SummaryTimeSheet = (props) => {
         onClose={closeMessageDialog}
       />
       <Card className={className}>
-        <h3>Summary Timesheet</h3>
+        <h2>Summary Timesheet</h2>
         <SelectInput
           id="firstWeek"
           label="First Week"

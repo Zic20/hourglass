@@ -96,7 +96,8 @@ function convertDate(date) {
   date = new Date(date);
   let month =
     date.getMonth() > 9 ? date.getMonth() + 1 : `0${date.getMonth() + 1}`;
-  date = `${date.getFullYear()}-${month}-${date.getDate()}`;
+  let day = date.getDate() > 9 ? date.getDate() : `0${date.getDate()}`;
+  date = `${date.getFullYear()}-${month}-${day}`;
   return date;
 }
 
@@ -113,12 +114,11 @@ export function totalTime(dataset) {
   if (totalMinutes > 60) {
     totalHours += Math.floor(totalMinutes / 60);
     totalMinutes = Math.abs(totalMinutes / 60);
-  } 
+  }
 
   return `${totalHours}:${totalMinutes}`;
 }
 
- 
 export {
   validateTimeInputs,
   validateDateInputs,

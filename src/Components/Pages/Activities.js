@@ -1,15 +1,27 @@
-import React, { useReducer, useState, Fragment, useEffect } from "react";
+import React, {
+  useReducer,
+  useState,
+  Fragment,
+  useEffect,
+  useCallback,
+} from "react";
+import useFetch from "../../hooks/useFetch";
 import ActivitiesForm from "../Forms/ActivitiesForm";
 import Button from "../Utilities/Button";
 import AlertDialog from "../ImportedComponents/AlertDialog";
 import Card from "../Utilities/Card";
 import MyDatatable from "../Utilities/DataTableBase";
 import Modal from "../Utilities/Modal";
-import SelectInput from "../Utilities/Inputs/Select";
+import SelectVariants from "../ImportedComponents/SelectVariants";
 import { RequestHelper } from "../../modules/Requester";
 import { getTimeDifference, convertTime } from "../../modules/timecalculation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faKeyboard, faTrash,faPrint,faFile } from "@fortawesome/free-solid-svg-icons";
+import {
+  faKeyboard,
+  faTrash,
+  faPrint,
+  faFile,
+} from "@fortawesome/free-solid-svg-icons";
 import TimesheetPrint from "../Reports/TimesheetPrint";
 
 const activitiesReducer = (state, action) => {
@@ -54,10 +66,53 @@ const Activities = (props) => {
     activities: [],
   });
 
+  const { sendRequest } = useFetch();
+
+  const getWeeks = useCallback(async () => {
+    sendRequest({ url: `learningcontracts?weeks` }, (data) => {
+      if (!data || data.length === 0) {
+        return;
+      }
+      let result = data.map((week) => {
+        return { value: week.Week, text: `  Week ${week.Week}` };
+      });
+      setWeeks(result);
+    });
+  }, [sendRequest]);
+
+  const getActivities = useCallback(
+    async (week) => {
+      sendRequest({ url: `activities?week=${week}` }, (data) => {
+        dispatchActivities({ type: "REMOVE_ALL" });
+        if (data && data.length > 0) {
+          data.forEach((activity) => {
+            let modifiedActivity = formatActivity(activity);
+            dispatchActivities({ type: "ADD", activity: modifiedActivity });
+          });
+        }
+      });
+    },
+    [sendRequest]
+  );
+
+  const getCurrentWeek = useCallback(async () => {
+    const { data, error } = await RequestHelper.get(
+      `learningcontracts?current`
+    );
+    if (!error) {
+      let { StartDate: startDate, EndDate: endDate, Week } = data;
+      setCurrentWeek(Week);
+      setSelectedWeek(Week);
+      setStartDate(startDate);
+      setEndDate(endDate);
+      getActivities(Week);
+    }
+  }, [getActivities]);
+
   useEffect(() => {
     getWeeks();
     getCurrentWeek();
-  }, []);
+  }, [getWeeks, getCurrentWeek]);
 
   const { activities } = activitiesState;
 
@@ -119,53 +174,19 @@ const Activities = (props) => {
     className = "card_mid";
   }
 
-  const getActivities = async (week) => {
+  const formatActivity = (activity) => {
     const option = { year: "numeric", month: "long", day: "numeric" };
-    const { data, error } = await RequestHelper.get(`activities?week=${week}`);
-    if (!error) {
-      dispatchActivities({ type: "REMOVE_ALL" });
-      data.forEach((activity) => {
-        let date = new Date(activity.Date);
-        date = date.toLocaleDateString("en-Monrovia", option);
-        let startTime = convertTime(activity.StartTime);
-        let endTime = convertTime(activity.EndTime);
-        const modifiedActivity = {
-          ...activity,
-          TimeInput: getTimeDifference(activity.StartTime, activity.EndTime),
-          Date: date,
-          StartTime: startTime,
-          EndTime: endTime,
-        };
-        dispatchActivities({ type: "ADD", activity: modifiedActivity });
-      });
-    } else {
-      dispatchActivities({ type: "REMOVE_ALL" });
-    }
-  };
-
-  const getWeeks = async () => {
-    const { data, error } = await RequestHelper.get(`learningcontracts?weeks`);
-    if (!error) {
-      let result = data.map((week) => {
-        return { value: week.Week, text: week.Week };
-      });
-      setWeeks(result);
-    }
-  };
-
-  const getCurrentWeek = async () => {
-    const { data, error } = await RequestHelper.get(
-      `learningcontracts?current`
-    );
-    if (!error) {
-      let { StartDate: startDate, EndDate: endDate, Week } = data;
-      setCurrentWeek(Week);
-      setSelectedWeek(Week);
-      setStartDate(startDate);
-      setEndDate(endDate);
-
-      getActivities(Week);
-    }
+    let date = new Date(activity.Date);
+    date = date.toLocaleDateString("en-Monrovia", option);
+    let startTime = convertTime(activity.StartTime);
+    let endTime = convertTime(activity.EndTime);
+    return {
+      ...activity,
+      TimeInput: getTimeDifference(activity.StartTime, activity.EndTime),
+      Date: date,
+      StartTime: startTime,
+      EndTime: endTime,
+    };
   };
 
   const onAddActivityHandler = (data, id = null) => {
@@ -195,7 +216,7 @@ const Activities = (props) => {
   const onDeleteDialogClose = () => setShowDeleteDialog(false);
 
   const onUpdateHandler = (event) => {
-    const id = event.target.closest("button").value;
+    const id = +event.target.closest("button").value;
     let row = activities.filter(
       (activity) => parseInt(activity.id) === parseInt(id)
     );
@@ -222,23 +243,29 @@ const Activities = (props) => {
   };
 
   const onWeekChangeHandler = (event) => {
-    let week = +event.target.value;
+    let week = +event;
     setSelectedWeek(week);
     getActivities(week);
   };
 
   const onPrintHandler = () => {
     TimesheetPrint({
-      columnHeaders: ["Week", "Date", "Activity", "Start Time", "End Time","Time Input"],
+      columnHeaders: [
+        "Week",
+        "Date",
+        "Activity",
+        "Start Time",
+        "End Time",
+        "Time Input",
+      ],
       data: activitiesState.activities,
       title: `Week ${currentWeek} Timesheet`,
-      week: currentWeek
+      week: currentWeek,
     });
   };
 
   return (
     <Fragment>
-      {/* Opens form for saving new activity */}
       {showForm && !update && (
         <Modal headerText="Add Activity" onClose={closeForm}>
           <ActivitiesForm
@@ -249,7 +276,6 @@ const Activities = (props) => {
           />
         </Modal>
       )}
-      {/* Opens form for updating existing activity */}
       {showForm && update && (
         <Modal headerText="Edit Activity" onClose={closeForm}>
           <ActivitiesForm
@@ -271,22 +297,12 @@ const Activities = (props) => {
       </AlertDialog>
 
       <Card className={className}>
-        <h2
-          style={{
-            textAlign: "left",
-            marginBottom: "1rem",
-            fontWeight: 600,
-            fontSize: "18px",
-          }}
-        >
-          Activities
-        </h2>
+        <h2>Activities</h2>
         <div>
-          <SelectInput
-            options={weeks}
-            label="Week"
+          <SelectVariants
             onChange={onWeekChangeHandler}
-            className="select-sm"
+            data={weeks}
+            title="Select Week"
           />
           <Button className="btn__new" onClick={openActivityForm}>
             <FontAwesomeIcon icon={faFile}></FontAwesomeIcon> &nbsp; New

@@ -24,6 +24,9 @@
 }
 
 @media screen and (max-width: 768px) {
+    .dashboard,.dashboard-large {
+        flex-direction: column;
+    }
     .card {
         margin-left: 1rem;
         width: 90%;

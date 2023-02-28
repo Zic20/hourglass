@@ -1,10 +1,11 @@
 import React from "react";
 import { renderToString } from "react-dom/server";
 import { jsPDF } from "jspdf";
+import styles from "./LearningContractPrint.module.css";
 
-const PrintTable = ({ data }) => {
+export const PrintTable = ({ data }) => {
   return (
-    <table>
+    <table className={styles.table}>
       <thead>
         <th>Week / Date</th>
         <th>Goal</th>
@@ -14,56 +15,62 @@ const PrintTable = ({ data }) => {
         <th>Indicators of Performance</th>
         <th>Means Of Verification</th>
       </thead>
-      {data.map((row) => {
-        return (
-          <tr key={row.id}>
-            <td>{`${row.Week} \n \n ${row.StartDate} to ${row.EndDate}`}</td>
-            <td>{`${row.Goal}`}</td>
-            <td
-              dangerouslySetInnerHTML={{
-                __html: row.Objectives.replace('"', ""),
-              }}
-            />
-            <td
-              dangerouslySetInnerHTML={{
-                __html: row.Activities.replace('"', ""),
-              }}
-            />
-            <td
-              dangerouslySetInnerHTML={{
-                __html: row.ExpectedOutcome.replace('"', ""),
-              }}
-            />
-            <td
-              dangerouslySetInnerHTML={{
-                __html: row.IndicatorsOfPerformance.replace('"', ""),
-              }}
-            />
-            <td
-              dangerouslySetInnerHTML={{
-                __html: row.MeansOfVerification.replace('"', ""),
-              }}
-            />
-          </tr>
-        );
-      })}
+      <tbody>
+        {data.map((row) => {
+          return (
+            <tr key={row.id}>
+              <td>
+                <p>{`Week ${row.Week}`}</p>
+                {`${row.StartDate} - ${row.EndDate}`}
+              </td>
+              <td>{`${row.Goal}`}</td>
+              <td
+                dangerouslySetInnerHTML={{
+                  __html: row.Objectives.replace('"', ""),
+                }}
+              />
+              <td
+                dangerouslySetInnerHTML={{
+                  __html: row.Activities.replace('"', ""),
+                }}
+              ></td>
+              <td
+                dangerouslySetInnerHTML={{
+                  __html: row.ExpectedOutcome.replace('"', ""),
+                }}
+              />
+              <td
+                dangerouslySetInnerHTML={{
+                  __html: row.IndicatorsOfPerformance.replace('"', ""),
+                }}
+              />
+              <td
+                dangerouslySetInnerHTML={{
+                  __html: row.MeansOfVerification.replace('"', ""),
+                }}
+              />
+            </tr>
+          );
+        })}
+      </tbody>
     </table>
   );
 };
 
 const LearningContractPrint = ({ data, title }) => {
-
   const string = renderToString(<PrintTable data={data} />);
   const doc = new jsPDF({ orientation: "landscape" });
-  console.log(string);
-  doc.html(string);
-  doc.save(`${title}.pdf`);
+  // console.log(string);
+  doc.addJS(<PrintTable data={data}/>, {
+    async callback(doc) {
+      doc.save(`${title}.pdf`);
+    },
+  });
 };
-
 
 // const LearningContractPrint = ({ data, title }) => {
 //   const columnHeaders = [
-//     "Week - Date",
+//     "Week / Date",
 //     "Goal",
 //     "Specific Objectives",
 //     "Activities",
@@ -90,7 +97,7 @@ const LearningContractPrint = ({ data, title }) => {
 //     let result = [];
 //     data.forEach((row) => {
 //       result.push({
-//         "Week - Date": `Week ${row.Week} \n \n ${row.StartDate} to ${row.EndDate}`,
+//         "Week / Date": `Week ${row.Week} \n \n ${row.StartDate} to ${row.EndDate}`,
 //         Goal: row.Goal,
 //         "Specific Objectives": row.Objectives,
 //         Activities: row.Activities,

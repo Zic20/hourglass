@@ -10,6 +10,7 @@
     background-size: cover;
     background-position: center;
     font-family: 'Open Sans', sans-serif;
+    border-radius: .2rem;
 }
 
 .form {
@@ -127,6 +128,4 @@
         background-position: center;
         border-radius: 5px;
     }
-
-
 }

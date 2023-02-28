@@ -6,6 +6,7 @@
     padding: .6rem 1rem;
     width: 100%;
 }
+
 .input,
 .select {
     border-radius: 3px;
@@ -27,7 +28,7 @@
 }
 
 .textarea {
-    resize:none;
+    resize: none;
     padding: 1rem;
     font-family: 'Roboto Slab', serif;
 }

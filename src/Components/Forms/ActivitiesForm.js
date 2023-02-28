@@ -95,7 +95,6 @@ const ActivitiesForm = (props) => {
   const { error, sendRequest } = useFetch();
 
   function getTimeString(time) {
-    // converts time to conform to format of time input field
     let date = new Date(`January 1, 1980 ${time}`);
     let hour = date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`;
     let minutes =

@@ -16,6 +16,7 @@ const TimesheetPrint = ({ columnHeaders, data, title, week }) => {
     autoSize: false,
     headerBackgroundColor: "white",
     printHeaders: true,
+    padding:2
   });
 
   console.log(table);
