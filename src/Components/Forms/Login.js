@@ -40,12 +40,10 @@ const Login = () => {
   const [formIsValid, setFormIsValid] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showErrorModal, setShowErrorModal] = useState(false);
-  // the reducer below manages email state
   const [emailState, dispatchEmail] = useReducer(emailReducer, {
     value: "",
     isValid: null,
   });
-  // the reducer below manages password state
   const [passwordState, dispatchPassword] = useReducer(passwordReducer, {
     value: "",
     isValid: null,
@@ -55,7 +53,6 @@ const Login = () => {
   const navigate = useNavigate();
   const { sendRequest } = useFetch();
 
-  // This effect hook is used to change the formIsValid state whenever emailState.isValid or passwordState.isValid changes
   useEffect(() => {
     const identifier = setTimeout(() => {
       setFormIsValid(emailState.isValid && passwordState.isValid);
