@@ -5,15 +5,18 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import NewAuthProvider from "./store/NewAuthProvider";
+import StudentProfileProvider from "./store/StudentProfileProvider";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
-    <BrowserRouter>
-      <NewAuthProvider>
+  <BrowserRouter>
+    <NewAuthProvider>
+      <StudentProfileProvider>
         <App />
-      </NewAuthProvider>
-    </BrowserRouter>
+      </StudentProfileProvider>
+    </NewAuthProvider>
+  </BrowserRouter>
   //  </React.StrictMode>
 );
 

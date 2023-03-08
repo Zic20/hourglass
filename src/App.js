@@ -1,9 +1,16 @@
-import React, { Fragment, Suspense, useContext, useState } from "react";
+import React, {
+  Fragment,
+  Suspense,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
+import LinearDeterminate from "./Components/Utilities/LinearDeterminate";
 import Sidebar from "./Components/Utilities/Navigation/Sidebar";
 import authContext from "./store/auth-context";
-
+import studentprofileContext from "./store/studentprofile-context";
 
 const Login = React.lazy(() => import("./Components/Forms/Login"));
 
@@ -26,9 +33,25 @@ const ChangePassword = React.lazy(() =>
 
 function App() {
   const [sideBarClosed, setSidebarClosed] = useState(true);
+
+  const studentprofileCtx = useContext(studentprofileContext);
   const onSidebarCloseHandler = (closed) => {
     setSidebarClosed(!closed);
   };
+
+  useEffect(() => {
+    let practicuminstructor = localStorage.getItem("practicuminstructor");
+    if (practicuminstructor) {
+      practicuminstructor = JSON.parse(practicuminstructor);
+      studentprofileCtx.addInstructor(practicuminstructor);
+    }
+
+    let studentprofile = localStorage.getItem("studentProfile");
+    if (studentprofile) {
+      studentprofile = JSON.parse(studentprofile);
+      studentprofileCtx.addStudent(studentprofile);
+    }
+  },[]);
 
   const authCtx = useContext(authContext);
 
@@ -40,7 +63,7 @@ function App() {
         {path !== "/login" && path !== "/signup" && authCtx.isLoggedIn && (
           <Sidebar onClose={onSidebarCloseHandler} />
         )}
-        <Suspense fallback={<p>loading...</p>}>
+        <Suspense fallback={<LinearDeterminate />}>
           <Routes>
             {authCtx.isLoggedIn && (
               <>

@@ -2,11 +2,12 @@
     background: #fffefe;
     border-radius: .2rem;
     padding: 1.5rem;
-    box-shadow: .3rem .1rem 1rem .1rem rgba(0, 0, 0, 0.078);
+    box-shadow: 0rem 0rem 2rem 0.5rem rgb(197 195 195 / 48%);
     margin-top: 4rem;
     margin-bottom: 1rem;
     margin-left: 18rem;
     width: 75%;
+    overflow-x: auto;
 }
 
 .card_large {

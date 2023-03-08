@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import styles from "./Sidebar.module.css";
 import Button from "../Button";
 import authContext from "../../../store/auth-context";
+import studentprofileContext from "../../../store/studentprofile-context";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChartLine,
@@ -16,6 +17,7 @@ import {
 const Sidebar = (props) => {
   const [isClosed, setIsClosed] = useState(false);
   const authCtx = useContext(authContext);
+  const studentProfileCtx = useContext(studentprofileContext);
 
   const onCloseHandler = (event) => {
     if (event.target.checked) {
@@ -56,7 +58,7 @@ const Sidebar = (props) => {
             <h1>Tracks</h1>
           </div>
         </div>
-        <div>Isaac Zally Jr.</div>
+        <div>{studentProfileCtx.Student.Name}</div>
       </div>
       <div className={`${styles.sidebar} ${isClosed && styles.closed}`}>
         <div className={styles["logo-box"]}>

@@ -8,6 +8,7 @@ import React, {
 import { useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import authContext from "../../store/auth-context";
+import studentprofileContext from "../../store/studentprofile-context";
 import Button from "../Utilities/Button";
 import styles from "./Login.module.css";
 import formStyles from "./Form.module.css";
@@ -50,6 +51,7 @@ const Login = () => {
   });
 
   const authCtx = useContext(authContext);
+  const studenprofileCtx = useContext(studentprofileContext);
   const navigate = useNavigate();
   const { sendRequest } = useFetch();
 
@@ -96,6 +98,17 @@ const Login = () => {
       (data) => {
         if (data["access_token"]) {
           authCtx.login(data);
+          const { usertype, uniqueid } = data;
+          if (usertype === "Student") {
+            sendRequest(
+              { url: `students?studentid=${uniqueid}` },
+              setStudentProfile
+            );
+            sendRequest(
+              { url: `practicuminstructors?studentid=${uniqueid}` },
+              setPracticumInstructor
+            );
+          }
           navigate("/dashboard");
         } else {
           setErrorMessage("Invalid username or password");
@@ -105,6 +118,31 @@ const Login = () => {
     );
   };
 
+  const setStudentProfile = (data) => {
+    const { FirstName, MiddleName, LastName, PhoneNo, Email } = data;
+    const studentprofile = {
+      Name: `${FirstName} ${MiddleName || ""} ${LastName}`,
+      Phone: PhoneNo || "",
+      Email: Email || "",
+    };
+    studenprofileCtx.addStudent(studentprofile);
+    localStorage.setItem("studentProfile", JSON.stringify(studentprofile));
+  };
+
+
+
+  const setPracticumInstructor = (data) => {
+    const { Name, Phone, Email, Agency } = data;
+
+    const practicumInstructor = { Name, Phone, Email, Agency };
+
+    studenprofileCtx.addInstructor(practicumInstructor);
+    localStorage.setItem(
+      "practicuminstructor",
+      JSON.stringify(practicumInstructor)
+    );
+    
+  };
   const showModal = (option) => {
     setShowErrorModal(option);
   };

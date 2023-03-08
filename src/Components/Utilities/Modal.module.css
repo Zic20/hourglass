@@ -53,6 +53,8 @@
     .modal-dialog,
     .modal-dialog.modal-dialog-scrollable {
         width: 95%;
+        height: 80%;
+        overflow-y: auto;
     }
 }
 

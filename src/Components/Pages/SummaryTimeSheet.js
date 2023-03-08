@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState,useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPrint } from "@fortawesome/free-solid-svg-icons";
 import Button from "../Utilities/Button";
@@ -9,6 +9,7 @@ import useFetch from "../../hooks/useFetch";
 import { convertTimeToString } from "../../modules/timecalculation";
 import printSummaryTimesheet from "../Reports/PrintSummaryTimesheet";
 import ErrorModal from "../ImportedComponents/ErrorModal";
+import studentprofileContext from "../../store/studentprofile-context";
 
 const TableHead = (props) => {
   const headerData = props.data;
@@ -50,6 +51,7 @@ const SummaryTimeSheet = (props) => {
   const [detail, setDetails] = useState(null);
   const [tableHeader, setTableHeader] = useState(null);
   const [showMessageDialog, setshowMessageDialog] = useState(false);
+  const {Student,PracticumInstructor} = useContext(studentprofileContext);
 
   const { error, loading, sendRequest } = useFetch();
 
@@ -111,12 +113,12 @@ const SummaryTimeSheet = (props) => {
       data: detail,
       title: `Week ${firstWeek} and ${secondWeek} Summary Timesheet`,
       student: {
-        name: "Isaac Zally, Jr",
-        phone: "0777204203",
-        email: "izallyjr@gmail.com",
-        "Practicum Instructor": "Isaac Zally, Jr.",
-        "Instructor Phone": "0880339614",
-        agency: "Tracks",
+        name: Student.Name,
+        phone: Student.Phone,
+        email: Student.Email,
+        "Practicum Instructor": PracticumInstructor.Name,
+        "Instructor Phone": PracticumInstructor.Phone,
+        agency: PracticumInstructor.Agency,
       },
       totalHours: "200 hrs 25mins",
     });
@@ -150,13 +152,15 @@ const SummaryTimeSheet = (props) => {
         <Button className="btn__action" onClick={onPrintClickHandler}>
           <FontAwesomeIcon icon={faPrint}></FontAwesomeIcon> &nbsp; Print
         </Button>
-
+        <div className={classes.cardBody}>
         {!error && !loading && (
           <table className={classes.datatable}>
             {tableHeader !== null && <TableHead data={tableHeader} />}
             {detail !== null && <TableBody data={detail} />}
           </table>
         )}
+        </div>
+       
       </Card>
     </Fragment>
   );

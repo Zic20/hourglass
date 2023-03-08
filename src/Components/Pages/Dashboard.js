@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBullseye,
   faHourglass,
+  faHourglassStart,
   faStarHalf,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -81,16 +82,16 @@ const Dashboard = (props) => {
             "linear-gradient(160deg, #83c9f1da 0%, #80d0c7f0 100%)",
         }}
       >
-        <h5 className={styles.header}>Rating</h5>
+        <h5 className={styles.header}>Remaining Hours</h5>
         <div className={styles.content}>
           <FontAwesomeIcon
             className={styles.icon}
             style={{
               fontWeight: 400,
             }}
-            icon={faStarHalf}
+            icon={faHourglassStart}
           />
-          <p className={styles.text}>3</p>
+          <p className={styles.text}>321</p>
         </div>
       </div>
     </div>

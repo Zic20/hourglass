@@ -12,6 +12,10 @@ const ExpandedComponent = ({ data }) => {
   return (
     <div className={styles.expandedDetails}>
       <div>
+        <h4>Start Date - End Date</h4>
+        <p>{data.StartDate} - {data.EndDate}</p>
+      </div>
+      <div>
         <h4>Objectives</h4>
         <section
           className={styles.expandedDetailsItem}
@@ -73,17 +77,24 @@ const LearningContractTable = memo(({ data: list, onDelete, onShowForm }) => {
       name: "Goal",
       selector: (row) => row.Goal,
       wrap: true,
+      grow: 3,
+      style: {
+        textAlign: "left",
+        padding: "1rem"
+      },
     },
     {
       name: "Start Date",
       sortable: true,
       selector: (row) => row.StartDate,
       wrap: true,
+      hide: "md"
     },
     {
       name: "End Date",
       selector: (row) => row.EndDate,
       wrap: true,
+      hide: "md"
     },
     {
       name: "Action",
