@@ -161,6 +161,7 @@ const LearningContracts = (props) => {
     let learningcontract = contracts.learningContracts.filter(
       (row) => row.Week === +week
     );
+    
     LearningContractPrint({
       data: learningcontract,
       title: "Learning Contract",

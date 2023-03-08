@@ -16,18 +16,16 @@
 
 @media (max-width:768px) {
     .form__container {
-        width: 95%;
+        width: 100%;
         padding: 1rem;
         padding-top: 2rem;
-        height: 35rem;
+        height: 100%;
     }
 
     form button,
     form button:disabled {
         width: 100%;
     }
-
-
 }
 
 .heading__primary {

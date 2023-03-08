@@ -1,5 +1,5 @@
 import React from "react";
-// import { renderToString } from "react-dom/server";
+import { renderToString } from "react-dom/server";
 import { jsPDF } from "jspdf";
 import styles from "./LearningContractPrint.module.css";
 
@@ -58,9 +58,9 @@ export const PrintTable = ({ data }) => {
 };
 
 const LearningContractPrint = ({ data, title }) => {
-  // const string = renderToString(<PrintTable data={data} />);
+  const string = renderToString(<PrintTable data={data} />);
   const doc = new jsPDF({ orientation: "landscape" });
-  doc.addJS(<PrintTable data={data}/>, {
+  doc.addJS(string, {
     async callback(doc) {
       doc.save(`${title}.pdf`);
     },
