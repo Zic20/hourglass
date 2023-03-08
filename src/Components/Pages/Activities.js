@@ -4,6 +4,7 @@ import React, {
   Fragment,
   useEffect,
   useCallback,
+  useContext
 } from "react";
 import useFetch from "../../hooks/useFetch";
 import ActivitiesForm from "../Forms/ActivitiesForm";
@@ -23,6 +24,7 @@ import {
   faFile,
 } from "@fortawesome/free-solid-svg-icons";
 import TimesheetPrint from "../Reports/TimesheetPrint";
+import studentProfileContext from "../../store/studentprofile-context";
 
 const activitiesReducer = (state, action) => {
   if (action.type === "ADD") {
@@ -65,6 +67,8 @@ const Activities = (props) => {
   const [activitiesState, dispatchActivities] = useReducer(activitiesReducer, {
     activities: [],
   });
+
+  const {Student} = useContext(studentProfileContext);
 
   const { sendRequest } = useFetch();
 
@@ -261,6 +265,7 @@ const Activities = (props) => {
       data: activitiesState.activities,
       title: `Week ${currentWeek} Timesheet`,
       week: currentWeek,
+      student:Student.Name,
     });
   };
 
