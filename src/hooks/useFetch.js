@@ -11,10 +11,13 @@ const useFetch = () => {
       try {
         setLoading(true);
         const headers = new Headers();
-        headers.append(
-          "Authorization",
-          `Bearer ${localStorage.getItem("tracksToken")}`
-        );
+        if(localStorage.getItem("tracksToken")){
+
+          headers.append(
+            "Authorization",
+            `Bearer ${localStorage.getItem("tracksToken")}`
+          );
+        }
         headers.append("Content-Type", "application/json");
         const response = await fetch(baseUrl + requestConfig.url, {
           method: requestConfig.method ? requestConfig.method : "GET",

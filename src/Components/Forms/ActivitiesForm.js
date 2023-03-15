@@ -73,7 +73,7 @@ const ActivitiesForm = (props) => {
     if (props.week) {
       setWeek(props.week);
     }
-  }, []);
+  }, [props]);
 
   useEffect(() => {
     const identifier = setTimeout(() => {

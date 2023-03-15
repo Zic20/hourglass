@@ -2,7 +2,7 @@ import { jsPDF } from "jspdf";
 
 const TimesheetPrint = ({ columnHeaders, data, title, week, student }) => {
   let headers = createHeaders(columnHeaders);
-  let records = formatData(data);
+  let records = formatData(data,week);
 
   const doc = new jsPDF({ orientation: "landscape" });
   doc.setFont("times", "", 700);
@@ -59,7 +59,7 @@ function formatData(data) {
   let result = [];
   data.forEach((row) => {
     result.push({
-      Week: "1",
+      Week: `${row.Week}`,
       Date: row.Date,
       Activity: row.Activity,
       "Start Time": row.StartTime,

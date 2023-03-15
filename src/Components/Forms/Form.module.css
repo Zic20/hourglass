@@ -40,10 +40,11 @@
 
 .form__input {
     display: block;
-    padding: 0.8rem 0.8rem;
+    padding: 1rem 0.8rem;
+    text-align: center;
     width: 100%;
     border: 1px solid #bababa;
-    border-radius: 1.3rem;
+    border-radius: .5rem;
     margin-bottom: 0.2rem;
 }
 

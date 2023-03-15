@@ -4,7 +4,7 @@ import React, {
   Fragment,
   useEffect,
   useCallback,
-  useContext
+  useContext,
 } from "react";
 import useFetch from "../../hooks/useFetch";
 import ActivitiesForm from "../Forms/ActivitiesForm";
@@ -15,7 +15,11 @@ import MyDatatable from "../Utilities/DataTableBase";
 import Modal from "../Utilities/Modal";
 import SelectVariants from "../ImportedComponents/SelectVariants";
 import { RequestHelper } from "../../modules/Requester";
-import { getTimeDifference, convertTime } from "../../modules/timecalculation";
+import {
+  getTimeDifference,
+  convertTime,
+  convertTimeToString,
+} from "../../modules/timecalculation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faKeyboard,
@@ -68,7 +72,7 @@ const Activities = (props) => {
     activities: [],
   });
 
-  const {Student} = useContext(studentProfileContext);
+  const { Student } = useContext(studentProfileContext);
 
   const { sendRequest } = useFetch();
 
@@ -248,25 +252,60 @@ const Activities = (props) => {
 
   const onWeekChangeHandler = (event) => {
     let week = +event;
+    setCurrentWeek(week);
     setSelectedWeek(week);
     getActivities(week);
   };
 
   const onPrintHandler = () => {
-    TimesheetPrint({
-      columnHeaders: [
-        "Week",
-        "Date",
-        "Activity",
-        "Start Time",
-        "End Time",
-        "Time Input",
-      ],
-      data: activitiesState.activities,
-      title: `Week ${currentWeek} Timesheet`,
-      week: currentWeek,
-      student:Student.Name,
-    });
+    const { activities } = activitiesState;
+    let week = currentWeek;
+    console.log(currentWeek);
+    sendRequest(
+      { url: `activities?week=${currentWeek}&totalhours=true` },
+      (data) => {
+        if (!data || !data.status) {
+          return;
+        }
+
+        const time = convertTimeToString(data.totalhours);
+
+        let dataset = activities.map((activity) => {
+          return {
+            Week: week,
+            Date: activity.Date,
+            Activity: activity.Activity,
+            StartTime: activity.StartTime,
+            EndTime: activity.EndTime,
+            TimeInput: activity.TimeInput,
+          };
+        });
+
+        dataset.push({
+          Week: "Total Hours",
+          Date: " ",
+          Activity: " ",
+          StartTime: " ",
+          EndTime: " ",
+          TimeInput: time,
+        });
+
+        TimesheetPrint({
+          columnHeaders: [
+            "Week",
+            "Date",
+            "Activity",
+            "Start Time",
+            "End Time",
+            "Time Input",
+          ],
+          data: dataset,
+          title: `Week ${currentWeek} Timesheet`,
+          week: currentWeek,
+          student: Student.Name,
+        });
+      }
+    );
   };
 
   return (

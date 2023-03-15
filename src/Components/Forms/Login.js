@@ -111,7 +111,7 @@ const Login = () => {
           }
           navigate("/dashboard");
         } else {
-          setErrorMessage("Invalid username or password");
+          setErrorMessage("Invalid email or password");
           setShowErrorModal(true);
         }
       }
@@ -172,16 +172,16 @@ const Login = () => {
             <div className={styles["form__group"]}>
               <input
                 type="text"
-                name="username"
-                id="username"
+                name="email"
+                id="email"
                 onChange={emailOnChangeHandler}
                 onBlur={emailOnBlurHandler}
                 className={formStyles["form__input"]}
-                placeholder="Enter username"
+                placeholder="Enter Email"
                 required
               />
               <label htmlFor="email" className={styles["form__label"]}>
-                Enter username or email <span>*</span>
+                Enter email <span>*</span>
               </label>
             </div>
             <div className={styles["form__group"]}>

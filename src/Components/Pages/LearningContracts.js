@@ -16,6 +16,7 @@ import LearningContractTable from "../Tables/LearningContractTable";
 import LearningContractPrint from "../Reports/LearningContractPrint";
 import SelectVariants from "../ImportedComponents/SelectVariants";
 
+
 const contractsReducer = (state, action) => {
   if (action.type === "ADD") {
     const updatedState = state.learningContracts.concat(

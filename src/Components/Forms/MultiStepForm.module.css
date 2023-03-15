@@ -1,0 +1,21 @@
+.container {
+    width: 90%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 1px 0px .3rem rgba(221, 219, 219, 0.9);
+    padding: 1rem;
+    background-image: linear-gradient(136deg, rgba(222, 229, 243, 0.642) 0 38%, rgba(252, 252, 252, 0.936) 79%);
+    min-height: 15rem;
+}
+
+.footer {
+    display:flex;
+    width: 95%;
+    position: absolute;
+    bottom: .5rem;
+    flex-direction: row;
+    padding-right: 5px;
+    justify-content: space-between;
+}

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState,useContext } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPrint } from "@fortawesome/free-solid-svg-icons";
 import Button from "../Utilities/Button";
@@ -51,7 +51,7 @@ const SummaryTimeSheet = (props) => {
   const [detail, setDetails] = useState(null);
   const [tableHeader, setTableHeader] = useState(null);
   const [showMessageDialog, setshowMessageDialog] = useState(false);
-  const {Student,PracticumInstructor} = useContext(studentprofileContext);
+  const { Student, PracticumInstructor } = useContext(studentprofileContext);
 
   const { error, loading, sendRequest } = useFetch();
 
@@ -108,19 +108,27 @@ const SummaryTimeSheet = (props) => {
       setshowMessageDialog(true);
       return;
     }
-    printSummaryTimesheet({
-      columnHeaders: tableHeader,
-      data: detail,
-      title: `Week ${firstWeek} and ${secondWeek} Summary Timesheet`,
-      student: {
-        name: Student.Name,
-        phone: Student.Phone,
-        email: Student.Email,
-        "Practicum Instructor": PracticumInstructor.Name,
-        "Instructor Phone": PracticumInstructor.Phone,
-        agency: PracticumInstructor.Agency,
-      },
-      totalHours: "200 hrs 25mins",
+
+    sendRequest({ url: `activities?totalhours=true` }, (data) => {
+      if (!data || !data.status) {
+        return;
+      }
+
+      let time = convertTimeToString(data.totalhours);
+      printSummaryTimesheet({
+        columnHeaders: tableHeader,
+        data: detail,
+        title: `Week ${firstWeek} and ${secondWeek} Summary Timesheet`,
+        student: {
+          name: Student.Name,
+          phone: Student.Phone,
+          email: Student.Email,
+          "Practicum Instructor": PracticumInstructor.Name,
+          "Instructor Phone": PracticumInstructor.Phone,
+          agency: PracticumInstructor.Agency,
+        },
+        totalHours: time,
+      });
     });
   };
 
@@ -153,14 +161,13 @@ const SummaryTimeSheet = (props) => {
           <FontAwesomeIcon icon={faPrint}></FontAwesomeIcon> &nbsp; Print
         </Button>
         <div className={classes.cardBody}>
-        {!error && !loading && (
-          <table className={classes.datatable}>
-            {tableHeader !== null && <TableHead data={tableHeader} />}
-            {detail !== null && <TableBody data={detail} />}
-          </table>
-        )}
+          {!error && !loading && (
+            <table className={classes.datatable}>
+              {tableHeader !== null && <TableHead data={tableHeader} />}
+              {detail !== null && <TableBody data={detail} />}
+            </table>
+          )}
         </div>
-       
       </Card>
     </Fragment>
   );
