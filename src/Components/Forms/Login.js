@@ -157,18 +157,18 @@ const Login = () => {
       <div className={styles["form__container"]}>
         <form action="#" onSubmit={onSubmitHandler} className={styles["form"]}>
           <div className={styles["form__signup"]}>
-            <h1 className={styles["heading__primary"]}>Welcome!</h1>
-            <p>Create your account For Free!</p>
+            <h1 className={styles["heading__primary"]}></h1>
+            <p>Don't have an account?</p>
             <Button
               type="button"
-              className="btn__secondary-rounded"
+              className="btn__secondary"
               onClick={onSignupClickHandler}
             >
               Sign Up
             </Button>
           </div>
           <div className={styles["form__login"]}>
-            <h2>Login</h2>
+            <h2>Sign In</h2>
             <div className={styles["form__group"]}>
               <input
                 type="text"
@@ -202,14 +202,14 @@ const Login = () => {
             <div className={styles["form__group"]}>
               <Button
                 type="submit"
-                className="btn__primary-rounded"
+                className="btn__primary"
                 disabled={!formIsValid ? true : false}
               >
                 Sign In
               </Button>
               <Button
                 type="button"
-                className="btn__secondary-rounded"
+                className="btn__secondary"
                 disabled={false}
                 onClick={onSignupClickHandler}
               >
@@ -218,7 +218,7 @@ const Login = () => {
 
               <Button
                 type="button"
-                className="form__link-rounded"
+                className="form__link"
                 onClick={onForgotPasswordHandler}
               >
                 Forgot password?

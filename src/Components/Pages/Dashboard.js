@@ -1,14 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Dashboard.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBullseye,
   faHourglass,
   faHourglassStart,
-  faStarHalf,
 } from "@fortawesome/free-solid-svg-icons";
+import useFetch from "../../hooks/useFetch";
+import { convertTimeToString } from "../../modules/timecalculation";
 
 const Dashboard = (props) => {
+  const [hoursLeft, setHoursLeft] = useState("");
+  const [totalWorkHours, setTotalWorkHours] = useState("");
+  const [goalsCompleted, setGoalsCompleted] = useState([]);
+  const [goalsUnattempted, setGoalsUnattempted] = useState([]);
+  const { sendRequest } = useFetch();
+
+  useEffect(() => {
+    sendRequest({ url: `summary` }, (data) => {
+      if (!data) {
+        return;
+      }
+      const {
+        Goals: goals,
+        "Remaining Hours": RemainingHours,
+        "Total Hours": TotalHours,
+      } = data;
+
+      const completedGoals = goals.filter(
+        (goal) => goal.Status === "Completed"
+      );
+      const unattemptedGoals = goals.filter(
+        (goal) => goal.Status !== "Completed"
+      );
+
+      setTotalWorkHours(convertTimeToString(TotalHours));
+      setHoursLeft(convertTimeToString(RemainingHours));
+      setGoalsCompleted(completedGoals);
+      setGoalsUnattempted(unattemptedGoals);
+    });
+  }, []);
+
   let className = "";
   if (props.fullWidth) {
     className = "dashboard-large";
@@ -33,7 +65,7 @@ const Dashboard = (props) => {
             }}
             icon={faBullseye}
           />
-          <p className={styles.text}>12</p>
+          <p className={styles.text}>{goalsCompleted.length}</p>
         </div>
       </div>
 
@@ -53,7 +85,7 @@ const Dashboard = (props) => {
             }}
             icon={faBullseye}
           />
-          <p className={styles.text}>2</p>
+          <p className={styles.text}>{goalsUnattempted.length}</p>
         </div>
       </div>
       <div
@@ -71,7 +103,7 @@ const Dashboard = (props) => {
             }}
             icon={faHourglass}
           />
-          <p className={styles.text}>79</p>
+          <p className={styles.text}>{totalWorkHours}</p>
         </div>
       </div>
       <div
@@ -91,7 +123,7 @@ const Dashboard = (props) => {
             }}
             icon={faHourglassStart}
           />
-          <p className={styles.text}>321</p>
+          <p className={styles.text}>{hoursLeft}</p>
         </div>
       </div>
     </div>

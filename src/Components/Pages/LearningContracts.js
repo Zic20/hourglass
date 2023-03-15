@@ -208,9 +208,9 @@ const LearningContracts = (props) => {
             <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
             &nbsp;New Goal
           </Button>
-          <Button className="btn__action" onClick={onPrintHandler}>
+          {/* <Button className="btn__action" onClick={onPrintHandler}>
             Print &nbsp;<FontAwesomeIcon icon={faPrint}></FontAwesomeIcon>
-          </Button>
+          </Button> */}
         </div>
         <LearningContractTable
           data={contracts.learningContracts}

@@ -32,12 +32,12 @@
     }
     .card {
         margin-left: 1rem;
-        width: 90%;
+        width: 95%;
     }
 }
 
 .basicCard {
-    min-width: 18rem;
+    width: 18rem;
     height: 12rem;
     border-radius: .5rem;
     color: #fffefe;
@@ -72,5 +72,5 @@
 }
 
 .basicCard .content .text {
-    font-size: 3rem;
+    font-size: 1.5rem;
 }

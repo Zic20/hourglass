@@ -97,11 +97,11 @@ const Sidebar = (props) => {
               Timesheet
             </NavLink>
           </li>
-          <li>
+          {/* <li>
             <NavLink className={setActiveNavLink} to="/profile">
               <FontAwesomeIcon icon={faTools} /> &nbsp;Profile
             </NavLink>
-          </li>
+          </li> */}
         </ul>
         <Button onClick={onLogoutHandler} className="btn__dark">
           <FontAwesomeIcon icon={faArrowAltCircleLeft} /> &nbsp;Logout
