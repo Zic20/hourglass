@@ -7,11 +7,11 @@ import studentprofileContext from "../../../store/studentprofile-context";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChartLine,
-  faBookOpen,
   faListCheck,
   faSquarePollVertical,
-  faTools,
+  // faTools,
   faArrowAltCircleLeft,
+  faBullseye,
 } from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = (props) => {
@@ -83,7 +83,7 @@ const Sidebar = (props) => {
           </li>
           <li>
             <NavLink className={setActiveNavLink} to="/learningcontracts">
-              <FontAwesomeIcon icon={faBookOpen} /> &nbsp;Goals
+              <FontAwesomeIcon icon={faBullseye} /> &nbsp;Goals
             </NavLink>
           </li>
           <li>

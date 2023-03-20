@@ -109,27 +109,34 @@ const SummaryTimeSheet = (props) => {
       return;
     }
 
-    sendRequest({ url: `activities?totalhours=true` }, (data) => {
-      if (!data || !data.status) {
-        return;
-      }
+    sendRequest(
+      {
+        url: `activities?totalhours=${
+          secondWeek > firstWeek ? secondWeek : firstWeek
+        }`,
+      },
+      (data) => {
+        if (!data || !data.status) {
+          return;
+        }
 
-      let time = convertTimeToString(data.totalhours);
-      printSummaryTimesheet({
-        columnHeaders: tableHeader,
-        data: detail,
-        title: `Week ${firstWeek} and ${secondWeek} Summary Timesheet`,
-        student: {
-          name: Student.Name,
-          phone: Student.Phone,
-          email: Student.Email,
-          "Practicum Instructor": PracticumInstructor.Name,
-          "Instructor Phone": PracticumInstructor.Phone,
-          agency: PracticumInstructor.Agency,
-        },
-        totalHours: time,
-      });
-    });
+        let time = convertTimeToString(data.totalhours);
+        printSummaryTimesheet({
+          columnHeaders: tableHeader,
+          data: detail,
+          title: `Week ${firstWeek} and ${secondWeek} Summary Timesheet`,
+          student: {
+            name: Student.Name,
+            phone: Student.Phone,
+            email: Student.Email,
+            "Practicum Instructor": PracticumInstructor.Name,
+            "Instructor Phone": PracticumInstructor.Phone,
+            agency: PracticumInstructor.Agency,
+          },
+          totalHours: time,
+        });
+      }
+    );
   };
 
   const closeMessageDialog = () => setshowMessageDialog(false);

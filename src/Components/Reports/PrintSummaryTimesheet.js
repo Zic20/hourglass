@@ -11,39 +11,39 @@ const printSummaryTimesheet = ({
     return;
   }
 
-  const { headers, columnCount } = createHeaders(columnHeaders);
+  const { headers } = createHeaders(columnHeaders);
   let records = formatData(columnHeaders, data);
 
   const doc = new jsPDF();
   doc.setFont("times", "", 700);
   doc.setFontSize(16);
-  doc.text(`Field Practicum Time Sheet`, 105, 10, { align: "center" });
+  doc.text(`Field Practicum Time Sheet`, 105, 20, { align: "center" });
   doc.setFont("times", "", "normal");
   doc.setFontSize(14);
-  doc.text("Mother Patern College of Health Sciences", 105, 17, {
+  doc.text("Mother Patern College of Health Sciences", 105, 27, {
     align: "center",
   });
 
-  doc.text("Social Work Program", 105, 24, { align: "center" });
+  doc.text("Social Work Program", 105, 34, { align: "center" });
 
-  doc.text(`Name: ${student.name}`, 10, 33);
-  doc.line(25, 34, 105, 34);
-  doc.text(`Student Phone (Home) : ${student.phone}`, 110, 33);
-  doc.line(159, 34, 195, 34);
-  doc.text(`E-mail: ${student.email}`, 10, 40);
-  doc.line(25, 41, 195, 41);
-  doc.text(`Agency: ${student.agency}`, 10, 47);
-  doc.line(27, 48, 195, 48);
-  doc.text(`Practicum Instructor: ${student["Practicum Instructor"]}`, 10, 54);
-  doc.line(53, 55, 110, 55);
+  doc.text(`Name: ${student.name}`, 10, 53);
+  doc.line(25, 54, 105, 54);
+  doc.text(`Student Phone (Home) : ${student.phone}`, 110, 53);
+  doc.line(159, 54, 195, 54);
+  doc.text(`E-mail: ${student.email}`, 10, 60);
+  doc.line(25, 61, 195, 61);
+  doc.text(`Agency: ${student.agency}`, 10, 67);
+  doc.line(27, 68, 195, 68);
+  doc.text(`Practicum Instructor: ${student["Practicum Instructor"]}`, 10, 74);
+  doc.line(53, 75, 110, 75);
   doc.text(
     `Practicum Instructor Phone: ${student["Instructor Phone"]}`,
     110,
-    54
+    74
   );
-  doc.line(167, 55, 195, 55);
+  doc.line(167, 75, 195, 75);
 
-  doc.table(10, 61, records, headers, {
+  doc.table(10, 81, records, headers, {
     autoSize: false,
     headerBackgroundColor: "white",
     printHeaders: true,
@@ -55,23 +55,23 @@ const printSummaryTimesheet = ({
   doc.text(
     `Total Hours of Practicum Experience to Date:   ${totalHours}`,
     10,
-    185
+    205
   );
-  doc.line(90, 186, 140, 186);
-  doc.text("SIGNATURES:", 10, 195);
-  doc.text("Student:", 10, 205);
-  doc.line(25, 205, 155, 205);
+  doc.line(90, 206, 140, 206);
+  doc.text("SIGNATURES:", 10, 215);
+  doc.text("Student:", 10, 225);
+  doc.line(25, 225, 155, 225);
 
-  doc.text("Date:", 158, 205);
-  doc.line(169, 205, 200, 205);
-  doc.text("Practicum Instructor:", 10, 215);
-  doc.line(46, 215, 155, 215);
-  doc.text("Date:", 158, 215);
-  doc.line(169, 215, 200, 215);
-  doc.text("Practicum Director:", 10, 225);
-  doc.line(44, 225, 155, 225);
   doc.text("Date:", 158, 225);
   doc.line(169, 225, 200, 225);
+  doc.text("Practicum Instructor:", 10, 235);
+  doc.line(46, 235, 155, 235);
+  doc.text("Date:", 158, 235);
+  doc.line(169, 235, 200, 235);
+  doc.text("Practicum Director:", 10, 245);
+  doc.line(44, 245, 155, 245);
+  doc.text("Date:", 158, 245);
+  doc.line(169, 245, 200, 245);
   doc.save(`${title}.pdf`);
 };
 
@@ -81,7 +81,7 @@ function createHeaders(columnHeaders) {
     let width = 0;
     let align = "center";
 
-    if (columnHeaders.length === 10) {
+    if (columnHeaders.length <= 10) {
       width = 22;
       if (index === 0) {
         align = "left";
