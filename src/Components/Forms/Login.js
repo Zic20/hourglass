@@ -157,7 +157,8 @@ const Login = () => {
       <div className={styles["form__container"]}>
         <form action="#" onSubmit={onSubmitHandler} className={styles["form"]}>
           <div className={styles["form__signup"]}>
-            {/* <h1 className={styles["heading__primary"]}>Tracks</h1> */}
+            <h1 className={styles["heading__primary"]}>TRACKS</h1>
+            <p className={styles["description"]}>Log in to your account to easily track your work hours and improve your productivity.</p>
             <p>Don't have an account?</p>
             <Button
               type="button"
@@ -204,6 +205,7 @@ const Login = () => {
                 type="submit"
                 className="btn__primary"
                 disabled={!formIsValid ? true : false}
+                onClick={onSubmitHandler}
               >
                 Sign In
               </Button>

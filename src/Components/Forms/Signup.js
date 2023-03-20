@@ -270,14 +270,15 @@ const Signup = () => {
             <div className={styles["form__group"]}>
               <Button
                 type="submit"
-                className="btn__primary-rounded"
+                className="btn__primary"
                 disabled={!formIsValid ? true : false}
+                onClick={onSubmitHandler}
               >
                 Sign Up
               </Button>
               <Button
                 type="button"
-                className="btn__secondary-rounded"
+                className="btn__secondary"
                 onClick={onSignInClickHandler}
               >
                 Sign In
