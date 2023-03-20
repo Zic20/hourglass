@@ -157,7 +157,7 @@ const Login = () => {
       <div className={styles["form__container"]}>
         <form action="#" onSubmit={onSubmitHandler} className={styles["form"]}>
           <div className={styles["form__signup"]}>
-            <h1 className={styles["heading__primary"]}></h1>
+            {/* <h1 className={styles["heading__primary"]}>Tracks</h1> */}
             <p>Don't have an account?</p>
             <Button
               type="button"
