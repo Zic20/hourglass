@@ -19,7 +19,6 @@ const useFetch = () => {
             `Bearer ${localStorage.getItem("tracksToken")}`
           );
         }
-        headers.append("Content-Type", "application/json");
         const response = await fetch(baseUrl + requestConfig.url, {
           method: requestConfig.method ? requestConfig.method : "GET",
           headers,

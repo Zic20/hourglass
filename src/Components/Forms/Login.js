@@ -93,6 +93,7 @@ const Login = () => {
       username: emailState.value,
       password: passwordState.value,
     };
+    
     sendRequest(
       { url: "login.php", method: "POST", body: userData },
       (data) => {

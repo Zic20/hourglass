@@ -23,19 +23,6 @@
 
 }
 
-@media screen and (max-width: 768px) {
-    .dashboard{
-        margin-left: 0;
-    }
-    .dashboard,.dashboard-large {
-        flex-direction: column;
-    }
-    .card {
-        margin-left: 1rem;
-        width: 95%;
-    }
-}
-
 .basicCard {
     width: 18rem;
     height: 12rem;
@@ -73,4 +60,18 @@
 
 .basicCard .content .text {
     font-size: 1.5rem;
+}
+
+
+@media screen and (max-width: 768px) {
+    .dashboard{
+        margin-left: 0;
+    }
+    .dashboard,.dashboard-large {
+        flex-direction: column;
+    }
+    .basicCard {
+        margin-left: .8rem;
+        width: 95%;
+    }
 }

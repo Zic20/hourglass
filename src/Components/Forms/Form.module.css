@@ -75,3 +75,7 @@ label span {
 .editor {
     height: 5rem;
 }
+
+button {
+    margin: 8px;
+}

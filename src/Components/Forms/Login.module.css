@@ -127,6 +127,7 @@
         padding: .8rem 0;
         font-size: .99rem;
         margin: 8px;
+        margin-left: 0;
     }
 
     .form__container {

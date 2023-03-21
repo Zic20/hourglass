@@ -71,7 +71,6 @@
 }
 
 .nav-check-mobile-icon:hover::after {
-    /* top: 0; */
     background: #656b7b;
     transform: rotate(135deg);
 }
