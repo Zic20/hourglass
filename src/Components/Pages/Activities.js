@@ -14,7 +14,6 @@ import Card from "../Utilities/Card";
 import MyDatatable from "../Utilities/DataTableBase";
 import Modal from "../Utilities/Modal";
 import SelectVariants from "../ImportedComponents/SelectVariants";
-import { RequestHelper } from "../../modules/Requester";
 import {
   getTimeDifference,
   convertTime,
@@ -104,17 +103,17 @@ const Activities = (props) => {
   );
 
   const getCurrentWeek = useCallback(async () => {
-    const { data, error } = await RequestHelper.get(
-      `learningcontracts?current`
-    );
-    if (!error) {
+    sendRequest({ url: `learningcontracts?current` }, (data) => {
+      if(!data){
+        return;
+      }
       let { StartDate: startDate, EndDate: endDate, Week } = data;
       setCurrentWeek(Week);
       setSelectedWeek(Week);
       setStartDate(startDate);
       setEndDate(endDate);
       getActivities(Week);
-    }
+    });
   }, [getActivities]);
 
   useEffect(() => {
@@ -213,12 +212,9 @@ const Activities = (props) => {
   };
 
   const onAcceptDelete = async () => {
-    const { data, error } = await RequestHelper.delete(
-      `activities/${selectedRowID}`
-    );
-    if (data && !error) {
+    sendRequest({url:`activities/${selectedRowID}`},(data)=>{
       dispatchActivities({ type: "REMOVE", id: selectedRowID });
-    }
+    })
   };
 
   const onDeleteDialogClose = () => setShowDeleteDialog(false);
