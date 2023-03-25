@@ -173,7 +173,7 @@ const Login = () => {
             <h2>Sign In</h2>
             <div className={styles["form__group"]}>
               <input
-                type="text"
+                type="email"
                 name="email"
                 id="email"
                 onChange={emailOnChangeHandler}

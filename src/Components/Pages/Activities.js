@@ -252,17 +252,14 @@ const Activities = (props) => {
 
   const onWeekChangeHandler = (event) => {
     let week = +event;
-    setCurrentWeek(week);
     setSelectedWeek(week);
     getActivities(week);
   };
 
   const onPrintHandler = () => {
     const { activities } = activitiesState;
-    let week = currentWeek;
-    console.log(currentWeek);
     sendRequest(
-      { url: `activities?week=${currentWeek}&totalhours=true` },
+      { url: `activities?week=${selectedWeek}&totalhours=true` },
       (data) => {
         if (!data || !data.status) {
           return;
@@ -272,7 +269,7 @@ const Activities = (props) => {
 
         let dataset = activities.map((activity) => {
           return {
-            Week: week,
+            Week: selectedWeek,
             Date: activity.Date,
             Activity: activity.Activity,
             StartTime: activity.StartTime,
