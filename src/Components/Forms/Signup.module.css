@@ -44,6 +44,8 @@ form button {
         width: 100%;
         margin-left: 0;
         margin-bottom: 2rem;
+        padding: .8rem 0;
+        font-size: .99rem;
     }
 }
 
