@@ -8,6 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import useFetch from "../../hooks/useFetch";
 import { convertTimeToString } from "../../modules/timecalculation";
+import NestedList from "../ImportedComponents/NestedList";
 
 const Dashboard = (props) => {
   const [hoursLeft, setHoursLeft] = useState("");
@@ -101,7 +102,7 @@ const Dashboard = (props) => {
             style={{
               fontWeight: 400,
             }}
-            icon={faHourglass}
+            icon={faHourglass}  
           />
           <p className={styles.text}>{totalWorkHours}</p>
         </div>
@@ -126,6 +127,9 @@ const Dashboard = (props) => {
           <p className={styles.text}>{hoursLeft}</p>
         </div>
       </div>
+
+      <NestedList header={"Completed Goals"} data={goalsCompleted}/>
+      <NestedList header={"Unattempted Goals"} data={goalsUnattempted}/>
     </div>
   );
 };
