@@ -114,7 +114,7 @@ const Activities = (props) => {
       setEndDate(endDate);
       getActivities(Week);
     });
-  }, [getActivities]);
+  }, [getActivities,sendRequest]);
 
   useEffect(() => {
     getWeeks();

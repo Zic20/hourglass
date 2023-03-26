@@ -40,7 +40,7 @@ const Dashboard = (props) => {
       setGoalsCompleted(completedGoals);
       setGoalsUnattempted(unattemptedGoals);
     });
-  }, []);
+  }, [sendRequest]);
 
   let className = "";
   if (props.fullWidth) {
