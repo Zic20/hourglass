@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 const useFetch = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const baseUrl = `https://zictracks.com/practicumapi/`;
+  const baseUrl = `https://api.zictracks.com/`;
   // const baseUrl = `http://127.0.0.1/practicumapi/`;
   // const baseUrl = `http://192.168.0.197:80/practicumapi/`;
 
