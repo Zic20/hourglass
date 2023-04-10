@@ -24,6 +24,13 @@
     font-size: "18px";
 }
 
+@media screen and (max-width: 1024px){
+    .card { 
+        width: 72%;
+        margin-left: 16.5rem;
+    }
+}
+
 @media screen and (max-width: 768px) {
     .card {
         margin-left: 1rem;

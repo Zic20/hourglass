@@ -4,7 +4,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     width: 60%;
-    height: 30rem;
+    height: 31rem;
     box-shadow: 0rem 1.5rem 3rem rgba(0, 0, 0, 0.15);
     background-image: linear-gradient(136deg, rgba(19, 82, 209, 0.642) 0 38%, rgba(28, 146, 93, 0.936) 79%), url(./assets/images/photo-1541480601022-2308c0f02487.avif);
     background-size: cover;
