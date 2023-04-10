@@ -9,7 +9,6 @@ import {
   faChartLine,
   faListCheck,
   faSquarePollVertical,
-  // faTools,
   faArrowAltCircleLeft,
   faBullseye,
 } from "@fortawesome/free-solid-svg-icons";
@@ -41,7 +40,8 @@ const Sidebar = (props) => {
     <Fragment>
       <div className={styles["top-nav"]}>
         <div className={styles["logo-box"]}>
-          <div className={styles["sidebar-check-mobile"]}>
+          <div className={styles["sidebar-check-mobile"]}
+          onClick={onCloseHandler}>
             <input
               type="checkbox"
               className={styles["nav-check-mobile"]}
