@@ -22,7 +22,7 @@ function StepOne(props) {
   };
 
   const submitHandler = () => {
-    sendRequest({ url: `/reset.php?email=${email}` }, (data) => {
+    sendRequest({ url: `reset.php?email=${email}` }, (data) => {
       if (!data || !data.status) {
         alert("Please use a valid email");
         return;
@@ -75,7 +75,7 @@ function StepTwo(props) {
   const onSubmitHandler = () => {
     sendRequest(
       {
-        url: `/reset.php`,
+        url: `reset.php`,
         method: "POST",
         body: { code: resetCode, username: props.email },
       },
@@ -124,7 +124,7 @@ function StepTwo(props) {
   );
 }
 
-// this reducer is used to validate user password input and manage the password state
+
 const passwordReducer = (state, action) => {
   if (action.type === "USER_INPUT") {
     return { value: action.val, isValid: action.val.trim().length > 7 };
@@ -212,7 +212,7 @@ function StepThree(props) {
   const onSubmitHandler = () => {
     sendRequest(
       {
-        url: `/reset.php`,
+        url: `reset.php`,
         method: "POST",
         body: {
           username: props.email,

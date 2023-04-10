@@ -3,17 +3,16 @@ import React, {
   useEffect,
   useReducer,
   Fragment,
-  useCallback,
 } from "react";
 import useFetch from "../../hooks/useFetch";
 import Button from "../Utilities/Button";
 import Card from "../Utilities/Card";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPrint, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import LearningContractForm from "../Forms/LearningContractForm";
 import Modal from "../Utilities/Modal";
 import LearningContractTable from "../Tables/LearningContractTable";
-import LearningContractPrint from "../Reports/LearningContractPrint";
+// import LearningContractPrint from "../Reports/LearningContractPrint";
 import SelectVariants from "../ImportedComponents/SelectVariants";
 
 
@@ -49,7 +48,7 @@ const LearningContracts = (props) => {
   const [showForm, setShowForm] = useState(false);
   const [update, setUpdate] = useState(false);
   const [weeks, setWeeks] = useState([]);
-  const [week, setWeek] = useState([]);
+  // const [week, setWeek] = useState([]);
   const [id, setID] = useState("");
   const [activeRow, setActiveRow] = useState({});
 
@@ -58,9 +57,9 @@ const LearningContracts = (props) => {
   });
   const { sendRequest } = useFetch();
 
+  
   const option = { year: "numeric", month: "long", day: "numeric" };
-
-  const listLearningContract = useCallback((data) => {
+  const listLearningContract = (data) => {
     dispatchContracts({ type: "REMOVE_ALL" });
     const result = data.map((learningContract) => {
       let startDate = new Date(learningContract.StartDate).toLocaleDateString(
@@ -78,7 +77,7 @@ const LearningContracts = (props) => {
       };
     });
     dispatchContracts({ type: "ADD", learningContracts: result });
-  }, []);
+  };
 
   const listWeeks = (data) => {
     const result = data.map((week) => {
@@ -91,7 +90,7 @@ const LearningContracts = (props) => {
   useEffect(() => {
     sendRequest({ url: `learningcontracts?weeks` }, listWeeks);
     sendRequest({ url: "learningcontracts" }, listLearningContract);
-  }, []);
+  }, [sendRequest]);
 
   let className = "";
   if (props.fullWidth) {
@@ -158,19 +157,19 @@ const LearningContracts = (props) => {
     dispatchContracts({ type: "REMOVE", id: +id });
   };
 
-  const onPrintHandler = () => {
-    let learningcontract = contracts.learningContracts.filter(
-      (row) => row.Week === +week
-    );
+  // const onPrintHandler = () => {
+  //   let learningcontract = contracts.learningContracts.filter(
+  //     (row) => row.Week === +week
+  //   );
     
-    LearningContractPrint({
-      data: learningcontract,
-      title: "Learning Contract",
-    });
-  };
+  //   LearningContractPrint({
+  //     data: learningcontract,
+  //     title: "Learning Contract",
+  //   });
+  // };
 
   const onWeekChangeHandler = (week) => {
-    setWeek(week);
+    // setWeek(week);
   }
 
   return (

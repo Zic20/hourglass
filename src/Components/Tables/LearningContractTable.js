@@ -13,7 +13,9 @@ const ExpandedComponent = ({ data }) => {
     <div className={styles.expandedDetails}>
       <div>
         <h4>Start Date - End Date</h4>
-        <p>{data.StartDate} - {data.EndDate}</p>
+        <p>
+          {data.StartDate} - {data.EndDate}
+        </p>
       </div>
       <div>
         <h4>Objectives</h4>
@@ -80,7 +82,7 @@ const LearningContractTable = memo(({ data: list, onDelete, onShowForm }) => {
       grow: 3,
       style: {
         textAlign: "left",
-        padding: "1rem"
+        padding: "1rem",
       },
     },
     {
@@ -88,13 +90,13 @@ const LearningContractTable = memo(({ data: list, onDelete, onShowForm }) => {
       sortable: true,
       selector: (row) => row.StartDate,
       wrap: true,
-      hide: "md"
+      hide: "md",
     },
     {
       name: "End Date",
       selector: (row) => row.EndDate,
       wrap: true,
-      hide: "md"
+      hide: "md",
     },
     {
       name: "Action",
@@ -119,7 +121,6 @@ const LearningContractTable = memo(({ data: list, onDelete, onShowForm }) => {
   const onShowUpdateForm = (event) => {
     const id = event.target.closest("button").value;
     onShowForm(id);
-    // props.onShowForm(id);
   };
 
   const onDeleteHandler = (event) => {
@@ -151,8 +152,8 @@ const LearningContractTable = memo(({ data: list, onDelete, onShowForm }) => {
         onClose={onDeleteDialogClose}
         onAgree={onAcceptDelete}
       >
-        Are you sure you want to delete this goal? Deleted goals
-        cannot be retrieved!
+        Are you sure you want to delete this goal? Deleted goals cannot be
+        retrieved!
       </AlertDialog>
 
       <DataTable

@@ -102,9 +102,9 @@ const Activities = (props) => {
     [sendRequest]
   );
 
-  const getCurrentWeek = useCallback(async () => {
+  const getCurrentWeek = () => {
     sendRequest({ url: `learningcontracts?current` }, (data) => {
-      if(!data){
+      if (!data) {
         return;
       }
       let { StartDate: startDate, EndDate: endDate, Week } = data;
@@ -114,12 +114,12 @@ const Activities = (props) => {
       setEndDate(endDate);
       getActivities(Week);
     });
-  }, [getActivities,sendRequest]);
+  };
 
   useEffect(() => {
-    getWeeks();
     getCurrentWeek();
-  }, [getWeeks, getCurrentWeek]);
+    getWeeks();
+  }, []);
 
   const { activities } = activitiesState;
 
@@ -212,9 +212,12 @@ const Activities = (props) => {
   };
 
   const onAcceptDelete = async () => {
-    sendRequest({url:`activities/${selectedRowID}`},(data)=>{
+    sendRequest({ url: `activities/${selectedRowID}` }, (data) => {
+      if (!data.rows || data.rows < 1) {
+        return;
+      }
       dispatchActivities({ type: "REMOVE", id: selectedRowID });
-    })
+    });
   };
 
   const onDeleteDialogClose = () => setShowDeleteDialog(false);
@@ -293,8 +296,8 @@ const Activities = (props) => {
             "Time Input",
           ],
           data: dataset,
-          title: `Week ${currentWeek} Timesheet`,
-          week: currentWeek,
+          title: `Week ${selectedWeek} Timesheet`,
+          week: selectedWeek,
           student: Student.Name,
         });
       }
