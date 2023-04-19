@@ -197,6 +197,6 @@ li:has(> .active) {
 }
 
 .sidebar .nav-list li:hover a,
-.sidebar .nav-list li:hover:has( > a.active) {
+.sidebar .nav-list li:hover:has( > a.active) a {
     color: #fcfcfc;
 }

@@ -20,8 +20,8 @@ const TimesheetPrint = ({ columnHeaders, data, title, week, student }) => {
   });
 
   doc.setTableHeaderRow();
-  doc.text("Signed By: ________________________", 10, 190);
-  doc.text("Practicum Instructor", 30, 195);
+  // doc.text("Signed By: ________________________", 10, 190);
+  // doc.text("Practicum Instructor", 30, 195);
   doc.save(`${title}.pdf`);
 };
 
@@ -37,10 +37,10 @@ function createHeaders(columnHeaders) {
         width = 60;
         break;
       case "Activity":
-        width = 120;
+        width = 140;
         break;
       default:
-        width = 46;
+        width = 60;
         break;
     }
     result.push({
@@ -62,9 +62,10 @@ function formatData(data) {
       Week: `${row.Week}`,
       Date: row.Date,
       Activity: row.Activity,
-      "Start Time": row.StartTime,
-      "End Time": row.EndTime,
-      "Time Input": row.TimeInput,
+      "Time Input": `${row.StartTime} - ${row.EndTime}`,
+      // "Start Time": row.StartTime,
+      // "End Time": row.EndTime,
+      "Total Hours": row.TimeInput,
     });
   });
 

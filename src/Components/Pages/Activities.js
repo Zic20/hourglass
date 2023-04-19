@@ -291,9 +291,10 @@ const Activities = (props) => {
             "Week",
             "Date",
             "Activity",
-            "Start Time",
-            "End Time",
+            // "Start Time",
+            // "End Time",
             "Time Input",
+            "Total Hours"
           ],
           data: dataset,
           title: `Week ${selectedWeek} Timesheet`,
