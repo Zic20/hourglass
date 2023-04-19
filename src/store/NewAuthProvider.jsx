@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import authContext from "./auth-context";
 
-let refreshTimer;
+// let refreshTimer;
 
 function retrieveStoredToken() {
   const hasToken = !!localStorage.getItem("tracksToken");
@@ -43,6 +43,7 @@ const NewAuthProvider = (props) => {
 
   let initialAccessToken = "";
   let initialRefreshToken = "";
+  let refreshTimer;
 
   if (tokenData) {
     initialAccessToken = tokenData.accessToken;

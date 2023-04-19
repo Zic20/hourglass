@@ -2,7 +2,7 @@ import { jsPDF } from "jspdf";
 
 const TimesheetPrint = ({ columnHeaders, data, title, week, student }) => {
   let headers = createHeaders(columnHeaders);
-  let records = formatData(data,week);
+  let records = formatData(data, week);
 
   const doc = new jsPDF({ orientation: "landscape" });
   doc.setFont("times", "", 700);
@@ -56,15 +56,25 @@ function createHeaders(columnHeaders) {
 }
 
 function formatData(data) {
+  let weekDays = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
   let result = [];
-  data.forEach((row) => {
+  data.forEach((row,index) => {
+    let date = new Date(row.Date);
+    let day = date.getDay();
+    row.Week = day ? weekDays[day]: "Total";
     result.push({
       Week: `${row.Week}`,
       Date: row.Date,
       Activity: row.Activity,
       "Time Input": `${row.StartTime} - ${row.EndTime}`,
-      // "Start Time": row.StartTime,
-      // "End Time": row.EndTime,
       "Total Hours": row.TimeInput,
     });
   });
