@@ -48,30 +48,30 @@ const printSummaryTimesheet = ({
     headerBackgroundColor: "white",
     printHeaders: true,
     fontSize: 11,
-    padding: 2
+    padding: 1,
   });
-  
+
   doc.setFontSize(12);
   doc.text(
     `Total Hours of Practicum Experience to Date:   ${totalHours}`,
     10,
-    205
+    230
   );
-  doc.line(90, 206, 140, 206);
-  doc.text("SIGNATURES:", 10, 215);
-  doc.text("Student:", 10, 225);
-  doc.line(25, 225, 155, 225);
+  doc.line(90, 231, 140, 231);
+  doc.text("SIGNATURES:", 10, 240);
+  doc.text("Student:", 10, 250);
+  doc.line(25, 250, 155, 250);
 
-  doc.text("Date:", 158, 225);
-  doc.line(169, 225, 200, 225);
-  doc.text("Practicum Instructor:", 10, 235);
-  doc.line(46, 235, 155, 235);
-  doc.text("Date:", 158, 235);
-  doc.line(169, 235, 200, 235);
-  doc.text("Practicum Director:", 10, 245);
-  doc.line(44, 245, 155, 245);
-  doc.text("Date:", 158, 245);
-  doc.line(169, 245, 200, 245);
+  doc.text("Date:", 158, 250);
+  doc.line(169, 250, 200, 250);
+  doc.text("Practicum Instructor:", 10, 260);
+  doc.line(46, 260, 155, 260);
+  doc.text("Date:", 158, 260);
+  doc.line(169, 260, 200, 260);
+  doc.text("Practicum Director:", 10, 270);
+  doc.line(44, 270, 155, 270);
+  doc.text("Date:", 158, 270);
+  doc.line(169, 270, 200, 270);
   doc.save(`${title}.pdf`);
 };
 

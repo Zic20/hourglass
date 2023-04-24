@@ -212,12 +212,15 @@ const Activities = (props) => {
   };
 
   const onAcceptDelete = async () => {
-    sendRequest({ url: `activities/${selectedRowID}` }, (data) => {
-      if (!data.rows || data.rows < 1) {
-        return;
+    sendRequest(
+      { url: `activities/${selectedRowID}`, method: "DELETE" },
+      (data) => {
+        if (!data.rows || data.rows < 1) {
+          return;
+        }
+        dispatchActivities({ type: "REMOVE", id: selectedRowID });
       }
-      dispatchActivities({ type: "REMOVE", id: selectedRowID });
-    });
+    );
   };
 
   const onDeleteDialogClose = () => setShowDeleteDialog(false);
@@ -294,7 +297,7 @@ const Activities = (props) => {
             // "Start Time",
             // "End Time",
             "Time Input",
-            "Total Hours"
+            "Total Hours",
           ],
           data: dataset,
           title: `Week ${selectedWeek} Timesheet`,

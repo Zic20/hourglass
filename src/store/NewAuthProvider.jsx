@@ -1,27 +1,29 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import authContext from "./auth-context";
 
-// let refreshTimer;
+let refreshTimer;
 
 function retrieveStoredToken() {
   const hasToken = !!localStorage.getItem("tracksToken");
-  if (hasToken) {
+  const hasRefreshToken = !!localStorage.getItem("tracksRefresh");
+
+  if (hasToken && hasRefreshToken) {
     const accessToken = localStorage.getItem("tracksToken");
     const refreshToken = localStorage.getItem("tracksRefresh");
-    const storedExpirationDate = localStorage.getItem("tokenExpiration");
+    const storedExpirationDate = +localStorage.getItem("tokenExpiration");
 
     const remainingTime = getRemainingTime(storedExpirationDate);
 
-    if (parseInt(remainingTime) <= 3600) {
+    if (parseInt(remainingTime) <= 300) {
       return null;
     }
 
     return {
       accessToken,
       refreshToken,
-      duration: remainingTime,
+      duration: remainingTime / 1000,
     };
   }
 
@@ -30,20 +32,18 @@ function retrieveStoredToken() {
 
 const getRemainingTime = (expirationTime) => {
   const currentTime = new Date().getTime();
-  const expiration = new Date(expirationTime).getTime();
-  const remainingTime = +expiration - currentTime;
+  // const expiration = new Date(expirationTime).getTime();
+  const remainingTime = +expirationTime - currentTime;
   return +remainingTime;
 };
 
 const NewAuthProvider = (props) => {
- 
-
   const navigate = useNavigate();
-  const tokenData = useMemo(() => retrieveStoredToken(), []);
+  const tokenData = retrieveStoredToken();
+  // const tokenData = useMemo(() => retrieveStoredToken(), []);
 
   let initialAccessToken = "";
   let initialRefreshToken = "";
-  let refreshTimer;
 
   if (tokenData) {
     initialAccessToken = tokenData.accessToken;
@@ -62,11 +62,10 @@ const NewAuthProvider = (props) => {
     }
   }
 
-  const { error, sendRequest } = useFetch();
+  const { sendRequest } = useFetch();
 
   useEffect(() => {
-    if (tokenData) {
-      //sets a timer based on the token expiration time to get a new token
+    if (tokenData && !isNaN(tokenData.duration)) {
       refreshTimer = setTimeout(getNewToken, tokenData.duration);
     }
   }, []);
@@ -76,12 +75,11 @@ const NewAuthProvider = (props) => {
     setToken(data["access_token"]);
     setRefreshToken(data["refresh_token"]);
     const expiresIn = new Date(data.expiresIn * 1000).getTime();
-    // const remainingTime = getRemainingTime(expiresIn);
-    localStorage.setItem("tokenExpiration", expiresIn);
+    const remainingTime = getRemainingTime(expiresIn);
+    localStorage.setItem("tokenExpiration", data.expiresIn * 1000);
     localStorage.setItem("tracksToken", data["access_token"]);
     localStorage.setItem("tracksRefresh", data["refresh_token"]);
-    localStorage.setItem("name", data.userName);
-    // refreshTimer = setTimeout(getNewToken, remainingTime);
+    refreshTimer = setTimeout(getNewToken, remainingTime);
   };
 
   const loginHandler = (data) => {
@@ -112,12 +110,12 @@ const NewAuthProvider = (props) => {
     sendRequest(
       { url: `refresh.php`, method: "POST", body: userData },
       (data) => {
-        if (!error) {
+        if (!data.message) {
           setTokens(data);
+          return;
         }
-        if (error) {
-          logoutHandler();
-        }
+
+        logoutHandler();
       }
     );
   }

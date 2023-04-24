@@ -12,8 +12,7 @@ const useFetch = () => {
       try {
         setLoading(true);
         const headers = new Headers();
-        if(localStorage.getItem("tracksToken")){
-
+        if (localStorage.getItem("tracksToken")) {
           headers.append(
             "Authorization",
             `Bearer ${localStorage.getItem("tracksToken")}`
