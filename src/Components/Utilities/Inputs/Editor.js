@@ -22,7 +22,7 @@ const Editor = React.forwardRef((props, ref) => {
       theme="snow"
       onChange={onChangeHandler}
       value={props.value}
-      style={{ marginTop: ".5rem" }}
+      style={{ height: "6rem" }}
     />
   );
 });
