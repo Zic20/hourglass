@@ -7,8 +7,17 @@ const Textarea = React.forwardRef((props, ref) => {
       <label className={styles.label} htmlFor={props.id}>
         {props.label}
       </label>
-      <textarea className={styles.textarea} {...props} ref={ref}>
-      </textarea>
+      <textarea
+        className={styles.textarea}
+        {...props}
+        ref={ref}
+        style={{
+          resize: "none",
+          padding: ".5rem",
+          lineHeight: "1.5",
+          fontFamily: "Roboto Slab",
+        }}
+      ></textarea>
 
       {props.isrequired === true && (
         <p className={styles.isInvalid}>* {`${props.label} is required`}</p>

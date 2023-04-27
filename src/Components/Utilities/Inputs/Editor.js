@@ -4,7 +4,9 @@ import formStyles from "../../Forms/Form.module.css";
 import "react-quill/dist/quill.snow.css";
 
 const Editor = React.forwardRef((props, ref) => {
-  const toolbarOptions = ["bold", "italic", "underline"];
+  const toolbarOptions = [
+    ["bold", "italic", "underline", { list: "ordered" }, { list: "bullet" }],
+  ];
 
   const onChangeHandler = (value) => {
     props.onChange(value);
@@ -20,6 +22,7 @@ const Editor = React.forwardRef((props, ref) => {
       theme="snow"
       onChange={onChangeHandler}
       value={props.value}
+      style={{ marginTop: ".5rem" }}
     />
   );
 });
