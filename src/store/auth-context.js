@@ -3,11 +3,11 @@ import React from "react";
 const authContext = React.createContext({
   username: "",
   usertype: "",
-  userUniqueID:"",
+  userUniqueID: "",
   token: "",
-  refreshToken:"",
-  isLoggedIn: "",
-  register: ({username,studentID,password,password2})=>{},
+  refreshToken: "",
+  isLoggedIn: false,
+  register: ({ username, studentID, password, password2 }) => {},
   login: (username, password) => {},
   logout: () => {},
 });

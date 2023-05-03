@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { redirect } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import authContext from "./auth-context";
 
@@ -36,14 +36,6 @@ const getRemainingTime = (expirationTime) => {
 };
 
 const NewAuthProvider = (props) => {
-  /* user has token?
-   1. Retrieve user's tokens
-   2. If user has token, validate token but if user doesn't have token ask user to log in
-   3. if user token is valid allow access else check whether user has a valid refresh token
-   4. if user has a valid refresh token request a new token set else ask user to login
-  */
-
-  const navigate = useNavigate();
   const tokenData = useMemo(() => retrieveStoredToken(), []);
 
   let initialAccessToken = "";
@@ -62,7 +54,7 @@ const NewAuthProvider = (props) => {
   if (!isLoggedIn) {
     let hasRefreshToken = !!refreshToken;
     if (hasRefreshToken) {
-     // getNewToken();
+      // getNewToken();
     }
   }
 
@@ -71,7 +63,7 @@ const NewAuthProvider = (props) => {
   useEffect(() => {
     if (tokenData) {
       //sets a timer based on the token expiration time to get a new token
-     refreshTimer = setTimeout(getNewToken, tokenData.duration);
+      refreshTimer = setTimeout(getNewToken, tokenData.duration);
     }
   }, [tokenData]);
 
@@ -84,13 +76,13 @@ const NewAuthProvider = (props) => {
     localStorage.setItem("tokenExpiration", expiresIn);
     localStorage.setItem("tracksToken", data["access_token"]);
     localStorage.setItem("tracksRefresh", data["refresh_token"]);
-   // refreshTimer = setTimeout(getNewToken, remainingTime);
+    // refreshTimer = setTimeout(getNewToken, remainingTime);
   };
-
 
   const loginHandler = (data) => {
     setTokens(data);
-    navigate("/dashboard");
+    redirect("/dashboard");
+    // navigate("/dashboard");
   };
 
   const logoutHandler = useCallback(() => {
@@ -99,7 +91,8 @@ const NewAuthProvider = (props) => {
       setRefreshToken("");
       localStorage.clear();
       clearTimeout(refreshTimer);
-      navigate("/login");
+      redirect("/login");
+      // navigate("/login");
     }
   }, []);
 
