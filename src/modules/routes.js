@@ -4,7 +4,6 @@ import Dashboard from "../Components/Pages/Dashboard";
 import Layout from "../Components/Pages/Layout";
 import authContext from "../store/auth-context";
 import { useContext } from "react";
-import NewAuthProvider from "../store/NewAuthProvider";
 
 const Login = React.lazy(() => import("../Components/Forms/Login"));
 
@@ -28,7 +27,7 @@ const RouteAuth = (props) => {
   const { isLoggedIn } = authCtx;
   return (
     <>
-      {isLoggedIn && <NewAuthProvider>{props.children}</NewAuthProvider>}
+      {isLoggedIn && props.children}
       {!isLoggedIn && <Navigate to="/login" />}
     </>
   );
@@ -41,7 +40,7 @@ const routes = createBrowserRouter([
     errorElement: <h1>Page not found</h1>,
     children: [
       {
-        path: "/dashboard",
+        path: "dashboard",
         element: (
           <RouteAuth>
             <Dashboard />
@@ -49,7 +48,7 @@ const routes = createBrowserRouter([
         ),
       },
       {
-        path: "/learningcontracts",
+        path: "learningcontracts",
         element: (
           <RouteAuth>
             <LearningContracts />
@@ -57,7 +56,7 @@ const routes = createBrowserRouter([
         ),
       },
       {
-        path: "/timesheet",
+        path: "timesheet",
         element: (
           <RouteAuth>
             <Activities />
@@ -65,7 +64,7 @@ const routes = createBrowserRouter([
         ),
       },
       {
-        path: "/summarytimesheet",
+        path: "summarytimesheet",
         element: (
           <RouteAuth>
             <SummaryTimeSheet />
@@ -76,11 +75,7 @@ const routes = createBrowserRouter([
   },
   {
     path: "/login",
-    element: (
-      <NewAuthProvider>
-        <Login />
-      </NewAuthProvider>
-    ),
+    element: <Login />,
   },
   { path: "/signup", element: <Signup /> },
   { path: "/changepassword", element: <ChangePassword /> },

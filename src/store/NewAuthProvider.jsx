@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { redirect } from "react-router-dom";
+// import { redirect, useNavigate } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import authContext from "./auth-context";
 
@@ -37,6 +37,7 @@ const getRemainingTime = (expirationTime) => {
 
 const NewAuthProvider = (props) => {
   const tokenData = useMemo(() => retrieveStoredToken(), []);
+  // const navigate = useNavigate();
 
   let initialAccessToken = "";
   let initialRefreshToken = "";
@@ -62,7 +63,6 @@ const NewAuthProvider = (props) => {
 
   useEffect(() => {
     if (tokenData) {
-      //sets a timer based on the token expiration time to get a new token
       refreshTimer = setTimeout(getNewToken, tokenData.duration);
     }
   }, [tokenData]);
@@ -81,7 +81,7 @@ const NewAuthProvider = (props) => {
 
   const loginHandler = (data) => {
     setTokens(data);
-    redirect("/dashboard");
+    // redirect("/dashboard");
     // navigate("/dashboard");
   };
 
@@ -91,8 +91,6 @@ const NewAuthProvider = (props) => {
       setRefreshToken("");
       localStorage.clear();
       clearTimeout(refreshTimer);
-      redirect("/login");
-      // navigate("/login");
     }
   }, []);
 

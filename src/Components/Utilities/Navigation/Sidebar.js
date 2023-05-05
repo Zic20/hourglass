@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import styles from "./Sidebar.module.css";
 import Button from "../Button";
 import authContext from "../../../store/auth-context";
@@ -11,11 +11,12 @@ import {
   faSquarePollVertical,
   faTools,
 } from "@fortawesome/free-solid-svg-icons";
-import { faHandPointLeft} from "@fortawesome/free-regular-svg-icons";
+import { faHandPointLeft } from "@fortawesome/free-regular-svg-icons";
 
 const Sidebar = (props) => {
   const [isClosed, setIsClosed] = useState(false);
   const authCtx = useContext(authContext);
+  const navigate = useNavigate();
 
   const onCloseHandler = (event) => {
     if (event.target.checked) {
@@ -29,6 +30,7 @@ const Sidebar = (props) => {
 
   const onLogoutHandler = () => {
     authCtx.logout();
+    navigate("/login");
   };
 
   function setActiveNavLink(navData) {
@@ -76,28 +78,28 @@ const Sidebar = (props) => {
 
         <ul className={styles["nav-list"]}>
           <li>
-            <NavLink className={setActiveNavLink}  to="/dashboard">
+            <NavLink className={setActiveNavLink} to="dashboard">
               <FontAwesomeIcon icon={faChartLine} /> &nbsp; Dashboard
             </NavLink>
           </li>
           <li>
-            <NavLink className={setActiveNavLink} to="/learningcontracts">
+            <NavLink className={setActiveNavLink} to="learningcontracts">
               <FontAwesomeIcon icon={faBookOpen} /> &nbsp;Goals
             </NavLink>
           </li>
           <li>
-            <NavLink className={setActiveNavLink} to="/timesheet">
+            <NavLink className={setActiveNavLink} to="timesheet">
               <FontAwesomeIcon icon={faListCheck} /> &nbsp;Activities
             </NavLink>
           </li>
           <li>
-            <NavLink className={setActiveNavLink} to="/summarytimesheet">
+            <NavLink className={setActiveNavLink} to="summarytimesheet">
               <FontAwesomeIcon icon={faSquarePollVertical} /> &nbsp;Summary
               Timesheet
             </NavLink>
           </li>
           <li>
-            <NavLink className={setActiveNavLink} to="/profile">
+            <NavLink className={setActiveNavLink} to="profile">
               <FontAwesomeIcon icon={faTools} /> &nbsp;Profile
             </NavLink>
           </li>

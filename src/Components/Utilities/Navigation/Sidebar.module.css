@@ -186,17 +186,16 @@
     width: 100%;
 }
 
-.sidebar .nav-list li:hover
-/* .sidebar .nav-list li a.active  */
-{
-    /* background-color: #000000; */
+.sidebar .nav-list li:hover {
     background-color: #4a7dff;
     border-radius: 5px;
     transform: scale(.9);
 }
 
-
-
 .sidebar .nav-list li:hover a {
+    color: #fcfcfc;
+}
+
+.sidebar .nav-list li:has(a:active) {
     color: #fcfcfc;
 }
